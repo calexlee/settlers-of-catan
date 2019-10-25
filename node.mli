@@ -1,0 +1,1 @@
+(* Consists of attributes of an index that represents what node it is on the board City/settlements located there and 3 neighboring tiles.*)

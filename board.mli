@@ -1,0 +1,1 @@
+(*  array of tiles. Initialize the state of this game. *)
