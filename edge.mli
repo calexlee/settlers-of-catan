@@ -1,16 +1,9 @@
 module type Edge = sig 
 
   (**The type of Road *)
-  type rd = {
-    is_there: bool;
-    (*player: Player.player;*)
-  }
+  type rd
 
   (** The abstract type of values representing adventures. *)
-  type t = {
-    road: rd;
-    index: int;
-  }
-
+  type t
 
 end
