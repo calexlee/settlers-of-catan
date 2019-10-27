@@ -1,1 +1,4 @@
-(* Tile to be implemented here *)
+module Tile = struct
+  type r = unit
+  type t = unit
+end
