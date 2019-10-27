@@ -1,15 +1,11 @@
-(* Board to be implemented here *)
 
+type t = unit
 
-module Board = struct 
-  type t = unit
-
-  let initial_board = 
-    failwith "unimpelmented"
-  let rand_Board = 
-    failwith "unimpelmented"
-  let get_tile = 
-    failwith "unimpelmented"
-  let get_tiles_with_num = 
-    failwith "unimpelmented"
-end 
+let initial_board = 
+  failwith "unimpelmented"
+let rand_board = 
+  failwith "unimpelmented"
+let get_tile = 
+  failwith "unimpelmented"
+let get_tiles_with_num = 
+  failwith "unimpelmented"

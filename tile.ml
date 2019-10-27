@@ -1,4 +1,3 @@
-module Tile = struct
-  type r = unit
-  type t = unit
-end
+type r = unit
+type t = unit
+

@@ -1,4 +1,4 @@
-MODULES= board devcard edge graphics main node player tile
+MODULES= tile board devcard edge graphics node player main
 OBJECTS=$(MODULES:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)
