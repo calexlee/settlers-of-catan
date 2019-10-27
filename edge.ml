@@ -1,13 +1,9 @@
-module Node = struct 
+type rd = {
+  is_there: bool;
+  (*player: Player.player;*)
+} 
 
-  type rd = {
-    is_there: bool;
-    (*player: Player.player;*)
-  } 
-
-  type t = {
-    road: rd;
-    index: int;
-  }
-
-end
+type t = {
+  road: rd;
+  index: int;
+}
