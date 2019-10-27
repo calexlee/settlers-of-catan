@@ -1,4 +1,3 @@
-(* Edge to be implemented here *)
 type rd = {
   is_there: bool;
   (*player: Player.player;*)
