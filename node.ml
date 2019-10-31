@@ -23,8 +23,8 @@ let give_resource (dr:int) (node:Node.t)=
     |Sheep->Player.give_sheep t.player
     |Wheat->Player.give_wheat t.player
     |Rock->Player.give_rock t.player
-    |Brick->Plater.give_brick t.player
+    |Brick->Player.give_brick t.player
   with
-  |Failure->()
+  |Failure->t.player
 
 
