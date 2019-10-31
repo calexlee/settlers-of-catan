@@ -1,6 +1,7 @@
 
 type t = unit
 
+
 let initial_board = 
   failwith "unimpelmented"
 let rand_board = 

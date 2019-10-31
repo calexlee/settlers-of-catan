@@ -4,6 +4,6 @@ type s
 (**The type of a Node *)
 type t
 
-(**[give_resource dr] changes the resources of the players who have
-   settlements adjacent to the tiles with the number [dr]*)
-val give_resource : int -> unit
+(**[give_resource dr node] give the player who has a settlement on node [node] 
+   all resources corresponding to die roll [dr]*)
+val give_resource : int -> t -> unit
