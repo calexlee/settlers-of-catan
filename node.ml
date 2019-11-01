@@ -3,7 +3,7 @@ type s = None | Settlement | City
 type t = {
   neigh_tiles: Tile.t list;
   settlement : s;
-  player : Player.player;
+  (* player : Player.player; #unimplemented*)
   index: int;
   edges: Edge.t list;
 }
