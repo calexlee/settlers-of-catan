@@ -13,16 +13,16 @@ val get_points : t -> int
 val get_resources : t -> r list
 
 (**[give_sheep t] gives the player t sheep.*)
-val give_sheep : t -> t
+val give_sheep : t -> unit
 
 (**[give_rock t] gives the player t rock.*)
-val give_rock : t -> t
+val give_rock : t -> unit
 
 (**[give_ brick t] gives the player t brick.*)
-val give_brick : t -> t
+val give_brick : t -> unit
 
 (**[give_sheep t] gives the player t wood.*)
-val give_wood  : t -> t
+val give_wood  : t -> unit
 
 (**[give_sheep t] gives the player t wheat.*)
-val give_wheat : t -> t
+val give_wheat : t -> unit
