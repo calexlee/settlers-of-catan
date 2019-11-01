@@ -1,5 +1,5 @@
 
-type t = unit
+type t = Tile.t list
 
 
 let initial_board = 
