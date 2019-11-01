@@ -1,3 +1,5 @@
+
+
 type s = None | Settlement | City
 
 type t = {
@@ -26,5 +28,4 @@ let give_resource (dr:int) (node:Node.t)=
     |Brick->Player.give_brick t.player
   with
   |Failure->t.player
-
 
