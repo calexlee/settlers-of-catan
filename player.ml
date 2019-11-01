@@ -2,13 +2,13 @@
 type r = Wood | Brick | Sheep | Rock | Wheat
 type t = {
   mutable resources: r list;
-  mutable point: int;
+  mutable points: int;
   (*mutable card_list: *)
   mutable longest_road: bool;
 }
 
 let get_points t =
-  t.point
+  t.points
 
 let get_resources t =
   t.resources
