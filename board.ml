@@ -28,9 +28,9 @@ let rand_board =
 let get_tile n t = 
   List.nth n t
 
-let get_tiles_with_num board n = 
+let rec get_tiles_with_num board n = 
   match board with
   | [] -> []
-  | h::t -> if (h.number = n) then h :: get_tiles_with_num t n 
-  else get_tiles_with_num t n
+  | h::t -> if ((Tile.get_number h) = n) then h :: get_tiles_with_num t n 
+    else get_tiles_with_num t n
 
