@@ -1,0 +1,10 @@
+#directory "_build";;
+#require "ANSITerminal";;
+#load_rec "tile.cmo";;
+#load_rec "player.cmo";;
+#load_rec "board.cmo";;
+#load_rec "devcard.cmo";;
+#load_rec "edge.cmo";;
+#load_rec "node.cmo";;
+#load_rec "main.cmo";;
+#load_rec "graphics.cmo";;
