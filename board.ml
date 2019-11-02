@@ -22,8 +22,46 @@ let initial_board () =
    Tile.make_tile 2 "wheat" false;
    Tile.make_tile 6 "wood" false;
   ]
-let rand_board = 
-  failwith "unimpelmented"
+
+(**19 tiles*)
+let resource_list = 
+  ["wood";"sheep";"wheat";"brick";"rock"; "brick"; "sheep"; "desert"; "wood"; 
+   "wheat"; "wood"; "wheat"; "brick"; "sheep"; "sheep"; "rock"; "rock"; 
+   "wheat"; "wood";]
+
+let number_list =
+  [11;12;9;4;6;5;10;0;3;11;4;8;8;10;9;3;5;2;6]
+
+let rec remove_index start index lst=
+  match lst with
+  |[]-> lst
+  |h::t-> if start=index then remove_index (start+1) index t
+    else h::(remove_index (start+1) index t)
+
+let rec get_index start index= function
+  |[]-> failwith "index out of bounds"
+  |h::t-> if start=index then h else get_index (start+1) index t
+
+
+let rec random_resources acc lst=
+  match lst with 
+  |[]->acc
+  |x-> 
+    let rand = Random.int (List.length lst) in
+    random_resources ((get_index 0 rand lst)::acc) (remove_index 0 rand lst)
+
+let rec rand_board_helper start num_lst rand_res_lst acc= 
+  match num_lst with
+  |[]->acc
+  |h_int::t_int-> 
+    match rand_res_lst with
+    |[]-> failwith "not enough resources"
+    |h_res::t_res-> 
+      let rob = h_res="desert" in
+      rand_board_helper (start+1) t_int t_res ((Tile.make_tile h_int h_res rob)::acc)
+
+let rand_board ()= 
+  rand_board_helper 0 number_list (random_resources [] resource_list) []
 
 let get_tile n t = 
   List.nth n t
