@@ -33,4 +33,4 @@ let get_resource (tile: t)=
   |Desert->"sheep"
 
 let get_number (tile: t)= 
-  tile.resource
+  tile.number
