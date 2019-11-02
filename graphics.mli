@@ -4,4 +4,4 @@
 *)
 
 (**[draw_board t] draws the board [t] in the terminal *) 
-val draw_board : Board.t -> unit
+val draw_board : Tile.t list -> unit
