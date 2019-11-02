@@ -1,5 +1,3 @@
-
-
 (**[type t] represents a list of all of the tiles in the board*)
 (**RI: the index of the list represents what tile it is**)
 type t
