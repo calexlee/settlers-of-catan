@@ -3,10 +3,10 @@
 type t
 
 (**[initial_board] becomes a pre-built standard board of type t*)
-val initial_board : unit -> t
+val initial_board : t
 
 (**[rand_board] becomes a randomized board of type t*)
-val rand_board : unit -> t
+val rand_board : t
 
 (**[get_tile] is a the type located at an index*)
 val get_tile : t -> int -> Tile.t

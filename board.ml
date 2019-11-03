@@ -1,7 +1,7 @@
 
 type t = Tile.t list
 
-let initial_board () = 
+let initial_board  = 
   [Tile.make_tile 11 "wood" false;
    Tile.make_tile 12 "sheep" false;
    Tile.make_tile 9 "wheat" false;
@@ -65,7 +65,7 @@ let rec rand_board_helper start num_lst rand_res_lst acc=
       rand_board_helper (start+1) t_int t_res ((Tile.make_tile h_int h_res rob)::acc)
 
 
-let rand_board ()= 
+let rand_board = 
   rand_board_helper 0 number_list (random_resources [] resource_list) []
 
 let get_tile n t = 
