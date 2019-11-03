@@ -25,7 +25,7 @@ let initial_board () =
 
 (**[resource_list] is a list of all the possible resource in a board*)
 let resource_list = 
-  ["wood";"sheep";"wheat";"brick";"rock"; "brick"; "sheep"; "desert"; "wood"; 
+  ["wood";"sheep";"wheat";"brick";"rock"; "brick"; "sheep"; "wood"; 
    "wheat"; "wood"; "wheat"; "brick"; "sheep"; "sheep"; "rock"; "rock"; 
    "wheat"; "wood";]
 (**[number] list is an ORDERED list of all the numbers on the board
@@ -52,21 +52,25 @@ let rec random_resources acc lst=
   |x-> 
     let rand = Random.int (List.length lst) in
     random_resources ((get_index 0 rand lst)::acc) (remove_index 0 rand lst)
+
 (**[rand_board_helper start num_lst rand_res_lst acc] is generates a 
    random board from [rand_res_lst] using the indexing of [num_lst]*)
 let rec rand_board_helper start num_lst rand_res_lst acc= 
   match num_lst with
   |[]->acc
   |h_int::t_int-> 
-    match rand_res_lst with
-    |[]-> failwith "not enough resources"
-    |h_res::t_res-> 
-      let rob = h_res="desert" in
-      rand_board_helper (start+1) t_int t_res ((Tile.make_tile h_int h_res rob)::acc)
+    if (h_int=0) then 
+      rand_board_helper (start+1) t_int rand_res_lst ((Tile.make_tile h_int "desert" true)::acc)
+    else
+      match rand_res_lst with
+      |[]-> failwith "not enough resources"
+      |h_res::t_res-> 
+        rand_board_helper (start+1) t_int t_res ((Tile.make_tile h_int h_res false)::acc)
 
 
 let rand_board ()= 
-  rand_board_helper 0 number_list (random_resources [] resource_list) []
+  let a = rand_board_helper 0 number_list (random_resources [] resource_list) [] in
+  List.rev a
 
 let get_tile n t = 
   List.nth n t

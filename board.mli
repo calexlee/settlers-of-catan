@@ -13,3 +13,16 @@ val get_tile : t -> int -> Tile.t
 
 (**[get_tiles_with_num] is the list of tiles with a certain int *)
 val get_tiles_with_num : t -> int -> Tile.t list
+
+(**[remove index start index lst] ist a [lst] without the element at [index]*)
+val remove_index : int -> int -> 'a list -> 'a list
+
+(**[get_index start index lst] is the entry of [lst] at [index]*)
+val get_index : int -> int -> 'a list -> 'a
+
+(**[random_resources acc lst] is [lst] but with its entries in a random order*)
+val random_resources : 'a list -> 'a list -> 'a list
+
+(**[rand_board_helper start num_lst rand_res_lst acc] is generates a 
+   random board from [rand_res_lst] using the indexing of [num_lst]*)
+val rand_board_helper : int -> int list -> string list -> Tile.t list -> Tile.t list
