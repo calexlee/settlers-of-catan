@@ -1,11 +1,9 @@
-
-
 type s = None | Settlement | City
 
 type t = {
   neigh_tiles: Tile.t list;
   settlement : s;
-  (* player : Player.player; #unimplemented*)
+  player : Player.t;
   index: int;
   edges: Edge.t list;
 }
@@ -16,16 +14,18 @@ type t = {
 let rec give_resource_helper (dr:int) (lst: Tile.t list)=
   match lst with 
   |[]-> failwith "none"
-  |h::t-> if(h.number = dr) then t.resource else give_resource_helper dr t
+  |h::t-> if((Tile.get_number h) = dr) then (Tile.get_resource h)
+    else give_resource_helper dr t
 
-let give_resource (dr:int) (node:Node.t)=
+let give_resource (dr:int) (node:t)=
   try 
     match (give_resource_helper dr node.neigh_tiles) with
-    |Wood->Player.give_wood t.player
-    |Sheep->Player.give_sheep t.player
-    |Wheat->Player.give_wheat t.player
-    |Rock->Player.give_rock t.player
-    |Brick->Player.give_brick t.player
+    |x when x="wood"->Player.give_wood node.player
+    |x when x="sheep"->Player.give_sheep node.player
+    |x when x="wheat"->Player.give_wheat node.player
+    |x when x="rock"->Player.give_rock node.player
+    |x when x="brick"->Player.give_brick node.player
+    |_->failwith "invalid resource type"
   with
-  |Failure->t.player
+  |Failure x->()
 
