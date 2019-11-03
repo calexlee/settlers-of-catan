@@ -4,7 +4,10 @@
 type t
 
 (** The abstract type representing resources.*)
-type r 
+type r
+
+(**[make_player] returns a new player t.*)
+val make_player : t
 
 (**[get_points t] returns the points of player t.*)
 val get_points : t -> int

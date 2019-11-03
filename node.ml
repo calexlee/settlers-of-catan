@@ -1,12 +1,35 @@
 type s = None | Settlement | City
 
+type node_player = None | Some of Player.t
+
 type t = {
   neigh_tiles: Tile.t list;
-  settlement : s;
-  player : Player.t;
+  mutable settlement : s;
+  mutable player : node_player;
   index: int;
   edges: Edge.t list;
 }
+
+let make_node list n edge = 
+  {
+    neigh_tiles = list;
+    settlement = None;
+    player = None;
+    index = n;
+    edges = edge;
+  }
+
+let add_settlement name t = 
+  try 
+    match name with
+    |x when x="settlement"-> t.settlement <- Settlement
+    |x when x="city"-> t.settlement <- City
+    |_ -> failwith "invalid settlement type"
+  with
+  |Failure x -> ()
+
+let add_player player t = 
+  t.player <- player
 
 (**[give_resource_helper dr lst] fails if there are no tiles with that 
    die roll around a node. Otherwise it returns the resource from [lst] of
@@ -18,16 +41,19 @@ let rec give_resource_helper (dr:int) (lst: Tile.t list)=
     else give_resource_helper dr t
 
 let give_resource (dr:int) (node:t)=
-  try 
-    match (give_resource_helper dr node.neigh_tiles) with
-    |x when x="wood"->Player.give_wood node.player
-    |x when x="sheep"->Player.give_sheep node.player
-    |x when x="wheat"->Player.give_wheat node.player
-    |x when x="rock"->Player.give_rock node.player
-    |x when x="brick"->Player.give_brick node.player
-    |_->failwith "invalid resource type"
-  with
-  |Failure x->()
+  match node.player with 
+  |None -> failwith "No player"
+  |Some n -> 
+    try 
+      match (give_resource_helper dr node.neigh_tiles) with
+      |x when x="wood"->Player.give_wood n
+      |x when x="sheep"->Player.give_sheep n
+      |x when x="wheat"->Player.give_wheat n
+      |x when x="rock"->Player.give_rock n
+      |x when x="brick"->Player.give_brick n
+      |_->failwith "invalid resource type"
+    with
+    |Failure x->()
 
 let get_index t = 
   t.index

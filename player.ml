@@ -1,11 +1,19 @@
 (* Player to be implemented here *)
-type r = Wood | Brick | Sheep | Rock | Wheat
+type r = Wood | Brick | Wheat | Sheep | Rock | Desert
 type t = {
   mutable resources: r list;
   mutable points: int;
   (*mutable card_list: *)
   mutable longest_road: bool;
 }
+
+let make_player = 
+  {
+    resources = [];
+    points = 0;
+    (*card_list = *)
+    longest_road = false;
+  }
 
 let get_points t =
   t.points

@@ -40,7 +40,8 @@ let settlement_draw s i =
     -> let n = find_node_with_idx i s in 
     failwith("unimplemented")
   |2|4|6|8|10|12|13|15|17|20|22|24|25|27|29|32|34|36|37|39|41|44|46|48|50|52|54
-    -> failwith("unimplemented")
+    -> let n = find_node_with_idx i s in 
+    failwith("unimplemented")
   | _ -> raise(Failure("invalid index"))
 
 
@@ -52,7 +53,7 @@ let grab_resource t n =
 let grab_num t n = 
   List.nth t n |> Tile.get_number |> even_string_number
 
-let draw_board t = 
+let draw_board t n = 
   print_string("                                  >-----< \n");
   print_string("                                 /~~~~~~~\\ \n");
   print_string("                                /~~~~~~~~~\\ \n");
