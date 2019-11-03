@@ -2,24 +2,24 @@
 type t = Tile.t list
 
 let initial_board () = 
-  [Tile.make_tile 11 "wood" false;
-   Tile.make_tile 12 "sheep" false;
-   Tile.make_tile 9 "wheat" false;
+  [Tile.make_tile 11 "sheep" false;
    Tile.make_tile 4 "brick" false;
-   Tile.make_tile 6 "rock" false; 
-   Tile.make_tile 5 "brick" false;
-   Tile.make_tile 10 "sheep" false;
+   Tile.make_tile 12 "sheep" false;
    Tile.make_tile 0 "desert" false;
+   Tile.make_tile 6 "rock" false; 
+   Tile.make_tile 9 "wheat" false;
    Tile.make_tile 3 "wood" false;
-   Tile.make_tile 11 "wheat" false;
-   Tile.make_tile 4 "wood" false;
-   Tile.make_tile 8 "wheat" false;
+   Tile.make_tile 5 "brick" false;
    Tile.make_tile 8 "brick" false;
+   Tile.make_tile 11 "wheat" false;
    Tile.make_tile 10 "sheep" false;
-   Tile.make_tile 9 "sheep" false; 
-   Tile.make_tile 3 "rock" false;
+   Tile.make_tile 10 "sheep" false;
+   Tile.make_tile 4 "wood" false;
    Tile.make_tile 5 "rock" false;
+   Tile.make_tile 9 "wood" false; 
+   Tile.make_tile 8 "wheat" false;
    Tile.make_tile 2 "wheat" false;
+   Tile.make_tile 3 "rock" false;
    Tile.make_tile 6 "wood" false;
   ]
 
@@ -28,10 +28,11 @@ let resource_list =
   ["wood";"sheep";"wheat";"brick";"rock"; "brick"; "sheep"; "wood"; 
    "wheat"; "wood"; "wheat"; "brick"; "sheep"; "sheep"; "rock"; "rock"; 
    "wheat"; "wood";]
+
 (**[number] list is an ORDERED list of all the numbers on the board
    where its index represents its specific location*)
 let number_list =
-  [11;12;9;4;6;5;10;0;3;11;4;8;8;10;9;3;5;2;6]
+  [11;4;12;5;6;9;3;5;8;11;10;10;4;5;9;8;2;3;6]
 
 (**[remove index start index lst] ist a [lst] without the element at [index]*)
 let rec remove_index start index lst=
