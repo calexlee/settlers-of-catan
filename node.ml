@@ -29,3 +29,5 @@ let give_resource (dr:int) (node:t)=
   with
   |Failure x->()
 
+let get_index t = 
+  t.index

@@ -1,6 +1,6 @@
 (* Graphics to be implemented here *)
 
-(**[even_string_resource r] is the string [r] with added spacing for display *)
+(**[even_string_resource r] is the resource [r] with added spacing for display *)
 let even_string_resource = function 
   | "wood" -> "wood  "
   | "brick"-> "brick "
@@ -10,6 +10,7 @@ let even_string_resource = function
   |"desert"-> "desert"
   | _ -> raise(Failure("invalid resource"))
 
+(**[even_string_number n] is the number [n] with added spacing for display *)
 let even_string_number = function
   |0 -> "0 "
   |2 -> "2 "
@@ -24,6 +25,25 @@ let even_string_number = function
   |11 -> "11"
   |12 -> "12"
   | _ -> raise(Failure("invalid number"))
+
+(**[find_node_with_idx idx nlist] is the node with index [idx] in [nlist] *)
+let rec find_node_with_idx idx (nlist : Node.t list) = 
+  match nlist with  
+  |[] -> raise(Failure("No Node Found with index"))
+  |h::t -> if Node.get_index h = idx then h else find_node_with_idx idx t
+
+(**[settlement_draw s i] draws the settlement at position [i] 
+   in the list of nodes [s] *)
+let settlement_draw s i =
+  match i with
+  |1|3|5|7|9|11|14|16|18|19|21|23|26|28|30|31|33|35|38|40|42|43|45|47|49|51|53
+    -> let n = find_node_with_idx i s in 
+    failwith("unimplemented")
+  |2|4|6|8|10|12|13|15|17|20|22|24|25|27|29|32|34|36|37|39|41|44|46|48|50|52|54
+    -> failwith("unimplemented")
+  | _ -> raise(Failure("invalid index"))
+
+
 
 (**[grab_resource t n] is the resource of the tile at position [n] in [t] *)
 let grab_resource t n =     
