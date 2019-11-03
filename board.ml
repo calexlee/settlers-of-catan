@@ -1,7 +1,7 @@
 
 type t = Tile.t list
 
-let initial_board () = 
+let initial_board = 
   [Tile.make_tile 11 "sheep" false;
    Tile.make_tile 4 "brick" false;
    Tile.make_tile 12 "sheep" false;
