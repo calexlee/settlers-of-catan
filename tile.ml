@@ -28,9 +28,9 @@ let get_resource (tile: t)=
   |Wood->"wood"
   |Brick->"brick"
   |Sheep->"sheep"
-  |Wheat->"sheep"
-  |Rock->"sheep"
-  |Desert->"sheep"
+  |Wheat->"wheat"
+  |Rock->"rock"
+  |Desert->"desert"
 
 let get_number (tile: t)= 
   tile.number
