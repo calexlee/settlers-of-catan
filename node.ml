@@ -19,17 +19,18 @@ let make_node list n edge =
     edges = edge;
   }
 
-let add_settlement name t = 
+let add_settlement name player t = 
   try 
     match name with
-    |x when x="settlement"-> t.settlement <- Settlement
-    |x when x="city"-> t.settlement <- City
+    |x when x="settlement"-> t.settlement <- Settlement; t.player <- player
+    |x when x="city"-> t.settlement <- City; t.player <- player
     |_ -> failwith "invalid settlement type"
   with
   |Failure x -> ()
 
-let add_player player t = 
-  t.player <- player
+let remove_settlement t =
+  t.settlement <- None; 
+  t.player <- None
 
 (**[give_resource_helper dr lst] fails if there are no tiles with that 
    die roll around a node. Otherwise it returns the resource from [lst] of
@@ -57,3 +58,9 @@ let give_resource (dr:int) (node:t)=
 
 let get_index t = 
   t.index
+
+let get_tiles t = 
+  t.neigh_tiles
+
+let get_edges t = 
+  t.edges
