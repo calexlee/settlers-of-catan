@@ -22,8 +22,8 @@ let make_node list n edge =
 let add_settlement name player t = 
   try 
     match name with
-    |x when x="settlement"-> t.settlement <- Settlement; t.player <- player
-    |x when x="city"-> t.settlement <- City; t.player <- player
+    |x when x="settlement"-> t.settlement <- Settlement; t.player <- Some player
+    |x when x="city"-> t.settlement <- City; t.player <- Some player
     |_ -> failwith "invalid settlement type"
   with
   |Failure x -> ()
