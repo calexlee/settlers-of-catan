@@ -11,8 +11,8 @@ type t = {
 
 let make_player = 
   {
-    resources = [];
     color = Green; (* Need to make random out of available options*)
+    resources = [];
     points = 0;
     (*card_list = *)
     longest_road = false;
