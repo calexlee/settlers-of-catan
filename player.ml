@@ -1,6 +1,8 @@
 (* Player to be implemented here *)
 type r = Wood | Brick | Wheat | Sheep | Rock | Desert
+type color = Green | Magenta | Yellow | Blue
 type t = {
+  color : color;
   mutable resources: r list;
   mutable points: int;
   (*mutable card_list: *)
@@ -10,6 +12,7 @@ type t = {
 let make_player = 
   {
     resources = [];
+    color = Green; (* Need to make random out of available options*)
     points = 0;
     (*card_list = *)
     longest_road = false;
@@ -20,6 +23,16 @@ let get_points t =
 
 let get_resources t =
   t.resources
+
+let get_color t =
+  t.color
+
+let color_to_string c = 
+  match c with 
+  |Green -> "G"
+  |Magenta -> "M"
+  |Yellow -> "Y"
+  |Blue -> "B"
 
 let give_sheep t =
   t.resources <- Sheep :: t.resources

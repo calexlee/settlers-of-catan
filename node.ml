@@ -64,3 +64,14 @@ let get_tiles t =
 
 let get_edges t = 
   t.edges
+
+let get_settlement t =
+  match t.settlement with 
+  |None -> raise(Not_found)
+  |Settlement -> "settlement"
+  |City -> "city"
+
+let get_player t =
+  match t.player with
+  |None -> raise(Not_found)
+  |Some p -> p

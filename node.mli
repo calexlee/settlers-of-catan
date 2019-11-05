@@ -29,3 +29,9 @@ val get_tiles : t -> Tile.t list
 
 (**[get_edges t] returns the neighbor edges of [t] *)
 val get_edges : t -> Edge.t list
+
+(**[get_player t] is the player in [t] *)
+val get_player : t -> Player.t
+
+(**[get_settlement t] is the settlement in [t] *)
+val get_settlement : t -> string
