@@ -32,7 +32,7 @@ let resource_list =
 (**[number] list is an ORDERED list of all the numbers on the board
    where its index represents its specific location*)
 let number_list =
-  [11;4;12;5;6;9;3;5;8;11;10;10;4;5;9;8;2;3;6]
+  [11;4;12;0;6;9;3;5;8;11;10;10;4;5;9;8;2;3;6]
 
 (**[remove index start index lst] ist a [lst] without the element at [index]*)
 let rec remove_index start index lst=
