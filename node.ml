@@ -81,7 +81,7 @@ let rec addNodes acc counter=
   else addNodes ((make_node [] counter [])::acc) (counter+1)
 
 let generateNodes () = 
-  addNodes [] 0
+  addNodes [] 1
 
 
 
