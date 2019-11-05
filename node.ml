@@ -75,3 +75,13 @@ let get_player t =
   match t.player with
   |None -> raise(Not_found)
   |Some p -> p
+
+let rec addNodes acc counter=
+  if counter=55 then acc 
+  else addNodes ((make_node [] counter [])::acc) (counter+1)
+
+let generateNodes () = 
+  addNodes [] 1
+
+
+
