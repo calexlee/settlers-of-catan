@@ -36,5 +36,5 @@ val get_player : t -> Player.t
 (**[get_settlement t] is the settlement in [t] *)
 val get_settlement : t -> string
 
-(**[generateNodes ()] is the *)
+(**[generateNodes ()] is a generated list of nodes indexed from 1-54 *)
 val generateNodes : unit -> t list
