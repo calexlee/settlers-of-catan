@@ -69,7 +69,7 @@ let rec rand_board_helper start num_lst rand_res_lst acc=
         rand_board_helper (start+1) t_int t_res ((Tile.make_tile h_int h_res false)::acc)
 
 
-let rand_board = 
+let rand_board () = 
   rand_board_helper 0 number_list (random_resources [] resource_list) []
 
 let get_tile n t = 
