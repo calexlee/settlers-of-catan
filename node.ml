@@ -22,8 +22,8 @@ let make_node list n edge =
 let add_settlement name player t = 
   try 
     match name with
-    |x when x="settlement"-> t.settlement <- Settlement; t.player <- player
-    |x when x="city"-> t.settlement <- City; t.player <- player
+    |x when x="settlement"-> t.settlement <- Settlement; t.player <- Some player
+    |x when x="city"-> t.settlement <- City; t.player <- Some player
     |_ -> failwith "invalid settlement type"
   with
   |Failure x -> ()
@@ -75,3 +75,13 @@ let get_player t =
   match t.player with
   |None -> raise(Not_found)
   |Some p -> p
+
+let rec addNodes acc counter=
+  if counter=55 then acc 
+  else addNodes ((make_node [] counter [])::acc) (counter+1)
+
+let generateNodes () = 
+  addNodes [] 0
+
+
+

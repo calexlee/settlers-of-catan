@@ -12,7 +12,7 @@ type t
 val make_node : Tile.t list -> int -> Edge.t list -> t
 
 (** [add_settlement a p t] can add a new settlement belonging to p to t.*)
-val add_settlement : string -> node_player -> t -> unit
+val add_settlement : string -> Player.t -> t -> unit
 
 (** [remove_settlement] can remove the settlement on t.*)
 val remove_settlement : t -> unit
@@ -35,3 +35,6 @@ val get_player : t -> Player.t
 
 (**[get_settlement t] is the settlement in [t] *)
 val get_settlement : t -> string
+
+(**[generateNodes ()] is the *)
+val generateNodes : unit -> t list
