@@ -1,0 +1,4 @@
+--------------How to Install----------------
+1. Run "make build" to build the source code.
+2. Run "make play" to start the game (currently just prints random boards each
+time)

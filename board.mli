@@ -26,3 +26,9 @@ val random_resources : 'a list -> 'a list -> 'a list
 (**[rand_board_helper start num_lst rand_res_lst acc] is generates a 
    random board from [rand_res_lst] using the indexing of [num_lst]*)
 val rand_board_helper : int -> int list -> string list -> Tile.t list -> Tile.t list
+
+(**[grab_resource t n] is the resource of the tile at position [n] in [t] *)
+val grab_resource : t -> int -> string
+
+(**[grab_number t n] is the number of the tile at position [n] in [t] *)
+val grab_num : t -> int -> int

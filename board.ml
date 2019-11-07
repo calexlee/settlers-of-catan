@@ -81,3 +81,8 @@ let rec get_tiles_with_num board n =
   | h::t -> if ((Tile.get_number h) = n) then h :: get_tiles_with_num t n 
     else get_tiles_with_num t n
 
+let grab_resource t n =     
+  List.nth t n |> Tile.get_resource 
+
+let grab_num t n = 
+  List.nth t n |> Tile.get_number 

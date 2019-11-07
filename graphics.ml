@@ -63,14 +63,12 @@ let settlement_draw s i =
         |Not_found -> "<")
   | _ -> raise(Failure("invalid index"))
 
-
-
 (**[grab_resource t n] is the resource of the tile at position [n] in [t] *)
 let grab_resource t n =     
-  List.nth t n |> Tile.get_resource |> even_string_resource
+  Board.grab_resource t n |> even_string_resource
 (**[grab_resource t n] is the number of the tile at position [n] in [t] *)
 let grab_num t n = 
-  List.nth t n |> Tile.get_number |> even_string_number
+  Board.grab_num t n |> even_string_number
 
 let draw_board t n = 
   print_string("                                  >-----< \n");
