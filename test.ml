@@ -30,10 +30,18 @@ let board_tests =
 
   ]
 
+let node1 = Node.make_node [] 2 []
+let player1 = Player.make_player
+let node_tests = 
+  [
+    "test add_settlement1">::(fun _ -> assert_equal "" ((Node.add_settlement "" player1 node1);
+                                                        (Node.get_settlement node1)));
+  ]
+
 let suite =
   "test suite for Final Project"  >::: List.flatten [
     board_tests;
-
+    node_tests;
   ]
 
 let _ = run_test_tt_main suite
