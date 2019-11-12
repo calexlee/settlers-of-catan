@@ -16,10 +16,9 @@ let random_roll () =
   die1 + die2
 
 
-
 let main () = 
   let b = rand_board () in 
-  Graphics.draw_board b (generateNodes ())
+  Gamegraphics.draw_board b (generateNodes ())
 
 (* Execute the game engine. *)
 let () = main ()
