@@ -2,7 +2,9 @@
 open Board
 open Node
 
-type phase = SETUP | PLAY | WIN
+type phase = SETUP | RED_PLAYER | BLUE_PLAYER | ORANGE_PLAYER | WHITE_PLAYER | PLAY | WIN
+
+let init = SETUP
 
 (**[random_die] is a random die between 1 and 6*)
 let random_die () = 
@@ -16,9 +18,14 @@ let random_roll () =
   die1 + die2
 
 
+let rec play_game phase = ()
+
 let main () = 
-  let b = rand_board () in 
-  Gamegraphics.draw_board b (generateNodes ())
+
+  play_game SETUP
+(*let b = rand_board () in 
+  Gamegraphics.draw_board b (generateNodes ()) *)
+
 
 (* Execute the game engine. *)
 let () = main ()
