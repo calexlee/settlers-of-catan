@@ -21,9 +21,9 @@ play:
 
 zip:
 	zip SoC.zip *.ml* *.json _tags Makefile
-	
+
 docs: docs-public docs-private
-	
+
 docs-public: build
 	mkdir -p doc.public
 	ocamlfind ocamldoc -I _build -package ANSITerminal \
