@@ -17,10 +17,9 @@ let random_roll () =
   get_index 0 index probability_list
 
 
-
 let main () = 
   let b = rand_board () in 
-  Graphics.draw_board b (generateNodes ())
+  Gamegraphics.draw_board b (generateNodes ())
 
 (* Execute the game engine. *)
 let () = main ()
