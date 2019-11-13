@@ -34,8 +34,13 @@ let node1 = Node.make_node [] 2 []
 let player1 = Player.make_player
 let node_tests = 
   [
-    "test add_settlement1">::(fun _ -> assert_equal "" ((Node.add_settlement "" player1 node1);
-                                                        (Node.get_settlement node1)));
+    "test add_settlement1">::(fun _ -> assert_equal "city" 
+                                 ((Node.add_settlement "city" player1 node1);
+                                  (Node.get_settlement node1)));
+    "test add_settlement2">::(fun _ -> assert_equal "settlement" 
+                                 ((Node.add_settlement "settlement" player1 node1);
+                                  (Node.get_settlement node1)));
+
   ]
 
 let suite =
