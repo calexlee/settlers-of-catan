@@ -4,6 +4,7 @@ type command =
   | AddCity
   | AddSettle
   | Done
+  | Help
 
 exception Empty
 
@@ -32,6 +33,10 @@ let parse str =
     end
     else if h="done" || h = "Done" then begin 
       if t = [] then Quit 
+      else raise Malformed
+    end
+    else if h="help" || h = "Help" then begin 
+      if t = [] then Help 
       else raise Malformed
     end
     else raise Malformed
