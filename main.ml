@@ -3,6 +3,33 @@ open Board
 open Node
 open Lwt
 
+let rec loop term =
+  LTerm.read_event term
+  >>= fun ev ->
+  match ev with
+  | LTerm_event.Mouse{ LTerm_mouse.row = row;LTerm_mouse.col = col; _ } ->
+    return (row,col)
+  | _ -> 
+    loop term
+
+let main () =
+  Lwt_io.printl "Please Select a Node"
+  >>= fun () ->
+  Lazy.force LTerm.stdout
+  >>= fun term ->
+  LTerm.enable_mouse term
+  >>= fun () ->
+  LTerm.enter_raw_mode term
+  >>= fun mode ->
+  Lwt.finalize (fun () -> loop term)
+    (fun () ->
+       LTerm.leave_raw_mode term mode
+       >>= fun () ->
+       LTerm.disable_mouse term)
+
+let selectNode ()= let (row,col) = Lwt_main.run (main ()) in 
+  print_endline(string_of_int row); print_endline(string_of_int col);
+
 type phase = Setup | Win | Interactive | Roll
 
 let player_list = [Player.make_player "green"; Player.make_player "magenta";
@@ -57,13 +84,13 @@ let distribute_resources board roll =
 let rec play_game phase board turn= 
   match phase with 
   |Setup-> 
-    Gamegraphics.draw_board board (generateNodes ()) ;
-    print_endline("Welcome to settlers of catan! please decide who will be the 
+    (Gamegraphics.draw_board board (generateNodes ()) ;
+     print_endline("Welcome to settlers of catan! please decide who will be the 
   green player, magenta player, yellow player and blue player. If you are a new
   player enter help at any time to get instructions on commands, otherwise enter
   \"done\" to continue");
-    let input = read_line() in 
-    Gamegraphics.draw_board board (generateNodes ())
+
+     selectNode () )
   (*green player place settlement and road*)
   (*magenta player place settlement and road*)
   (*yellow player place settlement and road *)

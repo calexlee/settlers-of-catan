@@ -71,6 +71,7 @@ let grab_num t n =
   Board.grab_num t n |> even_string_number
 
 let draw_board t n = 
+  ANSITerminal.resize 800 480;
   print_string("                                  >-----< \n");
   print_string("                                 /~~~~~~~\\ \n");
   print_string("                                /~~~~~~~~~\\ \n");
