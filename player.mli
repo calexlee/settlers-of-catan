@@ -9,6 +9,9 @@ type r
 (** The abstract type representing color*)
 type color
 
+(*[make_player color] creates a new player with color [color] *)
+val make_player : string -> t
+
 (**[make_player] returns a new player [t]*)
 val make_player : t
 

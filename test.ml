@@ -31,7 +31,7 @@ let board_tests =
   ]
 
 let node1 = Node.make_node [] 2 []
-let player1 = Player.make_player
+let player1 = Player.make_player "green"
 let node_tests = 
   [
     "test add_settlement1">::(fun _ -> assert_equal "city" 

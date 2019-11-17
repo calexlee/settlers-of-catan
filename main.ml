@@ -2,7 +2,7 @@
 open Board
 open Node
 
-type phase = SETUP | RED_PLAYER | BLUE_PLAYER | ORANGE_PLAYER | WHITE_PLAYER | PLAY | WIN
+type phase = SETUP | GREEN_PLAYER | MAGENTA_PLAYER | YELLOW_PLAYER | BLUE_PLAYER | WIN
 
 let init = SETUP
 
@@ -18,14 +18,32 @@ let random_roll () =
   die1 + die2
 
 
-let rec play_game phase = ()
+let rec play_game phase = 
+  match phase with 
+  |SETUP-> let b = rand_board () in 
+    Gamegraphics.draw_board b (generateNodes ()) 
+  (*green player place settlement and road*)
+  (*magenta player place settlement and road*)
+  (*yellow player place settlement and road *)
+  (*blue player place settlement and road *)
+  (*blue player place settlement and road *)
+  (*yellow player place settlement and road *)
+  (*magenta player place settlement and road*)
+  (*green player place settlement and road*)
+  |GREEN_PLAYER->()
+  (* 
+    1. die roll 
+    2. distribute recources
+    3. wait for player input
+    *)
+  |MAGENTA_PLAYER->()
+  |YELLOW_PLAYER->()
+  |BLUE_PLAYER->()
+  |WIN->()
 
 let main () = 
 
   play_game SETUP
-(*let b = rand_board () in 
-  Gamegraphics.draw_board b (generateNodes ()) *)
-
 
 (* Execute the game engine. *)
 let () = main ()

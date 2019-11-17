@@ -9,6 +9,22 @@ type t = {
   mutable longest_road: bool;
 }
 
+let make_player color= 
+  let colorp = 
+    match color with
+    |x when x="green" -> Green
+    |x when x="magenta" -> Magenta
+    |x when x="yellow" -> Yellow
+    |x when x="blue" -> Blue 
+    |_ -> Green in
+  {
+    color = colorp; (* Need to make random out of available options*)
+    resources = [];
+    points = 0;
+    (*card_list = *)
+    longest_road = false;
+  }
+
 let make_player = 
   {
     color = Green; (* Need to make random out of available options*)
@@ -17,7 +33,6 @@ let make_player =
     (*card_list = *)
     longest_road = false;
   }
-
 let get_points t =
   t.points
 
