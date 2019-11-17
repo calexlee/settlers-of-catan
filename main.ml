@@ -25,26 +25,26 @@ let rec get_index start index= function
 
 (* [rob_players] a function that runs through the players and removes
    half of their hand if they have more then 7 cards*)
-let rob_players players= 
+let rec rob_players start = 
   failwith "unimplemented"
 
 (* [build_settlement players turn board node] is a board but with the 
    players settlement built RAISES EXCEPTION IF PLAYER CAN NOT BUILD THERE
    condition for exception is that another player has a neighboring node*)
-let build_settlement players turn board node= 
+let build_settlement turn board node= 
   failwith "unimpelmented"
 
 (* [build_city players turn board node] is a board but with the 
    players city built RAISES EXCEPTION IF PLAYER CAN NOT BUILD THERE
    Condition for excpetion is the player does not have a settlment there*)
-let build_settlement players turn board node= 
+let build_settlement turn board node= 
   failwith "unimpelmented" 
 
 (* [distrubute_resources players board roll] distributes the resources to the
    [players] according to the [board] and [roll] condition*)
-let distribute_resources players board roll = 
+let distribute_resources board roll = 
   if roll=7 then 
-    rob_players players
+    rob_players 0
   else
     let tile_list = Board.get_tiles_with_num board roll in 
     failwith "unimplemented"
@@ -53,7 +53,7 @@ let distribute_resources players board roll =
   [phase] represents the phase of the game [board] represents the board to 
   be drawn, [players] is the list of all the updated players and [turn] 
   is th INDEX OF THE PLAYER IN players whose turn it is *)
-let rec play_game phase board players turn= 
+let rec play_game phase board turn= 
   match phase with 
   |Setup-> 
     Gamegraphics.draw_board board (generateNodes ()) ;
@@ -80,19 +80,18 @@ let rec play_game phase board players turn=
     *)
   |Roll->
     let die_roll = random_roll () in
-    let updated_players = distribute_resources players board die_roll in
+    distribute_resources board die_roll;
     print_endline(
       "It is player " ^ Player.player_to_string (get_index 0 turn player_list)
       ^ " turn.");
     print_endline("The die roll resulted in a " ^ (string_of_int die_roll) ^
                   " and all of the resources have been distributed");
-    play_game Interactive board updated_players turn
+    play_game Interactive board turn
   |Interactive->()
   |Win->()
 
 let main () = 
-
-  play_game Setup (rand_board ()) player_list 0
+  play_game Setup (rand_board ()) 0
 
 (* Execute the game engine. *)
 let () = main ()

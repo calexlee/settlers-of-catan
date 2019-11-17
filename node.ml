@@ -83,5 +83,3 @@ let rec addNodes acc counter=
 let generateNodes () = 
   addNodes [] 0
 
-
-

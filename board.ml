@@ -1,5 +1,5 @@
 
-type t = Tile.t list
+type t = Tile.t list  
 
 let initial_board = 
   [Tile.make_tile 11 "sheep" false;
