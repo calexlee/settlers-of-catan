@@ -85,14 +85,57 @@ let generateNodes () =
 
 let generateNodes2 board= 
   [make_node [board[1]] 0 [Edge.make_edge 1; Edge.make_edge 3];
-   make_node [board[1]] 1 [Edge.make_edge 1];
-
-
-
-
-
-
-
-
+   make_node [board[1]] 1 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 2 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 3 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 4 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 5 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 6 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 7 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 8 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 9 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 10 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 11 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 12 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 13 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 14 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 15 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 16 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 17 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 18 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 19 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 20 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 21 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 22 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 23 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 24 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 25 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 26 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 27 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 28 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 29 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 30 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 31 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 32 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 33 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 34 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 35 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 36 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 37 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 38 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 39 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 41 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 42 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 43 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 44 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 45 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 46 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 47 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 48 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 49 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 50 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 51 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 52 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 53 [Edge.make_edge 1; Edge.make_edge 3];
 
   ]
