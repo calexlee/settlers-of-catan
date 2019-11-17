@@ -85,7 +85,7 @@ let generateNodes () =
 
 let generateNodes2 board= 
   [make_node [board[1]] 0 [Edge.make_edge 1; Edge.make_edge 3];
-   make_node [board[1]] 1 [Edge.make_edge 1; Edge.make_edge ];
+   make_node [board[1]] 1 [Edge.make_edge 1; Edge.make_edge 3];
    make_node [board[1]] 2 [Edge.make_edge 1; Edge.make_edge 3];
    make_node [board[1]] 3 [Edge.make_edge 1; Edge.make_edge 3];
    make_node [board[1]] 4 [Edge.make_edge 1; Edge.make_edge 3];
