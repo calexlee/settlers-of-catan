@@ -83,3 +83,16 @@ let rec addNodes acc counter=
 let generateNodes () = 
   addNodes [] 0
 
+let generateNodes2 board= 
+  [make_node [board[1]] 0 [Edge.make_edge 1; Edge.make_edge 3];
+   make_node [board[1]] 1 [Edge.make_edge 1];
+
+
+
+
+
+
+
+
+
+  ]
