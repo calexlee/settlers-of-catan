@@ -77,7 +77,7 @@ let get_player t =
   |Some p -> p
 
 let rec addNodes acc counter=
-  if counter=55 then acc 
+  if counter=54 then acc 
   else addNodes ((make_node [] counter [])::acc) (counter+1)
 
 let generateNodes () = 

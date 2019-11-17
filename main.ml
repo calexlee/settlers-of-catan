@@ -37,7 +37,7 @@ let build_settlement players turn board node=
 (* [build_city players turn board node] is a board but with the 
    players city built RAISES EXCEPTION IF PLAYER CAN NOT BUILD THERE
    Condition for excpetion is the player does not have a settlment there*)
-let build_settlement players turn board node= 
+let build_city players turn board node= 
   failwith "unimpelmented" 
 
 (* [distrubute_resources players board roll] distributes the resources to the
