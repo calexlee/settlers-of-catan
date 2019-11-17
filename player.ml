@@ -25,14 +25,6 @@ let make_player color=
     longest_road = false;
   }
 
-let make_player = 
-  {
-    color = Green; (* Need to make random out of available options*)
-    resources = [];
-    points = 0;
-    (*card_list = *)
-    longest_road = false;
-  }
 let get_points t =
   t.points
 
@@ -63,3 +55,10 @@ let give_wood t =
 
 let give_wheat t =
   t.resources <- Wheat :: t.resources
+
+let player_to_string player = 
+  match player.color with 
+  |Magenta -> "Magenta"
+  |Blue -> "Blue"
+  |Green -> "Green"
+  |Yellow -> "yellow"

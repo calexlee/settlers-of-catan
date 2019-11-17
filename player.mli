@@ -12,9 +12,6 @@ type color
 (*[make_player color] creates a new player with color [color] *)
 val make_player : string -> t
 
-(**[make_player] returns a new player [t]*)
-val make_player : t
-
 (**[get_points t] returns the points of player [t].*)
 val get_points : t -> int
 
@@ -41,4 +38,8 @@ val give_wood  : t -> unit
 
 (**[give_sheep t] gives the player [t] wheat.*)
 val give_wheat : t -> unit
+
+(*[player_to_string player] is a string representation of [player]*)
+val player_to_string : t -> string
+
 
