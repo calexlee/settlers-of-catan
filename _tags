@@ -1,1 +1,1 @@
-true: package(oUnit),package(ANSITerminal),package(dune)
+true: package(oUnit),package(ANSITerminal),package(lwt)

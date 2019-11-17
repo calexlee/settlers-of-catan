@@ -2,5 +2,5 @@ B _build
 PKG oUnit
 PKG ANSITerminal
 PKG ocamlbuild
-PKG dune
+PKG Lwt
 PKG lambda-term

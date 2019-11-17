@@ -1,6 +1,7 @@
 (* Main to be implemented here *)
 open Board
 open Node
+open Lwt
 
 type phase = Setup | Win | Interactive | Roll
 
