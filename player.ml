@@ -9,9 +9,16 @@ type t = {
   mutable longest_road: bool;
 }
 
-let make_player = 
+let make_player color= 
+  let colorp = 
+    match color with
+    |x when x="green" -> Green
+    |x when x="magenta" -> Magenta
+    |x when x="yellow" -> Yellow
+    |x when x="blue" -> Blue 
+    |_ -> Green in
   {
-    color = Green; (* Need to make random out of available options*)
+    color = colorp; (* Need to make random out of available options*)
     resources = [];
     points = 0;
     (*card_list = *)
@@ -48,3 +55,10 @@ let give_wood t =
 
 let give_wheat t =
   t.resources <- Wheat :: t.resources
+
+let player_to_string player = 
+  match player.color with 
+  |Magenta -> "Magenta"
+  |Blue -> "Blue"
+  |Green -> "Green"
+  |Yellow -> "yellow"

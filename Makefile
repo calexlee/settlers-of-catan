@@ -1,4 +1,4 @@
-MODULES= tile board devcard edge gamegraphics node player main
+MODULES= tile board devcard edge gamegraphics node player command main
 OBJECTS=$(MODULES:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)
@@ -21,9 +21,9 @@ play:
 
 zip:
 	zip SoC.zip *.ml* *.json _tags Makefile
-	
+
 docs: docs-public docs-private
-	
+
 docs-public: build
 	mkdir -p doc.public
 	ocamlfind ocamldoc -I _build -package ANSITerminal \
