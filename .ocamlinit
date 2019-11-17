@@ -1,6 +1,6 @@
 #directory "_build";;
 #require "ANSITerminal";;
-#require "dune";;
+#require "lambda-term";;
 #load_rec "tile.cmo";;
 #load_rec "player.cmo";;
 #load_rec "board.cmo";;

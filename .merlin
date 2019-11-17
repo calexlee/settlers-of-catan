@@ -3,3 +3,4 @@ PKG oUnit
 PKG ANSITerminal
 PKG ocamlbuild
 PKG dune
+PKG lambda-term
