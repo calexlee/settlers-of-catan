@@ -25,6 +25,9 @@ let make_player color=
     longest_road = false;
   }
 
+let num_of_res t = 
+  List.length t.resources
+
 let get_points t =
   t.points
 
@@ -55,6 +58,14 @@ let give_wood t =
 
 let give_wheat t =
   t.resources <- Wheat :: t.resources
+
+let rec half_resources resources len index = 
+  match resources with 
+  |[]-> failwith "not possible"
+  |h::t-> if(len=index) then resources else half_resources t len (index+1) 
+
+let rob_player t = 
+  t.resources <- half_resources t.resources ((List.length t.resources)/2) 0 
 
 let player_to_string player = 
   match player.color with 

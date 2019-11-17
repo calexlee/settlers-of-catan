@@ -51,13 +51,20 @@ let rec get_index start index= function
   |[]-> failwith "index out of bounds"
   |h::t-> if start=index then h else get_index (start+1) index t
 
-(* [build_settlement players turn board node] is a board but with the 
+
+(* [build_road turn board node] is a board but with the 
+   players settlement built RAISES EXCEPTION IF PLAYER CAN NOT BUILD THERE
+   condition for exception is that another player has a neighboring node*)
+let build_road turn board node= 
+  failwith "unimpelmented"
+
+(* [build_settlement turn board node] is a board but with the 
    players settlement built RAISES EXCEPTION IF PLAYER CAN NOT BUILD THERE
    condition for exception is that another player has a neighboring node*)
 let build_settlement turn board node= 
   failwith "unimpelmented"
 
-(* [build_city players turn board node] is a board but with the 
+(* [build_city turn board node] is a board but with the 
    players city built RAISES EXCEPTION IF PLAYER CAN NOT BUILD THERE
    Condition for excpetion is the player does not have a settlment there*)
 let build_city turn board node= 
@@ -65,8 +72,10 @@ let build_city turn board node=
 
 (* [rob_players] a function that runs through the players and removes
    half of their hand if they have more then 7 cards*)
-let rec rob_players start = 
-  failwith "unimplemented"
+let rec rob_players index = 
+  if(index=4) then ()
+  else Player.rob_player (get_index 0 index player_list);
+  rob_players (index+1)
 
 (*[give_resources nodes roll] is a recrusrive function that checks through 
   all of the nodes and gives all the players resources based on if they have
@@ -78,7 +87,6 @@ let rec give_resources nodes roll =
     give_resources t roll;
     ()
 
-
 (* [distrubute_resources players board roll] distributes the resources to the
    [players] according to the [board] and [roll] condition*)
 let distribute_resources nodes roll = 
@@ -86,7 +94,6 @@ let distribute_resources nodes roll =
     rob_players 0
   else 
     give_resources nodes roll
-
 
 (*[play_game] a recrusive function that loops through the game playing where 
   [phase] represents the phase of the game [board] represents the board to 
@@ -100,7 +107,6 @@ let rec play_game phase board nodes turn=
   green player, magenta player, yellow player and blue player. If you are a new
   player enter help at any time to get instructions on commands, otherwise enter
   \"done\" to continue");
-
      selectNode () )
   (*green player place settlement and road*)
   (*magenta player place settlement and road*)
