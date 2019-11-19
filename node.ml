@@ -76,14 +76,14 @@ let get_player t =
   |None -> raise(Not_found)
   |Some p -> p
 
-let rec addNodes acc counter=
+let rec add_nodes acc counter=
   if counter=54 then acc 
-  else addNodes ((make_node [] counter [])::acc) (counter+1)
+  else add_nodes ((make_node [] counter [])::acc) (counter+1)
 
-let generateNodes () = 
-  addNodes [] 0
+let generate_empty_nodes () = 
+  add_nodes [] 0
 
-let generateNodes2 board= 
+let generate_nodes board= 
   [make_node [Board.get_tile board 0] 0 [Edge.make_edge 1; Edge.make_edge 3];
    make_node [Board.get_tile board 0] 1 [Edge.make_edge 0; Edge.make_edge 4];
    make_node [Board.get_tile board 1] 2 [Edge.make_edge 3; Edge.make_edge 7];

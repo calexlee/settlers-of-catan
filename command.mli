@@ -24,3 +24,6 @@ exception Malformed
     or if the verb is "quit" and there is a non-empty object phrase,
     or if the verb is "add" and there is an empty object phrase.*)
 val parse : string -> command
+
+(*[to_string command] is the command but in a string form *)
+val to_string : command -> string

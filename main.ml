@@ -49,7 +49,7 @@ let rec printSelectNode l = try let (row,col) = Lwt_main.run (main ()) in
   with
   |Failure _ -> List.map print_endline (List.rev l)
 
-type phase = Setup | Win | Interactive | Roll
+type phase = Welcome | Setup | Win | Interactive | Roll | Help | Quit
 
 let player_list = [Player.make_player "green"; Player.make_player "magenta";
                    Player.make_player "yellow"; Player.make_player "blue"]
@@ -118,17 +118,33 @@ let distribute_resources nodes roll =
   [phase] represents the phase of the game [board] represents the board to 
   be drawn, [players] is the list of all the updated players and [turn] 
   is th INDEX OF THE PLAYER IN players whose turn it is *)
-let rec play_game phase board nodes turn= 
+let rec play_game phase prev_phase board nodes turn= 
   match phase with 
-  |Setup-> 
-    (Gamegraphics.draw_board board (generateNodes ()) ;
+  |Welcome-> 
+    ((Gamegraphics.draw_board board nodes);
      print_endline("Welcome to settlers of catan! please decide who will be the 
   green player, magenta player, yellow player and blue player. If you are a new
   player enter help at any time to get instructions on commands, otherwise enter
   \"done\" to continue");
-
-     selectEdge ())
+     let input= Command.parse (read_line()) in
+     ( match Command.to_string input with 
+       |x when x="help"->play_game Help Welcome board nodes turn
+       |x when x="done"->play_game Setup Welcome board nodes turn
+       |x when x="quit"->play_game Quit Welcome board nodes turn
+       |_-> print_endline("Malformed command please re-enter");
+         play_game Welcome Welcome board nodes turn;)
+    )
+  |Setup -> 
+    (Gamegraphics.draw_board board (generate_nodes board));
+    (match turn with 
+     |x when x= 0->selectNode()
+     |x when x= 1->selectNode()
+     |x when x= 2->selectNode()
+     |x when x= 3->selectNode()
+     |_ -> ();
+    )
   (*green player place settlement and road*)
+
   (*magenta player place settlement and road*)
   (*yellow player place settlement and road *)
   (*blue player place settlement and road *)
@@ -143,6 +159,24 @@ let rec play_game phase board nodes turn=
     2. distribute recources
     3. wait for player input about building or done
     *)
+
+  |Help-> (
+      print_endline("\nHelp Menu: The valid commands include");
+      print_endline("done - when you are done with your turn");
+      print_endline("inventory - accsess your inventory");
+      print_endline("add city - build a city when it is your turn, and you have required resources");
+      print_endline("add settlement - build a settlement when it is your turn, and you have required resources");
+      print_endline("help- display help menu");
+      print_endline("quit- quit the game WARNING: progress will not be saved");
+      let input= Command.parse (read_line()) in
+      ( match Command.to_string input with 
+        |x when x="help"->play_game Help Help board nodes turn
+        |x when x="done"->play_game prev_phase Help board nodes turn
+        |x when x="quit"->play_game Quit Welcome board nodes turn
+        |_-> print_endline("Malformed command please re-enter");
+          play_game Help Help board nodes turn;)
+    );
+
   |Roll->
     let die_roll = random_roll () in
     distribute_resources nodes die_roll;
@@ -151,12 +185,14 @@ let rec play_game phase board nodes turn=
       ^ " turn.");
     print_endline("The die roll resulted in a " ^ (string_of_int die_roll) ^
                   " and all of the resources have been distributed");
-    play_game Interactive board nodes turn 
+    play_game Interactive Roll board nodes turn 
   |Interactive->()
   |Win->()
+  |Quit->print_endline("\nThank you for playing, all your progress has been lost");()
 
 let main () = 
-  play_game Setup (rand_board ()) (generateNodes ()) 0
+  let rand_board1 = rand_board () in
+  play_game Welcome Welcome (rand_board1) (generate_nodes rand_board1) 0
 
 (* Execute the game engine. *)
 let () = main ()

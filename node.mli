@@ -37,4 +37,7 @@ val get_player : t -> Player.t
 val get_settlement : t -> string
 
 (**[generateNodes ()] is a generated list of nodes indexed from 1-54 *)
-val generateNodes : unit -> t list
+val generate_nodes : Board.t -> t list
+
+(**[generateNodes ()] is a generated list of nodes indexed from 1-54 *)
+val generate_empty_nodes : unit -> t list
