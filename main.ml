@@ -80,8 +80,13 @@ let build_road turn board node=
 (* [build_settlement turn board node] is a board but with the 
    players settlement built RAISES EXCEPTION IF PLAYER CAN NOT BUILD THERE
    condition for exception is that another player has a neighboring node*)
-let build_settlement turn board node= 
-  failwith "unimpelmented"
+let rec build_settlement turn nodes nodes_index counter acc= 
+  (*BASE IMPLEMENTATION doers not check if the node is in the correct place*)
+  match nodes with 
+  |[]-> List.rev acc
+  |h::t-> if (nodes_index=counter) then build_settlement turn t nodes_index counter 
+        ((Node.add_settlement "settlement" (get_index 0 turn player_list) h)::acc)
+    else build_settlement turn t nodes_index (counter+1) (h::acc)
 
 (* [build_city turn board node] is a board but with the 
    players city built RAISES EXCEPTION IF PLAYER CAN NOT BUILD THERE
@@ -135,20 +140,18 @@ let rec play_game phase prev_phase board nodes turn=
          play_game Welcome Welcome board nodes turn;)
     )
   |Setup -> 
-    (Gamegraphics.draw_board board (generate_nodes board));
+    (Gamegraphics.draw_board board nodes);
     print_endline("");
     (match turn with 
      |0->let node_index = select_node() in 
+       Gamegraphics.draw_board board nodes
+     |1->()
 
 
-
-     |1->selectNode()
-
-
-     |2->selectNode()
+     |2->()
 
 
-     |3->selectNode()
+     |3->()
      |_ -> raise(Failure("not a player"));
     )
   (*green player place settlement and road*)
