@@ -162,6 +162,7 @@ let rec play_game phase prev_phase board nodes turn=
     *)
 
   |Help-> (
+      (Gamegraphics.draw_board board (generate_nodes board));
       print_endline("\nHelp Menu: The valid commands include");
       print_endline("done - when you are done with your turn");
       print_endline("inventory - accsess your inventory");
