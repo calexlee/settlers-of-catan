@@ -86,7 +86,7 @@ let rec build_settlement turn nodes nodes_index counter acc=
   |[]-> List.rev acc
   |h::t-> if (nodes_index=counter) then (
       (Node.add_settlement "settlement" (get_index 0 turn player_list) h);
-      build_settlement turn t nodes_index counter (h::acc))
+      build_settlement turn t nodes_index (counter+1) (h::acc))
     else build_settlement turn t nodes_index (counter+1) (h::acc)
 
 (* [build_city turn board node] is a board but with the 
@@ -144,8 +144,8 @@ let rec play_game phase prev_phase board nodes turn=
     (Gamegraphics.draw_board board nodes);
     print_endline("");
     (match turn with 
-     |0->let node_index = select_node() in 
-       Gamegraphics.draw_board board nodes
+     |0->let node_index = select_node() in
+       Gamegraphics.draw_board board (build_settlement 0 nodes node_index 0 [])
      |1->()
 
 
