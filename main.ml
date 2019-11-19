@@ -170,9 +170,9 @@ let rec play_game phase prev_phase board nodes turn=
       print_endline("quit- quit the game WARNING: progress will not be saved");
       let input= Command.parse (read_line()) in
       ( match Command.to_string input with 
-        |x when x="help"->play_game Help Help board nodes turn
-        |x when x="done"->play_game prev_phase Help board nodes turn
-        |x when x="quit"->play_game Quit Welcome board nodes turn
+        |"help"->play_game Help Help board nodes turn
+        |"done"->play_game prev_phase Help board nodes turn
+        |"quit"->play_game Quit Welcome board nodes turn
         |_-> print_endline("Malformed command please re-enter");
           play_game Help Help board nodes turn;)
     );
