@@ -128,9 +128,9 @@ let rec play_game phase prev_phase board nodes turn=
   \"done\" to continue");
      let input= Command.parse (read_line()) in
      ( match Command.to_string input with 
-       |x when x="help"->play_game Help Welcome board nodes turn
-       |x when x="done"->play_game Setup Welcome board nodes turn
-       |x when x="quit"->play_game Quit Welcome board nodes turn
+       |"help"->play_game Help Welcome board nodes turn
+       |"done"->play_game Setup Welcome board nodes turn
+       |"quit"->play_game Quit Welcome board nodes turn
        |_-> print_endline("Malformed command please re-enter");
          play_game Welcome Welcome board nodes turn;)
     )
@@ -138,10 +138,10 @@ let rec play_game phase prev_phase board nodes turn=
     (Gamegraphics.draw_board board (generate_nodes board));
     print_endline("");
     (match turn with 
-     |x when x= 0->selectNode()
-     |x when x= 1->selectNode()
-     |x when x= 2->selectNode()
-     |x when x= 3->selectNode()
+     |0->selectNode()
+     |1->selectNode()
+     |2->selectNode()
+     |3->selectNode()
      |_ -> ();
     )
   (*green player place settlement and road*)
