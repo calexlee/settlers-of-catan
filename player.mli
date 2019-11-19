@@ -42,4 +42,7 @@ val give_wheat : t -> unit
 (*[player_to_string player] is a string representation of [player]*)
 val player_to_string : t -> string
 
+(*[rob_player t] mutates player [t] so that they lose half of their resources*)
+val rob_player : t -> unit
+
 

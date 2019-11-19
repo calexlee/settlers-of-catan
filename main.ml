@@ -70,37 +70,55 @@ let rec get_index start index= function
   |[]-> failwith "index out of bounds"
   |h::t-> if start=index then h else get_index (start+1) index t
 
-(* [rob_players] a function that runs through the players and removes
-   half of their hand if they have more then 7 cards*)
-let rec rob_players start = 
-  failwith "unimplemented"
 
-(* [build_settlement players turn board node] is a board but with the 
+(* [build_road turn board node] is a board but with the 
+   players settlement built RAISES EXCEPTION IF PLAYER CAN NOT BUILD THERE
+   condition for exception is that another player has a neighboring node*)
+let build_road turn board node= 
+  failwith "unimpelmented"
+
+(* [build_settlement turn board node] is a board but with the 
    players settlement built RAISES EXCEPTION IF PLAYER CAN NOT BUILD THERE
    condition for exception is that another player has a neighboring node*)
 let build_settlement turn board node= 
   failwith "unimpelmented"
 
-(* [build_city players turn board node] is a board but with the 
+(* [build_city turn board node] is a board but with the 
    players city built RAISES EXCEPTION IF PLAYER CAN NOT BUILD THERE
    Condition for excpetion is the player does not have a settlment there*)
 let build_city turn board node= 
   failwith "unimpelmented" 
 
+(* [rob_players] a function that runs through the players and removes
+   half of their hand if they have more then 7 cards*)
+let rec rob_players index = 
+  if(index=4) then ()
+  else Player.rob_player (get_index 0 index player_list);
+  rob_players (index+1)
+
+(*[give_resources nodes roll] is a recrusrive function that checks through 
+  all of the nodes and gives all the players resources based on if they have
+  a settlement there*)
+let rec give_resources nodes roll = 
+  match nodes with 
+  |[]-> ()
+  |h::t->Node.give_resource roll h;
+    give_resources t roll;
+    ()
+
 (* [distrubute_resources players board roll] distributes the resources to the
    [players] according to the [board] and [roll] condition*)
-let distribute_resources board roll = 
+let distribute_resources nodes roll = 
   if roll=7 then 
     rob_players 0
-  else
-    let tile_list = Board.get_tiles_with_num board roll in 
-    failwith "unimplemented"
+  else 
+    give_resources nodes roll
 
 (*[play_game] a recrusive function that loops through the game playing where 
   [phase] represents the phase of the game [board] represents the board to 
   be drawn, [players] is the list of all the updated players and [turn] 
   is th INDEX OF THE PLAYER IN players whose turn it is *)
-let rec play_game phase board turn= 
+let rec play_game phase board nodes turn= 
   match phase with 
   |Setup-> 
     (Gamegraphics.draw_board board (generateNodes ()) ;
@@ -127,18 +145,18 @@ let rec play_game phase board turn=
     *)
   |Roll->
     let die_roll = random_roll () in
-    distribute_resources board die_roll;
+    distribute_resources nodes die_roll;
     print_endline(
       "It is player " ^ Player.player_to_string (get_index 0 turn player_list)
       ^ " turn.");
     print_endline("The die roll resulted in a " ^ (string_of_int die_roll) ^
                   " and all of the resources have been distributed");
-    play_game Interactive board turn
+    play_game Interactive board nodes turn 
   |Interactive->()
   |Win->()
 
 let main () = 
-  play_game Setup (rand_board ()) 0
+  play_game Setup (rand_board ()) (generateNodes ()) 0
 
 (* Execute the game engine. *)
 let () = main ()
