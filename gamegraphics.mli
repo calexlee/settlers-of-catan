@@ -5,3 +5,12 @@
 
 (**[draw_board t] draws the board [t] in the terminal *) 
 val draw_board : Board.t -> Node.t list -> unit
+
+(**[rc_to_node rc] is the node index of the row,column pair [rc]
+   Raises: Failure "Not a Node" if [rc] does not correspond to a node *)
+val rc_to_node: (int*int) -> int
+
+(**[rc_to_edge rc] is the index pair nodes that correspond to the edge at
+   [rc] 
+   Raises: Failure "Not an Edge" if the (row,col) is not an edge *)
+val rc_to_edge: (int*int) -> (int*int)

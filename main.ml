@@ -3,15 +3,19 @@ open Board
 open Node
 open Lwt
 
+(**[loop term] takes in a terminal and returns the row and column of a mouse
+   click.
+   Raises: "end" on a non=mouse click*)
 let rec loop term =
   LTerm.read_event term
   >>= fun ev ->
   match ev with
   | LTerm_event.Mouse{ LTerm_mouse.row = row;LTerm_mouse.col = col; _ } ->
     return (row,col)
-  | _ -> 
-    loop term
+  | _ -> raise(Failure("end"))
+(* loop term *)
 
+(**[main] is starts the terminal mouse selection *)
 let main () =
   Lwt_io.printl "Please Select a Node"
   >>= fun () ->
@@ -27,8 +31,23 @@ let main () =
        >>= fun () ->
        LTerm.disable_mouse term)
 
-let selectNode ()= let (row,col) = Lwt_main.run (main ()) in 
-  print_endline(string_of_int row); print_endline(string_of_int col);
+(**[selectNode] starts the selection process and prints out the node selected *)
+let selectNode () = let (row,col) = Lwt_main.run (main ()) in 
+  print_endline(string_of_int (Gamegraphics.rc_to_node (row,col))); ()
+
+(**[selectEdge] starts the selection process and prints the edge selected *)
+let selectEdge () = let (row,col) = Lwt_main.run (main ()) in 
+  let (r,c) = (Gamegraphics.rc_to_edge (row,col)) in 
+  print_string(string_of_int r);print_string(", ");
+  print_endline(string_of_int c); ()
+
+(**[printSelectNode l] takes in all clicks and prints out a list of the (row,col) 
+   which were selected, on key press *)
+let rec printSelectNode l = try let (row,col) = Lwt_main.run (main ()) in 
+    printSelectNode 
+      (String.concat "" ["(";(string_of_int row);",";(string_of_int col);")"]::l)
+  with
+  |Failure _ -> List.map print_endline (List.rev l)
 
 type phase = Setup | Win | Interactive | Roll
 
@@ -90,7 +109,7 @@ let rec play_game phase board turn=
   player enter help at any time to get instructions on commands, otherwise enter
   \"done\" to continue");
 
-     selectNode () )
+     selectEdge ())
   (*green player place settlement and road*)
   (*magenta player place settlement and road*)
   (*yellow player place settlement and road *)
