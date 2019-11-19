@@ -70,7 +70,6 @@ let rec get_index start index= function
   |[]-> failwith "index out of bounds"
   |h::t-> if start=index then h else get_index (start+1) index t
 
-
 (* [build_road turn board node] is a board but with the 
    players settlement built RAISES EXCEPTION IF PLAYER CAN NOT BUILD THERE
    condition for exception is that another player has a neighboring node*)
@@ -138,9 +137,16 @@ let rec play_game phase prev_phase board nodes turn=
     (Gamegraphics.draw_board board (generate_nodes board));
     print_endline("");
     (match turn with 
-     |0->selectNode()
+     |0->let node_index = select_node() in 
+
+
+
      |1->selectNode()
+
+
      |2->selectNode()
+
+
      |3->selectNode()
      |_ -> ();
     )
