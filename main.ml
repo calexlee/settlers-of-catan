@@ -31,20 +31,21 @@ let main () =
        >>= fun () ->
        LTerm.disable_mouse term)
 
-(**[selectNode] starts the selection process and prints out the node selected *)
-let selectNode () = let (row,col) = Lwt_main.run (main ()) in 
-  print_endline(string_of_int (Gamegraphics.rc_to_node (row,col))); ()
+(**[selectNode] the index of the selected Node in the terminal
+   Raises: "Not a Node" if the selection is not a node *)
+let select_node () = let (row,col) = Lwt_main.run (main ()) in 
+  Gamegraphics.rc_to_node (row,col)
 
 (**[selectEdge] starts the selection process and prints the edge selected *)
-let selectEdge () = let (row,col) = Lwt_main.run (main ()) in 
+let select_edge () = let (row,col) = Lwt_main.run (main ()) in 
   let (r,c) = (Gamegraphics.rc_to_edge (row,col)) in 
   print_string(string_of_int r);print_string(", ");
   print_endline(string_of_int c); ()
 
 (**[printSelectNode l] takes in all clicks and prints out a list of the (row,col) 
    which were selected, on key press *)
-let rec printSelectNode l = try let (row,col) = Lwt_main.run (main ()) in 
-    printSelectNode 
+let rec print_select_node l = try let (row,col) = Lwt_main.run (main ()) in 
+    print_select_node 
       (String.concat "" ["(";(string_of_int row);",";(string_of_int col);")"]::l)
   with
   |Failure _ -> List.map print_endline (List.rev l)
@@ -148,7 +149,7 @@ let rec play_game phase prev_phase board nodes turn=
 
 
      |3->selectNode()
-     |_ -> ();
+     |_ -> raise(Failure("not a player"));
     )
   (*green player place settlement and road*)
 
@@ -194,7 +195,7 @@ let rec play_game phase prev_phase board nodes turn=
     print_endline("The die roll resulted in a " ^ (string_of_int die_roll) ^
                   " and all of the resources have been distributed");
     play_game Interactive Roll board nodes turn 
-  |Interactive->()
+  |Interactive-> ()
   |Win->()
   |Quit->print_endline("\nThank you for playing, all your progress has been lost");()
 
