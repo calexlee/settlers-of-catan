@@ -52,12 +52,12 @@ let is_player_node n lg=
 let settlement_draw s i =
   match (i+1) with
   |1|3|5|7|9|11|14|16|18|19|21|23|26|28|30|31|33|35|38|40|42|43|45|47|49|51|53
-    -> (try let n = find_node_with_idx (i+1) s in 
+    -> (try let n = find_node_with_idx i s in 
           is_player_node n ">" 
         with 
         |Not_found -> ">")
   |2|4|6|8|10|12|13|15|17|20|22|24|25|27|29|32|34|36|37|39|41|44|46|48|50|52|54
-    -> (try let n = find_node_with_idx (i+1) s in 
+    -> (try let n = find_node_with_idx i s in 
           is_player_node n "<"
         with 
         |Not_found -> "<")

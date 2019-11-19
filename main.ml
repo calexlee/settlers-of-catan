@@ -89,6 +89,13 @@ let rec build_settlement turn nodes nodes_index counter acc building=
       build_settlement turn t nodes_index (counter+1) (h::acc) building)
     else build_settlement turn t nodes_index (counter+1) (h::acc) building
 
+
+(* [build_city turn board node] is a board but with the 
+   players city built RAISES EXCEPTION IF PLAYER CAN NOT BUILD THERE
+   Condition for excpetion is the player does not have a settlment there*)
+let build_city turn board node= 
+  failwith "unimpelmented" 
+
 (* [rob_players] a function that runs through the players and removes
    half of their hand if they have more then 7 cards*)
 let rec rob_players index = 
