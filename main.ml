@@ -125,7 +125,7 @@ let distribute_resources nodes roll =
   [phase] represents the phase of the game [board] represents the board to 
   be drawn, [players] is the list of all the updated players and [turn] 
   is th INDEX OF THE PLAYER IN players whose turn it is *)
-let rec play_game phase prev_phase board nodes turn= 
+let rec play_game phase prev_phase board nodes turn pass= 
   match phase with 
   |Welcome-> 
     ((Gamegraphics.draw_board board nodes);
@@ -135,25 +135,32 @@ let rec play_game phase prev_phase board nodes turn=
   \"done\" to continue");
      let input= Command.parse (read_line()) in
      ( match Command.to_string input with 
-       |"help"->play_game Help Welcome board nodes turn
-       |"done"->play_game Setup Welcome board nodes turn
-       |"quit"->play_game Quit Welcome board nodes turn
+       |"help"->play_game Help Welcome board nodes turn pass
+       |"done"->play_game Setup Welcome board nodes turn pass
+       |"quit"->play_game Quit Welcome board nodes turn pass 
        |_-> print_endline("Malformed command please re-enter");
-         play_game Welcome Welcome board nodes turn;)
+         play_game Welcome Welcome board nodes turn pass;)
     )
   |Setup -> 
     (Gamegraphics.draw_board board nodes);
     print_endline("");
     (match turn with 
      |0->let node_index = select_node() in
-       Gamegraphics.draw_board board (build_settlement 0 nodes node_index 0 [] "settlement")
-     |1->()
-
-
-     |2->()
-
-
-     |3->()
+       Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
+       if(pass) then play_game Quit Setup board nodes turn pass
+       else play_game Setup Setup board nodes (turn+1) pass
+     |1->let node_index = select_node() in
+       Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
+       if(pass) then play_game Setup Setup board nodes (turn-1) pass
+       else play_game Setup Setup board nodes (turn+1) pass
+     |2->let node_index = select_node() in
+       Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
+       if(pass) then play_game Setup Setup board nodes (turn-1) pass
+       else play_game Setup Setup board nodes (turn+1) pass
+     |3->let node_index = select_node() in
+       Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
+       if(pass) then play_game Setup Setup board nodes (turn-1) pass
+       else play_game Setup Setup board nodes turn true
      |_ -> raise(Failure("not a player"));
     )
   (*green player place settlement and road*)
@@ -184,11 +191,11 @@ let rec play_game phase prev_phase board nodes turn=
       print_endline("quit- quit the game WARNING: progress will not be saved");
       let input= Command.parse (read_line()) in
       ( match Command.to_string input with 
-        |"help"->play_game Help Help board nodes turn
-        |"done"->play_game prev_phase Help board nodes turn
-        |"quit"->play_game Quit Welcome board nodes turn
+        |"help"->play_game Help Help board nodes turn pass
+        |"done"->play_game prev_phase Help board nodes turn pass 
+        |"quit"->play_game Quit Welcome board nodes turn pass
         |_-> print_endline("Malformed command please re-enter");
-          play_game Help Help board nodes turn;)
+          play_game Help Help board nodes turn pass;)
     );
 
   |Roll->
@@ -199,14 +206,14 @@ let rec play_game phase prev_phase board nodes turn=
       ^ " turn.");
     print_endline("The die roll resulted in a " ^ (string_of_int die_roll) ^
                   " and all of the resources have been distributed");
-    play_game Interactive Roll board nodes turn 
+    play_game Interactive Roll board nodes turn pass
   |Interactive-> ()
   |Win->()
   |Quit->print_endline("\nThank you for playing, all your progress has been lost");()
 
 let main () = 
   let rand_board1 = rand_board () in
-  play_game Welcome Welcome (rand_board1) (generate_nodes rand_board1) 0
+  play_game Welcome Welcome (rand_board1) (generate_nodes rand_board1) 0 false
 
 (* Execute the game engine. *)
 let () = main ()
