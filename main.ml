@@ -17,7 +17,7 @@ let rec loop term =
 
 (**[main] is starts the terminal mouse selection *)
 let main () =
-  Lwt_io.printl "Please Select a Node"
+  Lwt_io.printl ""
   >>= fun () ->
   Lazy.force LTerm.stdout
   >>= fun term ->
@@ -145,19 +145,23 @@ let rec play_game phase prev_phase board nodes turn pass=
     (Gamegraphics.draw_board board nodes);
     print_endline("");
     (match turn with 
-     |0->let node_index = select_node() in
+     |0->print_endline("Green player, please select a node to build a settlement");
+       let node_index = select_node() in
        Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
        if(pass) then play_game Quit Setup board nodes turn pass
        else play_game Setup Setup board nodes (turn+1) pass
-     |1->let node_index = select_node() in
+     |1->print_endline("Magenta player, please select a node to build a settlement");
+       let node_index = select_node() in
        Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
        if(pass) then play_game Setup Setup board nodes (turn-1) pass
        else play_game Setup Setup board nodes (turn+1) pass
-     |2->let node_index = select_node() in
+     |2->print_endline("Yellow player, please select a node to build a settlement.");
+       let node_index = select_node() in
        Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
        if(pass) then play_game Setup Setup board nodes (turn-1) pass
        else play_game Setup Setup board nodes (turn+1) pass
-     |3->let node_index = select_node() in
+     |3->print_endline("Yellow player, please select a node to build a settlement.");
+       let node_index = select_node() in
        Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
        if(pass) then play_game Setup Setup board nodes (turn-1) pass
        else play_game Setup Setup board nodes turn true
