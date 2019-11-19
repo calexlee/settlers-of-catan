@@ -136,6 +136,7 @@ let rec play_game phase prev_phase board nodes turn=
     )
   |Setup -> 
     (Gamegraphics.draw_board board (generate_nodes board));
+    print_endline("");
     (match turn with 
      |x when x= 0->selectNode()
      |x when x= 1->selectNode()
