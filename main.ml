@@ -84,8 +84,9 @@ let rec build_settlement turn nodes nodes_index counter acc=
   (*BASE IMPLEMENTATION doers not check if the node is in the correct place*)
   match nodes with 
   |[]-> List.rev acc
-  |h::t-> if (nodes_index=counter) then build_settlement turn t nodes_index counter 
-        ((Node.add_settlement "settlement" (get_index 0 turn player_list) h)::acc)
+  |h::t-> if (nodes_index=counter) then (
+      (Node.add_settlement "settlement" (get_index 0 turn player_list) h);
+      build_settlement turn t nodes_index counter (h::acc))
     else build_settlement turn t nodes_index (counter+1) (h::acc)
 
 (* [build_city turn board node] is a board but with the 
