@@ -136,8 +136,6 @@ let rec play_game phase prev_phase board nodes turn pass=
          play_game Welcome Welcome board nodes turn pass;)
     )
   |Setup -> 
-    (Gamegraphics.draw_board board nodes);
-    print_endline("");
     (match turn with 
      |0->print_endline("Green player, please select a node to build a settlement");
        let node_index = select_node() in
