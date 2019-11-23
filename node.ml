@@ -126,7 +126,7 @@ let generate_nodes board=
    make_node [Board.get_tile board 7; Board.get_tile board 9; Board.get_tile board 12] 27 [Edge.make_edge 21; Edge.make_edge 28; Edge.make_edge 33];
    make_node [Board.get_tile board 7; Board.get_tile board 10; Board.get_tile board 12] 28 [Edge.make_edge 22; Edge.make_edge 27; Edge.make_edge 34];
    make_node [Board.get_tile board 10] 29 [Edge.make_edge 23; Edge.make_edge 35];
-   make_node [Board.get_tile board 8; Board.get_tile board 13] 30 [Edge.make_edge 24; Edge.make_edge 36];
+   make_node [Board.get_tile board 8; Board.get_tile board 13] 30 [Edge.make_edge 24;Edge.make_edge 31; Edge.make_edge 36];
    make_node [Board.get_tile board 8; Board.get_tile board 11; Board.get_tile board 13] 31 [Edge.make_edge 25; Edge.make_edge 30; Edge.make_edge 37];
    make_node [Board.get_tile board 9; Board.get_tile board 11; Board.get_tile board 14] 32 [Edge.make_edge 26; Edge.make_edge 33; Edge.make_edge 38];
    make_node [Board.get_tile board 9; Board.get_tile board 12; Board.get_tile board 14] 33 [Edge.make_edge 27; Edge.make_edge 32; Edge.make_edge 39];
