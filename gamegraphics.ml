@@ -32,20 +32,25 @@ let rec find_node_with_idx idx (nlist : Node.t list) =
   |[] -> raise(Not_found)
   |h::t -> if Node.get_index h = idx then h else find_node_with_idx idx t
 
+(**[draw_player_color t p] draws the settle/city of player [p] *)
+let draw_player_color t = function
+  |"G" -> ANSITerminal.(print_string [green] t)
+  |"Y" -> ANSITerminal.(print_string [yellow] t)
+  |"M" -> ANSITerminal.(print_string [magenta] t)
+  |"B" ->ANSITerminal.(print_string [blue] t)
+  | _ -> raise(Failure("Not a player color"))
+
 (**[is_player_node n] is the letter of the player color, repeated twice if it
    if there is a city at node [n], otherwise [lg] if player is None *)
 let is_player_node n lg= 
   try
     match Node.get_player n with 
     |p -> if String.equal (Node.get_settlement n) "settlement" 
-      then Player.color_to_string (Player.get_color p)
+      then Player.color_to_string (Player.get_color p) |> draw_player_color "S"
       else 
-        String.concat "" 
-          [Player.color_to_string (Player.get_color p);
-           Player.color_to_string (Player.get_color p)]
+        Player.color_to_string (Player.get_color p) |> draw_player_color "C"
   with 
-  |Not_found -> lg
-
+  |Not_found -> (print_string(lg);)
 
 (**[settlement_draw s i] is the string of the settlement at position [i] 
    in the list of nodes [s] *)
@@ -55,12 +60,12 @@ let settlement_draw s i =
     -> (try let n = find_node_with_idx i s in 
           is_player_node n ">" 
         with 
-        |Not_found -> ">")
+        |Not_found -> print_string(">");)
   |2|4|6|8|10|12|13|15|17|20|22|24|25|27|29|32|34|36|37|39|41|44|46|48|50|52|54
     -> (try let n = find_node_with_idx i s in 
           is_player_node n "<"
         with 
-        |Not_found -> "<")
+        |Not_found -> print_string("<");)
   | _ -> raise(Failure("invalid index"))
 
 (**[grab_resource t n] is the resource of the tile at position [n] in [t] *)
@@ -221,7 +226,7 @@ let player_at_pos pos n=
    player at [pos] *)
 let draw_edge t pos n= 
   match (player_at_pos pos n) with 
-  |"G" -> ANSITerminal.(print_string [red] t)
+  |"G" -> ANSITerminal.(print_string [green] t)
   |"M" -> ANSITerminal.(print_string [magenta] t)
   |"Y" -> ANSITerminal.(print_string [yellow] t)
   |"B" -> ANSITerminal.(print_string [blue] t)
@@ -236,37 +241,37 @@ let draw_board t n =
   print_string("                         >-----<~~~~3:1~~~~>-----< \n");
   print_string("                        /~~~~~~~\\~~~~~~~~~/~~~~~~~\\ \n");
   print_string("                       /~~~~~~~~~\\*~~~~~*/~~~~~~~~~\\ \n");
-  print_string("                >-----<~~~~~~~~~~~");print_string(settlement_draw n 0);draw_edge "-----" (0,1) n;print_string(settlement_draw n 1);print_string("~~~~~~~~~~~>-----< \n");
+  print_string("                >-----<~~~~~~~~~~~");settlement_draw n 0;draw_edge "-----" (0,1) n;settlement_draw n 1;print_string("~~~~~~~~~~~>-----< \n");
   print_string("               /~~~~~~~\\~~~~~~~~~");draw_edge "/" (0,3) n;print_string("       ");draw_edge "\\" (1,4) n;print_string("~~~~~~~~~/~~~~~~~\\ \n");
   print_string("              /~~~2:1~~~\\~~~~~~~");draw_edge "/" (0,3) n;print_string("   ");print_string(grab_num t 0);print_string("    ");draw_edge "\\" (1,4) n;print_string("~~~~~~~/~~~2:1~~~\\ \n");
-  print_string("       >-----<~~~sheep~~~*");print_string(settlement_draw n 2);draw_edge "-----" (2,3) n;print_string(settlement_draw n 3);print_string("  ");print_string(grab_resource t 0);print_string("  ");print_string(settlement_draw n 4);draw_edge "-----" (4,5) n;print_string(settlement_draw n 5);print_string("*~~rock~~~>-----< \n");
+  print_string("       >-----<~~~sheep~~~*");settlement_draw n 2;draw_edge "-----" (2,3) n;settlement_draw n 3;print_string("  ");print_string(grab_resource t 0);print_string("  ");settlement_draw n 4;draw_edge "-----" (4,5) n;settlement_draw n 5;print_string("*~~rock~~~>-----< \n");
   print_string("      /~~~~~~~\\~~~~~~~~~");draw_edge "/" (2,7) n;print_string("       ");draw_edge "\\" (3,8) n;print_string("         ");draw_edge "/" (4,9) n;print_string("       ");draw_edge "\\" (5,10) n;print_string("~~~~~~~~~/~~~~~~~\\ \n");
   print_string("     /~~~~~~~~~\\~~~~~~*");draw_edge "/" (2,7) n;print_string("   ");print_string(grab_num t 1);print_string("    ");draw_edge "\\" (3,8) n;print_string("       ");draw_edge "/" (4,9) n;print_string("    ");print_string(grab_num t 2);print_string("   ");draw_edge "\\" (5,10) n;print_string("*~~~~~~/~~~~~~~~~\\ \n");
-  print_string("    <~~~~~~~~~~~");print_string(settlement_draw n 6);draw_edge "-----" (6,7) n;print_string(settlement_draw n 7);print_string("   ");print_string(grab_resource t 1);print_string("  ");print_string(settlement_draw n 8);draw_edge "-----" (8,9) n;print_string(settlement_draw n 9);print_string("  ");print_string(grab_resource t 2);print_string("  ");print_string(settlement_draw n 10);draw_edge "-----" (10,11) n;print_string(settlement_draw n 11);print_string("~~~~~~~~~~~> \n");
+  print_string("    <~~~~~~~~~~~");settlement_draw n 6;draw_edge "-----" (6,7) n;settlement_draw n 7;print_string("   ");print_string(grab_resource t 1);print_string("  ");settlement_draw n 8;draw_edge "-----" (8,9) n;settlement_draw n 9;print_string("  ");print_string(grab_resource t 2);print_string("  ");settlement_draw n 10;draw_edge "-----" (10,11) n;settlement_draw n 11;print_string("~~~~~~~~~~~> \n");
   print_string("     \\~~~~~~~~~");draw_edge "/" (6,12) n;print_string("       ");draw_edge "\\" (7,13) n;print_string("         ");draw_edge "/" (8,14) n;print_string("       ");draw_edge "\\" (9,15) n;print_string("         ");draw_edge "/" (10,16) n;print_string("       ");draw_edge "\\" (11,17) n;print_string("~~~~~~~~~/ \n");
   print_string("      \\~~~~~~~");draw_edge "/" (6,12) n;print_string("    ");print_string(grab_num t 3);print_string("   ");draw_edge "\\" (7,13) n;print_string("       ");draw_edge "/" (8,14) n;print_string("    ");print_string(grab_num t 4);print_string("   ");draw_edge "\\" (9,15) n;print_string("       ");draw_edge "/" (10,16) n;print_string("    ");print_string(grab_num t 5);print_string("   ");draw_edge "\\" (11,17) n;print_string("~~~~~~~/ \n");
-  print_string("       >-----");print_string(settlement_draw n 12);print_string("  ");print_string(grab_resource t 3);print_string("   ");print_string(settlement_draw n 13);draw_edge "-----" (13,14) n;print_string(settlement_draw n 14);print_string("   ");print_string(grab_resource t 4);print_string("  ");print_string(settlement_draw n 15);draw_edge "-----" (15,16) n;print_string(settlement_draw n 16);print_string("   ");print_string(grab_resource t 5);print_string("   ");print_string(settlement_draw n 17);print_string("-----< \n");
+  print_string("       >-----");settlement_draw n 12;print_string("  ");print_string(grab_resource t 3);print_string("   ");settlement_draw n 13;draw_edge "-----" (13,14) n;settlement_draw n 14;print_string("   ");print_string(grab_resource t 4);print_string("  ");settlement_draw n 15;draw_edge "-----" (15,16) n;settlement_draw n 16;print_string("   ");print_string(grab_resource t 5);print_string("   ");settlement_draw n 17;print_string("-----< \n");
   print_string("      /~~~~~~~");draw_edge "\\" (12,18) n;print_string("         ");draw_edge "/" (13,19) n;print_string("       ");draw_edge "\\" (14,20) n;print_string("         ");draw_edge "/" (15,21) n;print_string("       ");draw_edge "\\" (16,22) n;print_string("         ");draw_edge "/" (17,23) n;print_string("~~~~~~~\\ \n");
   print_string("     /~~~2:1~~~");draw_edge "\\" (12,18) n;print_string("       ");draw_edge "/" (13,19) n;print_string("    ");print_string(grab_num t 6);print_string("   ");draw_edge "\\" (14,20) n;print_string("       ");draw_edge "/" (15,21) n;print_string("         ");draw_edge "\\" (16,22) n;print_string("       ");draw_edge "/" (17,23) n;print_string("~~~2:1~~~\\ \n");
-  print_string("    <~~~wood~~* ");print_string(settlement_draw n 18);draw_edge "-----" (18,19) n;print_string(settlement_draw n 19);print_string("  ");print_string(grab_resource t 6);print_string("   ");print_string(settlement_draw n 20);draw_edge "-----" (20,21) n;print_string(settlement_draw n 21);print_string("     ");print_string(grab_num t 7);print_string("    ");print_string(settlement_draw n 22);draw_edge "-----" (22,23) n;print_string(settlement_draw n 23);print_string("*~~ore~~~~> \n");
+  print_string("    <~~~wood~~* ");settlement_draw n 18;draw_edge "-----" (18,19) n;settlement_draw n 19;print_string("  ");print_string(grab_resource t 6);print_string("   ");settlement_draw n 20;draw_edge "-----" (20,21) n;settlement_draw n 21;print_string("     ");print_string(grab_num t 7);print_string("    ");settlement_draw n 22;draw_edge "-----" (22,23) n;settlement_draw n 23;print_string("*~~ore~~~~> \n");
   print_string("     \\~~~~~~~~~");draw_edge "/" (18,24) n;print_string("       ");draw_edge "\\" (19,25) n;print_string("         ");draw_edge "/" (20,26) n;print_string("       ");draw_edge "\\" (21,27) n;print_string("  ");print_string(grab_resource t 7);print_string(" ");draw_edge "/" (22,28) n;print_string("       ");draw_edge "\\" (23,29) n;print_string("~~~~~~~~~/ \n");
   print_string("      \\~~~~~~*");draw_edge "/" (18,24) n;print_string("    ");print_string(grab_num t 8);print_string("   ");draw_edge "\\" (19,25) n;print_string("       ");draw_edge "/" (20,26) n;print_string("    ");print_string(grab_num t 9);print_string("   ");draw_edge "\\" (21,27) n;print_string("       ");draw_edge "/" (22,28) n;print_string("    ");print_string(grab_num t 10);print_string("   ");draw_edge "\\" (23,29) n;print_string("*~~~~~~/ \n");
-  print_string("       >-----");print_string(settlement_draw n 24);print_string("  ");print_string(grab_resource t 8);print_string("   ");print_string(settlement_draw n 25);draw_edge "-----" (25,26) n;print_string(settlement_draw n 26);print_string("   ");print_string(grab_resource t 9);print_string("  ");print_string(settlement_draw n 27);draw_edge "-----" (27,28) n;print_string(settlement_draw n 28);print_string("   ");print_string(grab_resource t 10);print_string("  ");print_string(settlement_draw n 29);print_string("-----< \n");
+  print_string("       >-----");settlement_draw n 24;print_string("  ");print_string(grab_resource t 8);print_string("   ");settlement_draw n 25;draw_edge "-----" (25,26) n;settlement_draw n 26;print_string("   ");print_string(grab_resource t 9);print_string("  ");settlement_draw n 27;draw_edge "-----" (27,28) n;settlement_draw n 28;print_string("   ");print_string(grab_resource t 10);print_string("  ");settlement_draw n 29;print_string("-----< \n");
   print_string("      /~~~~~~~");draw_edge "\\" (24,30) n;print_string("         ");draw_edge "/" (25,31) n;print_string("       ");draw_edge "\\" (26,32) n;print_string("         ");draw_edge "/" (27,33) n;print_string("       ");draw_edge "\\" (28,34) n;print_string("         ");draw_edge "/" (29,35) n;print_string("~~~~~~~\\ \n");
   print_string("     /~~~~~~~~~");draw_edge "\\" (24,30) n;print_string("       ");draw_edge "/" (25,31) n;print_string("    ");print_string(grab_num t 11);print_string("   ");draw_edge "\\" (26,32) n;print_string("       ");draw_edge "/" (27,33) n;print_string("    ");print_string(grab_num t 12);print_string("   ");draw_edge "\\" (28,34) n;print_string("       ");draw_edge "/" (29,35) n;print_string("~~~~~~~~~\\ \n");
-  print_string("    <~~~~~~~~~~~");print_string(settlement_draw n 30);draw_edge "-----" (30,31) n;print_string(settlement_draw n 31);print_string("  ");print_string(grab_resource t 11);print_string("   ");print_string(settlement_draw n 32);draw_edge "-----" (32,33) n;print_string(settlement_draw n 33);print_string("   ");print_string(grab_resource t 12);print_string("  ");print_string(settlement_draw n 34);draw_edge "-----" (34,35) n;print_string(settlement_draw n 35);print_string("~~~~~~~~~~~>  \n");
+  print_string("    <~~~~~~~~~~~");settlement_draw n 30;draw_edge "-----" (30,31) n;settlement_draw n 31;print_string("  ");print_string(grab_resource t 11);print_string("   ");settlement_draw n 32;draw_edge "-----" (32,33) n;settlement_draw n 33;print_string("   ");print_string(grab_resource t 12);print_string("  ");settlement_draw n 34;draw_edge "-----" (34,35) n;settlement_draw n 35;print_string("~~~~~~~~~~~>  \n");
   print_string("     \\~~~~~~~~~");draw_edge "/" (30,36) n;print_string("       ");draw_edge "\\" (31,37) n;print_string("         ");draw_edge "/" (32,38) n;print_string("       ");draw_edge "\\" (33,39) n;print_string("         ");draw_edge "/" (34,40) n;print_string("       ");draw_edge "\\" (35,41) n;print_string("~~~~~~~~~/ \n");
   print_string("      \\~~~~~~~");draw_edge "/" (30,36) n;print_string("    ");print_string(grab_num t 13);print_string("   ");draw_edge "\\" (31,37) n;print_string("       ");draw_edge "/" (32,38) n;print_string("    ");print_string(grab_num t 14);print_string("   ");draw_edge "\\" (33,39) n;print_string("       ");draw_edge "/" (34,40) n;print_string("    ");print_string(grab_num t 15);print_string("   ");draw_edge "\\" (35,41) n;print_string("~~~~~~~/ \n");
-  print_string("       >-----");print_string(settlement_draw n 36);print_string("   ");print_string(grab_resource t 13);print_string("  ");print_string(settlement_draw n 37);draw_edge "-----" (37,38) n;print_string(settlement_draw n 38);print_string("   ");print_string(grab_resource t 14);print_string("  ");print_string(settlement_draw n 39);draw_edge "-----" (39,40) n;print_string(settlement_draw n 40);print_string("   ");print_string(grab_resource t 15);print_string("  ");print_string(settlement_draw n 41);print_string("-----< \n");
+  print_string("       >-----");settlement_draw n 36;print_string("   ");print_string(grab_resource t 13);print_string("  ");settlement_draw n 37;draw_edge "-----" (37,38) n;settlement_draw n 38;print_string("   ");print_string(grab_resource t 14);print_string("  ");settlement_draw n 39;draw_edge "-----" (39,40) n;settlement_draw n 40;print_string("   ");print_string(grab_resource t 15);print_string("  ");settlement_draw n 41;print_string("-----< \n");
   print_string("      /~~~~~~*");draw_edge "\\" (36,42) n;print_string("         ");draw_edge "/" (37,43) n;print_string("       ");draw_edge "\\" (38,44) n;print_string("         ");draw_edge "/" (39,45) n;print_string("       ");draw_edge "\\" (40,46) n;print_string("         ");draw_edge "/" (41,47) n;print_string("*~~~~~~\\ \n");
   print_string("     /~~~~~~~~~");draw_edge "\\" (36,42) n;print_string("       ");draw_edge "/" (37,43) n;print_string("    ");print_string(grab_num t 16);print_string("   ");draw_edge "\\" (38,44) n;print_string("       ");draw_edge "/" (39,45) n;print_string("    ");print_string(grab_num t 17);print_string("   ");draw_edge "\\" (40,46) n;print_string("       ");draw_edge "/" (41,47) n;print_string("~~~~~~~~~\\ \n");
-  print_string("    <~~~~3:1~~~*");print_string(settlement_draw n 42);draw_edge "-----" (42,43) n;print_string(settlement_draw n 43);print_string("   ");print_string(grab_resource t 16);print_string("  ");print_string(settlement_draw n 44);draw_edge "-----" (44,45) n;print_string(settlement_draw n 45);print_string("   ");print_string(grab_resource t 17);print_string("  ");print_string(settlement_draw n 46);draw_edge "-----" (46,47) n;print_string(settlement_draw n 47);print_string("*~~~3:1~~~~> \n");
+  print_string("    <~~~~3:1~~~*");settlement_draw n 42;draw_edge "-----" (42,43) n;settlement_draw n 43;print_string("   ");print_string(grab_resource t 16);print_string("  ");settlement_draw n 44;draw_edge "-----" (44,45) n;settlement_draw n 45;print_string("   ");print_string(grab_resource t 17);print_string("  ");settlement_draw n 46;draw_edge "-----" (46,47) n;settlement_draw n 47;print_string("*~~~3:1~~~~> \n");
   print_string("     \\~~~~~~~~~/~~~~~~~");draw_edge "\\" (43,48) n;print_string("         ");draw_edge "/" (44,49) n;print_string("       ");draw_edge "\\" (45,50) n;print_string("         ");draw_edge "/" (46,51) n;print_string("~~~~~~~\\~~~~~~~~~/ \n");
   print_string("      \\~~~~~~~/~~~~~~~~~");draw_edge "\\" (43,48) n;print_string("       ");draw_edge "/" (44,49) n;print_string("    ");print_string(grab_num t 18);print_string("   ");draw_edge "\\" (45,50) n;print_string("       ");draw_edge "/" (46,51) n;print_string("~~~~~~~~~\\~~~~~~~/ \n");
-  print_string("       >-----< ~~~~~~~~~~");print_string(settlement_draw n 48);draw_edge "-----" (48,49) n;print_string(settlement_draw n 49);print_string("   ");print_string(grab_resource t 18);print_string("  ");print_string(settlement_draw n 50);draw_edge "-----" (50,51) n;print_string(settlement_draw n 51);print_string("~~~~~~~~~~~>-----< \n");
+  print_string("       >-----< ~~~~~~~~~~");settlement_draw n 48;draw_edge "-----" (48,49) n;settlement_draw n 49;print_string("   ");print_string(grab_resource t 18);print_string("  ");settlement_draw n 50;draw_edge "-----" (50,51) n;settlement_draw n 51;print_string("~~~~~~~~~~~>-----< \n");
   print_string("              \\~~~~~~~~~/*~~~~~*");draw_edge "\\" (49,52) n;print_string("         ");draw_edge "/" (50,53) n;print_string("*~~~~~*\\~~~~~~~~~/ \n");
   print_string("               \\~~~~~~~/~~~~~~~~~");draw_edge "\\" (49,52) n;print_string("       ");draw_edge "/" (50,53) n;print_string("~~~2:1~~~\\~~~~~~~/ \n");
-  print_string("                >-----<~~~~3:1~~~~");print_string(settlement_draw n 52);draw_edge "-----" (52,53) n;print_string(settlement_draw n 53);print_string("~~~wheat~~~>-----< \n");
+  print_string("                >-----<~~~~3:1~~~~");settlement_draw n 52;draw_edge "-----" (52,53) n;settlement_draw n 53;print_string("~~~wheat~~~>-----< \n");
   print_string("                       \\~~~~~~~~~/~~~~~~~\\~~~~~~~~~/ \n");
   print_string("                        \\~~~~~~~/~~~~~~~~~\\~~~~~~~/ \n");
   print_string("                         >-----<~~~~~~~~~~~>-----< \n");
