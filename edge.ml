@@ -1,8 +1,7 @@
-type node_player = None | Some of Player.t
 
 type rd = {
   is_there: bool;
-  player: node_player;
+  player: Player.t option;
 }
 
 type t = {
@@ -33,3 +32,6 @@ let remove_road t =
 
 let get_index t = 
   t.index
+
+let get_player t =
+  t.road.player

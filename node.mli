@@ -36,6 +36,9 @@ val get_player : t -> Player.t
 (**[get_settlement t] is the settlement in [t] *)
 val get_settlement : t -> string
 
+(**[has_edge pos] is the player that owns the edge at [pos]*)
+val has_edge : t -> (int*int) -> Player.t option
+
 (**[generateNodes ()] is a generated list of nodes indexed from 1-54 *)
 val generate_nodes : Board.t -> t list
 

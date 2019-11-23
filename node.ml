@@ -83,6 +83,18 @@ let rec add_nodes acc counter=
 let generate_empty_nodes () = 
   add_nodes [] 0
 
+(**[find_edges elist e] is the player at position [e] in [elist] or None *)
+let rec find_edges elist e = 
+  match elist with 
+  | [] -> raise(Failure("No edge at position"))
+  | h::t -> if (Edge.get_index h) == e 
+    then Edge.get_player h 
+    else 
+      find_edges t e
+
+let has_edge node = function 
+  |(x,y) -> find_edges (get_edges node) y
+
 let generate_nodes board= 
   [make_node [Board.get_tile board 0] 0 [Edge.make_edge 1; Edge.make_edge 3];
    make_node [Board.get_tile board 0] 1 [Edge.make_edge 0; Edge.make_edge 4];
