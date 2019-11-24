@@ -115,10 +115,10 @@ let distribute_resources nodes roll =
   else 
     give_resources nodes roll
 
-(*[play_game] a recrusive function that loops through the game playing where 
+(*[play_game] a recursive function that loops through the game playing where 
   [phase] represents the phase of the game [board] represents the board to 
   be drawn, [players] is the list of all the updated players and [turn] 
-  is th INDEX OF THE PLAYER IN players whose turn it is *)
+  is the INDEX OF THE PLAYER IN players whose turn it is *)
 let rec play_game phase prev_phase board nodes turn pass= 
   match phase with 
   |Welcome-> 
