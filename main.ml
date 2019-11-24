@@ -50,7 +50,7 @@ let rec print_select_node l = try let (row,col) = Lwt_main.run (main ()) in
   with
   |Failure _ -> List.map print_endline (List.rev l)
 
-type phase = Welcome | Setup | Win | Interactive | Roll | Help | Quit
+type phase = Welcome | Setup | Win | Interactive | Roll | Help | Quit |Inventory
 
 let player_list = [Player.make_player "green"; Player.make_player "magenta";
                    Player.make_player "yellow"; Player.make_player "blue"]
@@ -203,6 +203,8 @@ let rec play_game phase prev_phase board nodes turn pass=
     print_endline("The die roll resulted in a " ^ (string_of_int die_roll) ^
                   " and all of the resources have been distributed");
     play_game Interactive Roll board nodes turn pass
+
+  |Inventory -> ()
   |Interactive-> ()
   |Win->()
   |Quit->print_endline("\nThank you for playing, all your progress has been lost");()
