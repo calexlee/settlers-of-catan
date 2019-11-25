@@ -70,23 +70,25 @@ let rec get_index start index= function
   |h::t-> if start=index then h else get_index (start+1) index t
 
 
-let find_edge 
 (* [build_road turn board node] is a board but with the 
    players settlement built RAISES EXCEPTION IF PLAYER CAN NOT BUILD THERE
    condition for exception is that another player has a neighboring node*)
-let rec build_road_helper turn nodes node1 node2 counter acc= 
+let rec build_road_helper turn nodes node1 node2 counter acc = 
   match nodes with 
   |[]-> List.rev acc
   |h::t-> if (node1=counter) then (
-
-    )
-    else if (node2=counter) then ()
+      let edge = Node.get_edge node2 h in
+      Edge.add_road edge (Some (get_index 0 turn player_list));
+      build_road_helper turn t node1 node2 (counter+1) (h::acc))
+    else if (node2=counter) then (
+      let edge = Node.get_edge node1 h in 
+      Edge.add_road edge (Some (get_index 0 turn player_list));
+      build_road_helper turn t node1 node2 (counter+1) (h::acc))
     else build_road_helper turn t node1 node2 (counter+1) (h::acc) 
 
 let build_road turn nodes node_tup counter acc = 
   match node_tup with 
   |(x,y)-> build_road_helper turn nodes x y counter acc
-  |_-> failwith "building road"
 
 (* [build_settlement turn board node] is a board but with the 
    players settlement built RAISES EXCEPTION IF PLAYER CAN NOT BUILD THERE

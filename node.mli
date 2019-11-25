@@ -39,6 +39,10 @@ val get_settlement : t -> string
 (**[has_edge pos] is the player that owns the edge at [pos]*)
 val has_edge : t -> (int*int) -> Player.t option
 
+(*[get_edge neigh node] is the edge leaving node [node] going to 
+  a neighboring node with index [neigh]*)
+val get_edge : int -> t -> Edge.t
+
 (**[generateNodes ()] is a generated list of nodes indexed from 1-54 *)
 val generate_nodes : Board.t -> t list
 

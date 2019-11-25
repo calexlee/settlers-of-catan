@@ -95,6 +95,15 @@ let rec find_edges elist e =
 let has_edge node = function 
   |(x,y) -> find_edges (get_edges node) y
 
+let rec get_edge_helper neigh edge_list = 
+  match edge_list with 
+  |[]->failwith"no such neighboring node"
+  |h::t-> if Edge.get_index h = neigh then h 
+    else get_edge_helper neigh t
+
+let rec get_edge neigh node = 
+  get_edge_helper neigh (get_edges node)
+
 let generate_nodes board= 
   [make_node [Board.get_tile board 0] 0 [Edge.make_edge 1; Edge.make_edge 3];
    make_node [Board.get_tile board 0] 1 [Edge.make_edge 0; Edge.make_edge 4];
