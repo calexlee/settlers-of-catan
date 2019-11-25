@@ -73,3 +73,17 @@ let player_to_string player =
   |Blue -> "Blue"
   |Green -> "Green"
   |Yellow -> "yellow"
+
+let resources_to_string player = 
+  let rec loop list =
+    match list with 
+    |[] -> []
+    |h::t -> begin 
+        match h with
+        |Wood -> "Wood" :: loop t
+        |Brick -> "Brick" :: loop t
+        |Wheat -> "Wheat" :: loop t
+        |Sheep -> "Shhep" :: loop t
+        |Rock -> "Rock" :: loop t
+        |Desert -> "Dessert" :: loop t 
+      end in loop player.resources

@@ -5,6 +5,7 @@ type command =
   | AddSettle
   | Done
   | Help
+  | Points
   | Malformed
 
 exception Empty
@@ -23,6 +24,7 @@ let to_string command =
   |AddSettle -> "addsettle"
   |Done-> "done"
   |Help -> "help"
+  |Points -> "points"
   |Malformed -> "malformed"
 
 let parse str =
@@ -49,6 +51,10 @@ let parse str =
       end
       else if h="help" || h = "Help" then begin 
         if t = [] then Help 
+        else raise Malformed
+      end
+      else if h="points" || h = "Points" then begin 
+        if t = [] then Points
         else raise Malformed
       end
       else raise Malformed)
