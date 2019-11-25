@@ -38,9 +38,7 @@ let select_node () = let (row,col) = Lwt_main.run (main ()) in
 
 (**[selectEdge] starts the selection process and prints the edge selected *)
 let select_edge () = let (row,col) = Lwt_main.run (main ()) in 
-  let (r,c) = (Gamegraphics.rc_to_edge (row,col)) in 
-  print_string(string_of_int r);print_string(", ");
-  print_endline(string_of_int c); ()
+  (Gamegraphics.rc_to_edge (row,col)) 
 
 (**[printSelectNode l] takes in all clicks and prints out a list of the (row,col) 
    which were selected, on key press *)
@@ -71,11 +69,24 @@ let rec get_index start index= function
   |[]-> failwith "index out of bounds"
   |h::t-> if start=index then h else get_index (start+1) index t
 
+
+let find_edge 
 (* [build_road turn board node] is a board but with the 
    players settlement built RAISES EXCEPTION IF PLAYER CAN NOT BUILD THERE
    condition for exception is that another player has a neighboring node*)
-let build_road turn board node= 
-  failwith "unimpelmented"
+let rec build_road_helper turn nodes node1 node2 counter acc= 
+  match nodes with 
+  |[]-> List.rev acc
+  |h::t-> if (node1=counter) then (
+
+    )
+    else if (node2=counter) then ()
+    else build_road_helper turn t node1 node2 (counter+1) (h::acc) 
+
+let build_road turn nodes node_tup counter acc = 
+  match node_tup with 
+  |(x,y)-> build_road_helper turn nodes x y counter acc
+  |_-> failwith "building road"
 
 (* [build_settlement turn board node] is a board but with the 
    players settlement built RAISES EXCEPTION IF PLAYER CAN NOT BUILD THERE
@@ -140,21 +151,25 @@ let rec play_game phase prev_phase board nodes turn pass=
      |0->print_endline("Green player, please select a node to build a settlement");
        let node_index = select_node() in
        Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
+       print_endline("Green Player, please select an edge next to your settlement to place a road");
        if(pass) then play_game Quit Setup board nodes turn pass
        else play_game Setup Setup board nodes (turn+1) pass
      |1->print_endline("Magenta player, please select a node to build a settlement");
        let node_index = select_node() in
        Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
+       print_endline("Magenta Player, please select an edge next to your settlement to place a road");
        if(pass) then play_game Setup Setup board nodes (turn-1) pass
        else play_game Setup Setup board nodes (turn+1) pass
      |2->print_endline("Yellow player, please select a node to build a settlement.");
        let node_index = select_node() in
        Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
+       print_endline("Yellow Player, please select an edge next to your settlement to place a road");
        if(pass) then play_game Setup Setup board nodes (turn-1) pass
        else play_game Setup Setup board nodes (turn+1) pass
-     |3->print_endline("Yellow player, please select a node to build a settlement.");
+     |3->print_endline("Blue player, please select a node to build a settlement.");
        let node_index = select_node() in
        Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
+       print_endline("Blue Player, please select an edge next to your settlement to place a road");
        if(pass) then play_game Setup Setup board nodes (turn-1) pass
        else play_game Setup Setup board nodes turn true
      |_ -> raise(Failure("not a player"));

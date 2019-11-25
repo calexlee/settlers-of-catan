@@ -66,6 +66,7 @@ let rec rand_board_helper start num_lst rand_res_lst acc=
       match rand_res_lst with
       |[]-> failwith "not enough resources"
       |h_res::t_res-> 
+        print_endline(h_res);
         rand_board_helper (start+1) t_int t_res ((Tile.make_tile h_int h_res false)::acc)
 
 
