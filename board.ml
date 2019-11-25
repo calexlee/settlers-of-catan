@@ -71,6 +71,7 @@ let rec rand_board_helper start num_lst rand_res_lst acc=
 
 
 let rand_board () = 
+  Random.self_init ();
   rand_board_helper 0 number_list (random_resources [] resource_list) []
 
 let get_tile n t = 

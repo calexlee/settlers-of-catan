@@ -48,7 +48,7 @@ let rec print_select_node l = try let (row,col) = Lwt_main.run (main ()) in
   with
   |Failure _ -> List.map print_endline (List.rev l)
 
-type phase = Welcome | Setup | Win | Interactive | Roll | Help | Quit
+type phase = Welcome | Setup | Win | Interactive | Roll | Help | Quit |Inventory
 
 let player_list = [Player.make_player "green"; Player.make_player "magenta";
                    Player.make_player "yellow"; Player.make_player "blue"]
@@ -126,10 +126,10 @@ let distribute_resources nodes roll =
   else 
     give_resources nodes roll
 
-(*[play_game] a recrusive function that loops through the game playing where 
+(*[play_game] a recursive function that loops through the game playing where 
   [phase] represents the phase of the game [board] represents the board to 
   be drawn, [players] is the list of all the updated players and [turn] 
-  is th INDEX OF THE PLAYER IN players whose turn it is *)
+  is the INDEX OF THE PLAYER IN players whose turn it is *)
 let rec play_game phase prev_phase board nodes turn pass= 
   match phase with 
   |Welcome-> 
@@ -218,6 +218,8 @@ let rec play_game phase prev_phase board nodes turn pass=
     print_endline("The die roll resulted in a " ^ (string_of_int die_roll) ^
                   " and all of the resources have been distributed");
     play_game Interactive Roll board nodes turn pass
+
+  |Inventory -> ()
   |Interactive-> ()
   |Win->()
   |Quit->print_endline("\nThank you for playing, all your progress has been lost");()
