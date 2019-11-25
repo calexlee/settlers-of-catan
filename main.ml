@@ -154,24 +154,32 @@ let rec play_game phase prev_phase board nodes turn pass=
        let node_index = select_node() in
        Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
        print_endline("Green Player, please select an edge next to your settlement to place a road");
+       let selected_edge = select_edge () in 
+       Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
        if(pass) then play_game Quit Setup board nodes turn pass
        else play_game Setup Setup board nodes (turn+1) pass
      |1->print_endline("Magenta player, please select a node to build a settlement");
        let node_index = select_node() in
        Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
-       print_endline("Magenta Player, please select an edge next to your settlement to place a road");
+       print_endline("Green Player, please select an edge next to your settlement to place a road");
+       let selected_edge = select_edge () in 
+       Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
        if(pass) then play_game Setup Setup board nodes (turn-1) pass
        else play_game Setup Setup board nodes (turn+1) pass
      |2->print_endline("Yellow player, please select a node to build a settlement.");
        let node_index = select_node() in
        Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
        print_endline("Yellow Player, please select an edge next to your settlement to place a road");
+       let selected_edge = select_edge () in 
+       Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
        if(pass) then play_game Setup Setup board nodes (turn-1) pass
        else play_game Setup Setup board nodes (turn+1) pass
      |3->print_endline("Blue player, please select a node to build a settlement.");
        let node_index = select_node() in
        Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
        print_endline("Blue Player, please select an edge next to your settlement to place a road");
+       let selected_edge = select_edge () in 
+       Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
        if(pass) then play_game Setup Setup board nodes (turn-1) pass
        else play_game Setup Setup board nodes turn true
      |_ -> raise(Failure("not a player"));
