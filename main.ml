@@ -149,12 +149,12 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph=
          play_game Welcome Welcome board nodes turn pass false;)
     )
   |Setup -> 
-    (try
+    (try 
        (match turn with 
         |0-> 
           if(not rd_ph) then 
             (print_endline("Green player, please select a node to build a settlement");
-             let node_index =  select_node()  in
+             let node_index =  select_node() in
              Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
              play_game Setup Setup board nodes turn pass true;)
           else 
@@ -170,7 +170,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph=
              Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
              play_game Setup Setup board nodes turn pass true;)
           else 
-            (print_endline("Green Player, please select an edge next to your settlement to place a road");
+            (print_endline("Magenta Player, please select an edge next to your settlement to place a road");
              let selected_edge = select_edge () in 
              Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
              if (pass) then play_game Setup Setup board nodes (turn-1) pass false
@@ -201,7 +201,8 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph=
              else play_game Setup Setup board nodes turn true false)
         |_ -> raise(Failure("not a player"));)
      with 
-     |_-> play_game Setup Setup board nodes turn pass rd_ph;)
+     |_-> (Gamegraphics.draw_board board nodes); 
+       play_game Setup Setup board nodes turn pass rd_ph;)
   (*green player place settlement and road*)
 
   (*magenta player place settlement and road*)

@@ -37,7 +37,7 @@ let draw_player_color t = function
   |"G" -> ANSITerminal.(print_string [green] t)
   |"Y" -> ANSITerminal.(print_string [yellow] t)
   |"M" -> ANSITerminal.(print_string [magenta] t)
-  |"B" ->ANSITerminal.(print_string [blue] t)
+  |"B" ->ANSITerminal.(print_string [cyan] t)
   | _ -> raise(Failure("Not a player color"))
 
 (**[is_player_node n] is the letter of the player color, repeated twice if it
@@ -229,7 +229,7 @@ let draw_edge t pos n=
   |"G" -> ANSITerminal.(print_string [green] t)
   |"M" -> ANSITerminal.(print_string [magenta] t)
   |"Y" -> ANSITerminal.(print_string [yellow] t)
-  |"B" -> ANSITerminal.(print_string [blue] t)
+  |"B" -> ANSITerminal.(print_string [cyan] t)
   |_ -> print_string(t)
 
 let draw_board t n = 
