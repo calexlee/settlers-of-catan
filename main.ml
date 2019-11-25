@@ -248,13 +248,13 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph=
     print_endline("The die roll resulted in a " ^ (string_of_int die_roll) ^
                   " and all of the resources have been distributed");
     play_game Interactive Roll board nodes turn pass rd_ph
-  |Points -> (match turn with 
+  |Inventory -> (match turn with 
       |0 -> let list = (Player.resources_to_string (List.nth player_list 0)) in List.iter print_string list
       |1 -> let list = (Player.resources_to_string (List.nth player_list 1)) in List.iter print_string list
       |2 -> let list = (Player.resources_to_string (List.nth player_list 2)) in List.iter print_string list
       |3 -> let list = (Player.resources_to_string (List.nth player_list 3)) in List.iter print_string list
       |_ -> failwith("not a true number"))
-  |Inventory-> (match turn with 
+  |Points-> (match turn with 
       |0 -> print_int(Player.get_points(List.nth player_list 0))
       |1 -> print_int(Player.get_points(List.nth player_list 0))
       |2 -> print_int(Player.get_points(List.nth player_list 0))
