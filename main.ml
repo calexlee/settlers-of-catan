@@ -275,7 +275,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node=
     *)
 
   |Help-> (
-      (Gamegraphics.draw_board board (generate_nodes board));
+      (Gamegraphics.draw_board board nodes);
       print_endline("\nHelp Menu: The valid commands include");
       print_endline("done - when you are done with your turn");
       print_endline("inventory - access your inventory");
