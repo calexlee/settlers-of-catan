@@ -183,11 +183,12 @@ let rec rob_players index =
   all of the nodes and gives all the players resources based on if they have
   a settlement there*)
 let rec give_resources nodes roll = 
-  match nodes with 
-  |[]-> ()
-  |h::t->Node.give_resource roll h;
-    give_resources t roll;
-    ()
+  (match nodes with 
+   |[]-> ()
+   |h::t->
+     try (Node.give_resource roll h;
+          give_resources t roll)
+     with |_-> give_resources t roll)
 
 (* [distrubute_resources players board roll] distributes the resources to the
    [players] according to the [board] and [roll] condition*)
@@ -228,7 +229,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node=
               if (if_neighbor node_index list) then failwith "wrong position" else
                 begin
                   Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
-                  play_game Setup Setup board nodes turn pass true (add_node list node_index) node_index;
+                  play_game Roll Setup board nodes turn pass true (add_node list node_index) node_index;
                 end
             end
           else 
@@ -238,7 +239,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node=
               if (not (if_edge selected_edge node)) then failwith "wrong position" else
                 begin
                   Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
-                  if (pass)then play_game Quit Setup board nodes (turn-1) pass false list node
+                  if (pass)then play_game Roll Setup board nodes (turn-1) pass false list node
                   else play_game Setup Setup board nodes (turn+1) pass false list node
                 end
             end
@@ -347,7 +348,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node=
           play_game Help Help board nodes turn pass rd_ph list node;)
     );
 
-  |Roll->
+  |Roll->print_endline("ROll");
     let die_roll = random_roll () in
     distribute_resources nodes die_roll;
     print_endline(

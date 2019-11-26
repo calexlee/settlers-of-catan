@@ -20,7 +20,7 @@ let make_player color=
   {
     color = colorp; (* Need to make random out of available options*)
     resources = [];
-    points = 0;
+    points = 2;
     (*card_list = *)
     longest_road = false;
   }
