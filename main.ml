@@ -58,6 +58,19 @@ let player_list = [Player.make_player "green"; Player.make_player "magenta";
 let random_die () = 
   (Random.int 6) + 1
 
+(**[add_node] returns a list of nodes that have been selected by players*)
+let add_node list n =
+  n::list
+
+(**[if_neighbor] checks if nodes can be selected by players*)
+let if_neighbor list n =
+  List.mem list n
+
+(**[if_edge] checks if this edge is conneted with this node*)
+let if_edge edge n =
+  match edge with
+  | a, b -> if a=n || b=n then true else false
+
 (*[random_roll] generates a random number that corresponds to
   the sum of two random dies*)
 let random_roll () = 
@@ -133,7 +146,7 @@ let distribute_resources nodes roll =
   [phase] represents the phase of the game [board] represents the board to 
   be drawn, [players] is the list of all the updated players and [turn] 
   is the INDEX OF THE PLAYER IN players whose turn it is *)
-let rec play_game phase prev_phase board nodes turn pass rd_ph= 
+let rec play_game phase prev_phase board nodes turn pass rd_ph list node= 
   match phase with 
   |Welcome-> 
     ((Gamegraphics.draw_board board nodes);
@@ -143,67 +156,107 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph=
   \"done\" to continue");
      let input= Command.parse (read_line()) in
      ( match Command.to_string input with 
-       |"help"->play_game Help Welcome board nodes turn pass false
-       |"done"->play_game Setup Welcome board nodes turn pass false
-       |"quit"->play_game Quit Welcome board nodes turn pass false
+       |"help"->play_game Help Welcome board nodes turn pass false list node
+       |"done"->play_game Setup Welcome board nodes turn pass false list node
+       |"quit"->play_game Quit Welcome board nodes turn pass false list node
        |_-> print_endline("Malformed command please re-enter");
-         play_game Welcome Welcome board nodes turn pass false;)
+         play_game Welcome Welcome board nodes turn pass false list node;)
     )
   |Setup -> 
     (try 
        (match turn with 
         |0-> 
-          if(not rd_ph) then 
-            (print_endline("Green player, please select a node to build a settlement");
-             let node_index =  select_node() in
-             Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
-             play_game Setup Setup board nodes turn pass true;)
+          if(not rd_ph) then
+            begin
+              print_endline("Green player, please select a node to build a settlement");
+              let node_index =  select_node() in
+              if (if_neighbor node_index list) then failwith "wrong position" else
+                begin
+                  Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
+                  play_game Setup Setup board nodes turn pass true (add_node list node_index) node_index;
+                end
+            end
           else 
-            (print_endline("Green Player, please select an edge next to your settlement to place a road");
-             let selected_edge = select_edge () in 
-             Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
-             if (pass)then play_game Quit Setup board nodes (turn-1) pass false
-             else play_game Setup Setup board nodes (turn+1) pass false)
+            begin
+              print_endline("Green Player, please select an edge next to your settlement to place a road");
+              let selected_edge = select_edge () in 
+              if (not (if_edge selected_edge node)) then failwith "wrong position" else
+                begin
+                  Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
+                  if (pass)then play_game Quit Setup board nodes (turn-1) pass false list node
+                  else play_game Setup Setup board nodes (turn+1) pass false list node
+                end
+            end
         |1->
           if(not rd_ph) then 
-            (print_endline("Magenta player, please select a node to build a settlement");
-             let node_index =  select_node()  in
-             Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
-             play_game Setup Setup board nodes turn pass true;)
-          else 
-            (print_endline("Magenta Player, please select an edge next to your settlement to place a road");
-             let selected_edge = select_edge () in 
-             Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
-             if (pass) then play_game Setup Setup board nodes (turn-1) pass false
-             else play_game Setup Setup board nodes (turn+1) pass false)
+            begin
+              print_endline("Magenta player, please select a node to build a settlement");
+              let node_index =  select_node()  in
+              if (if_neighbor node_index list) then failwith "wrong position" else
+                begin
+                  Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
+                  play_game Setup Setup board nodes turn pass true (add_node list node_index) node_index;
+                end
+            end
+          else
+            begin
+              print_endline("Magenta Player, please select an edge next to your settlement to place a road");
+              let selected_edge = select_edge () in
+              if (not (if_edge selected_edge node)) then failwith "wrong position" else
+                begin
+                  Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
+                  if (pass) then play_game Setup Setup board nodes (turn-1) pass false list node
+                  else play_game Setup Setup board nodes (turn+1) pass false list node
+                end
+            end
         |2-> 
           if(not rd_ph) then 
-            (print_endline("Yellow player, please select a node to build a settlement.");
-             let node_index =  select_node()  in
-             Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
-             play_game Setup Setup board nodes turn pass true;)
+            begin
+              print_endline("Yellow player, please select a node to build a settlement.");
+              let node_index =  select_node()  in
+              if (if_neighbor node_index list) then failwith "wrong position" else
+                begin
+                  Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
+                  play_game Setup Setup board nodes turn pass true (add_node list node_index) node_index;
+                end
+            end
           else 
-            (print_endline("Yellow Player, please select an edge next to your settlement to place a road");
-             let selected_edge = select_edge () in 
-             Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);   
-             if (pass)then play_game Setup Setup board nodes (turn-1) pass false
-             else play_game Setup Setup board nodes (turn+1) pass false)
+            begin
+              print_endline("Yellow Player, please select an edge next to your settlement to place a road");
+              let selected_edge = select_edge () in
+              if (not (if_edge selected_edge node)) then failwith "wrong position" else
+                begin
+                  Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);   
+                  if (pass)then play_game Setup Setup board nodes (turn-1) pass false list node
+                  else play_game Setup Setup board nodes (turn+1) pass false list node
+                end
+            end
         |3-> 
-          if(not rd_ph) then 
-            (print_endline("Blue player, please select a node to build a settlement.");
-             let node_index =  select_node()  in
-             Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
-             play_game Setup Setup board nodes turn pass true;)
-          else 
-            (print_endline("Blue Player, please select an edge next to your settlement to place a road");
-             let selected_edge = select_edge () in 
-             Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
-             if(pass)then play_game Setup Setup board nodes (turn-1) pass false
-             else play_game Setup Setup board nodes turn true false)
+          if(not rd_ph) then
+            begin
+              print_endline("Blue player, please select a node to build a settlement.");
+              let node_index =  select_node()  in
+              if (if_neighbor node_index list) then failwith "wrong position" else
+                begin
+                  Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
+                  play_game Setup Setup board nodes turn pass true (add_node list node_index) node_index;
+                end
+            end
+          else
+            begin
+              print_endline("Blue Player, please select an edge next to your settlement to place a road");
+              let selected_edge = select_edge () in
+              if (not (if_edge selected_edge node)) then failwith "wrong position" else
+                begin
+                  Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
+                  if(pass)then play_game Setup Setup board nodes (turn-1) pass false list node
+                  else play_game Setup Setup board nodes turn true false list node
+                end
+            end
         |_ -> raise(Failure("not a player"));)
      with 
      |_-> (Gamegraphics.draw_board board nodes); 
-       play_game Setup Setup board nodes turn pass rd_ph;)
+       play_game Setup Setup board nodes turn pass rd_ph list node;)
   (*green player place settlement and road*)
 
   (*magenta player place settlement and road*)
@@ -232,11 +285,11 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph=
       print_endline("quit- quit the game WARNING: progress will not be saved");
       let input= Command.parse (read_line()) in
       ( match Command.to_string input with 
-        |"help"->play_game Help Help board nodes turn pass rd_ph
-        |"done"->play_game prev_phase Help board nodes turn pass rd_ph
-        |"quit"->play_game Quit Welcome board nodes turn pass rd_ph
+        |"help"->play_game Help Help board nodes turn pass rd_ph list node
+        |"done"->play_game prev_phase Help board nodes turn pass rd_ph list node
+        |"quit"->play_game Quit Welcome board nodes turn pass rd_ph list node
         |_-> print_endline("Malformed command please re-enter");
-          play_game Help Help board nodes turn pass rd_ph;)
+          play_game Help Help board nodes turn pass rd_ph list node;)
     );
 
   |Roll->
@@ -247,7 +300,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph=
       ^ " turn.");
     print_endline("The die roll resulted in a " ^ (string_of_int die_roll) ^
                   " and all of the resources have been distributed");
-    play_game Interactive Roll board nodes turn pass rd_ph
+    play_game Interactive Roll board nodes turn pass rd_ph list node
   |Inventory -> (match turn with 
       |0 -> let list = (Player.resources_to_string (List.nth player_list 0)) in List.iter print_string list
       |1 -> let list = (Player.resources_to_string (List.nth player_list 1)) in List.iter print_string list
@@ -266,7 +319,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph=
 
 let main () = 
   let rand_board1 = rand_board () in
-  play_game Welcome Welcome (rand_board1) (generate_nodes rand_board1) 0 false false
+  play_game Welcome Welcome (rand_board1) (generate_nodes rand_board1) 0 false false [] (-1)
 
 (* Execute the game engine. *)
 let () = main ()
