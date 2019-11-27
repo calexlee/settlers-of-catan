@@ -49,7 +49,7 @@ let rec print_select_node l = try let (row,col) = Lwt_main.run (main ()) in
   |Failure _ -> List.map print_endline (List.rev l)
 
 type phase = Welcome | Setup | Win | Interactive | Roll | Help | Quit |Inventory
-           | Points
+           | Points | AddSettle | AddCity | AddRoad
 
 let player_list = [Player.make_player "green"; Player.make_player "magenta";
                    Player.make_player "yellow"; Player.make_player "blue"]
@@ -324,22 +324,6 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node=
      with 
      |_-> (Gamegraphics.draw_board board nodes); 
        play_game Setup Setup board nodes turn pass rd_ph list node;)
-  (*green player place settlement and road*)
-
-  (*magenta player place settlement and road*)
-  (*yellow player place settlement and road *)
-  (*blue player place settlement and road *)
-  (*blue player place settlement and road *)
-  (*yellow player place settlement and road *)
-  (*magenta player place settlement and road*)
-  (*green player place settlement and road*)
-  (*give every player one resource from every tile touching their second settlement*)
-
-  (* 
-    1. die roll 
-    2. distribute recources
-    3. wait for player input about building or done
-    *)
 
   |Help-> (
       (Gamegraphics.draw_board board nodes);
@@ -358,8 +342,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node=
         |_-> print_endline("Malformed command please re-enter");
           play_game Help Help board nodes turn pass rd_ph list node;)
     );
-
-  |Roll->print_endline("ROll");
+  |Roll->
     let die_roll = random_roll () in
     distribute_resources nodes die_roll;
     print_endline(
@@ -368,19 +351,91 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node=
     print_endline("The die roll resulted in a " ^ (string_of_int die_roll) ^
                   " and all of the resources have been distributed");
     play_game Interactive Roll board nodes turn pass rd_ph list node
-  |Inventory -> (match turn with 
-      |0 -> let list = (Player.resources_to_string (List.nth player_list 0)) in List.iter print_string list
-      |1 -> let list = (Player.resources_to_string (List.nth player_list 1)) in List.iter print_string list
-      |2 -> let list = (Player.resources_to_string (List.nth player_list 2)) in List.iter print_string list
-      |3 -> let list = (Player.resources_to_string (List.nth player_list 3)) in List.iter print_string list
-      |_ -> failwith("not a true number"))
-  |Points-> (match turn with 
-      |0 -> print_int(Player.get_points(List.nth player_list 0))
-      |1 -> print_int(Player.get_points(List.nth player_list 0))
-      |2 -> print_int(Player.get_points(List.nth player_list 0))
-      |3 -> print_int(Player.get_points(List.nth player_list 0))
-      |_ -> failwith("not a true number"))
-  |Interactive-> ()
+  |Interactive-> 
+    print_endline("Enter any command during your turn phase 
+    or help to view commands");
+    let input= Command.parse (read_line()) in
+    ( match Command.to_string input with 
+      |"help"->
+        play_game Help Interactive board nodes turn pass rd_ph list node
+      |"done"->
+        if turn!=3 then 
+          play_game Roll Interactive board nodes (turn+1) pass rd_ph list node
+        else 
+          play_game Roll Interactive board nodes 0 pass rd_ph list node
+      |"quit"->
+        play_game Quit Interactive board nodes turn pass rd_ph list node
+      |"points"->
+        play_game Points Interactive board nodes turn pass rd_ph list node
+      |"inventory"->
+        play_game Inventory Interactive board nodes turn pass rd_ph list node
+      |"addcity"-> 
+        play_game AddCity Interactive board nodes turn pass rd_ph list node
+      |"addsettle"->
+        play_game AddSettle Interactive board nodes turn pass rd_ph list node
+      |"addroad"-> 
+        play_game AddRoad Interactive board nodes turn pass rd_ph list node
+      |_-> print_endline("Malformed command please re-enter");
+        play_game Interactive Interactive board nodes turn pass rd_ph list node)
+  |AddSettle->(
+      try(
+        Gamegraphics.draw_board board nodes;
+        print_endline("select a node to place a settlement");
+        (*WE NEED TO CHECK IF YOU HAVE ENOUGH RESOURCES AND THEN TAKE THEM*)
+        let node_index =  select_node() in
+        if (if_neighbor node_index list) then failwith "wrong position" else
+          begin
+            Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
+            play_game Interactive AddSettle board nodes turn pass rd_ph (add_node list node_index) node_index;
+          end)
+      with 
+      |_->play_game AddSettle AddSettle board nodes turn pass rd_ph list node);
+  |AddCity->(
+      try(
+        Gamegraphics.draw_board board nodes;
+        print_endline("select a node to place a settlement");
+        (*WE NEED TO CHECK IF YOU HAVE ENOUGH RESOURCES AND THEN TAKE THEM*)
+        let node_index =  select_node() in
+        if (if_neighbor node_index list) then failwith "wrong position" else
+          begin
+            Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
+            play_game Interactive AddSettle board nodes turn pass rd_ph (add_node list node_index) node_index;
+          end)
+      with 
+      |_->play_game AddSettle AddCity board nodes turn pass rd_ph list node);
+  |AddRoad->(
+      try(
+        Gamegraphics.draw_board board nodes;
+        print_endline("select an edge to place a road");
+        (*WE NEED TO CHECK IF YOU HAVE ENOUGH RESOURCES AND THEN TAKE THEM*)
+        let selected_edge =  select_edge() in
+        if (not (if_edge selected_edge node)) then failwith "wrong position" else
+          begin
+            Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
+            play_game Interactive AddRoad board nodes turn pass rd_ph list node;
+          end) 
+      with 
+      |_->play_game AddRoad AddRoad board nodes turn pass rd_ph list node);
+  |Inventory -> 
+    Gamegraphics.draw_board board nodes;
+    (match turn with 
+     |0 -> let list = (Player.resources_to_string (List.nth player_list 0)) in List.iter print_string list
+     |1 -> let list = (Player.resources_to_string (List.nth player_list 1)) in List.iter print_string list
+     |2 -> let list = (Player.resources_to_string (List.nth player_list 2)) in List.iter print_string list
+     |3 -> let list = (Player.resources_to_string (List.nth player_list 3)) in List.iter print_string list
+     |_ -> failwith("not a true number"));
+    print_endline("");
+    play_game prev_phase Inventory board nodes turn pass rd_ph list node;
+  |Points-> 
+    Gamegraphics.draw_board board nodes;
+    (match turn with 
+     |0 -> print_int(Player.get_points(List.nth player_list 0))
+     |1 -> print_int(Player.get_points(List.nth player_list 0))
+     |2 -> print_int(Player.get_points(List.nth player_list 0))
+     |3 -> print_int(Player.get_points(List.nth player_list 0))
+     |_ -> failwith("not a true number"));
+    print_endline("");
+    play_game prev_phase Inventory board nodes turn pass rd_ph list node;
   |Win->()
   |Quit->print_endline("\nThank you for playing, all your progress has been lost");()
 

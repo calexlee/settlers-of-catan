@@ -3,6 +3,7 @@ type command =
   | Inventory
   | AddCity
   | AddSettle
+  | AddRoad
   | Done
   | Help
   | Points
@@ -22,6 +23,7 @@ let to_string command =
   |Inventory -> "inventory"
   |AddCity -> "addcity"
   |AddSettle -> "addsettle"
+  |AddRoad -> "addroad"
   |Done-> "done"
   |Help -> "help"
   |Points -> "points"
@@ -39,11 +41,13 @@ let parse str =
         if t = [] then Inventory
         else raise Malformed
       end
-      else if h = "add" || h = "Add" then begin
+      else if h = "build" || h = "Build" then begin
         match t with
         | [] -> raise Malformed
-        | h::t -> if h = "city"&& t=[] then AddCity
-          else if h = "settlement"&&t=[] then AddSettle else raise Malformed
+        | h::t -> if (h = "city" || h="City")&& t=[] then AddCity
+          else if (h = "settlement"|| h= "Settlement") && t=[] then AddSettle 
+          else if (h= "road" || h = "Road") && t=[] then AddRoad
+          else raise Malformed
       end
       else if h= "done" || h = "Done" then begin 
         if t = [] then Done
