@@ -47,14 +47,40 @@ let give_resource (dr:int) (node:t)=
   |Some n -> 
     try 
       match (give_resource_helper dr node.neigh_tiles) with
-      |x when x="wood"->Player.give_wood n
-      |x when x="sheep"->Player.give_sheep n
-      |x when x="wheat"->Player.give_wheat n
-      |x when x="rock"->Player.give_rock n
-      |x when x="brick"->Player.give_brick n
+      |"wood"->Player.give_wood n
+      |"sheep"->Player.give_sheep n
+      |"wheat"->Player.give_wheat n
+      |"rock"->Player.give_rock n
+      |"brick"->Player.give_brick n
       |_->failwith "invalid resource type"
     with
     |Failure x->()
+
+(**[give_resource_start_helper] is a helper method for give_resource_start
+   which takes in a [player] and a list of tiles [lst] in order to 
+   give the player one of every resource from the neighboring tiles *)
+let rec give_resource_start_helper (player:Player.t) (lst: Tile.t list) = 
+  match lst with 
+  |[]->()
+  |h::t-> 
+    (match Tile.get_resource h with 
+     |"wood"->Player.give_wood player
+     |"sheep"->Player.give_sheep player
+     |"wheat"->Player.give_wheat player
+     |"rock"->Player.give_rock player
+     |"brick"->Player.give_brick player
+     |_->failwith "invalid resource type");
+    give_resource_start_helper player t
+
+
+let give_resource_start (node:t)= 
+  match node.player with 
+  |None -> failwith "No player"
+  |Some n -> 
+    try 
+      give_resource_start_helper n node.neigh_tiles
+    with 
+    |Failure x-> ()
 
 let get_index t = 
   t.index

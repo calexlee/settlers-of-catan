@@ -163,13 +163,20 @@ let build_road turn nodes node_tup counter acc =
    players settlement built RAISES EXCEPTION IF PLAYER CAN NOT BUILD THERE
    condition for exception is that another player has a neighboring node*)
 let rec build_settlement turn nodes nodes_index counter acc building= 
-  (*BASE IMPLEMENTATION doers not check if the node is in the correct place*)
   match nodes with 
   |[]-> List.rev acc
   |h::t-> if (nodes_index=counter) then (
       (Node.add_settlement building (get_index 0 turn player_list) h);
       build_settlement turn t nodes_index (counter+1) (h::acc) building)
     else build_settlement turn t nodes_index (counter+1) (h::acc) building
+
+(*[start_resources turn nodes nodes_index counter] is a function that returns
+  unit after giving a player all the resources that they start with*)
+let rec start_resources turn nodes nodes_index counter = 
+  match nodes with 
+  |[]-> ()
+  |h::t-> if nodes_index=counter then failwith ""
+    else start_resources turn nodes nodes_index (counter+1)
 
 
 (* [rob_players] a function that runs through the players and removes
@@ -228,6 +235,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node=
               let node_index =  select_node() in
               if (if_neighbor node_index list) then failwith "wrong position" else
                 begin
+                  if pass then Node.give_resource_start (get_index 0 node_index nodes) else ();
                   Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
                   play_game Roll Setup board nodes turn pass true (add_node list node_index) node_index;
                 end
@@ -250,6 +258,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node=
               let node_index =  select_node()  in
               if (if_neighbor node_index list) then failwith "wrong position" else
                 begin
+                  if pass then Node.give_resource_start (get_index 0 node_index nodes) else ();
                   Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
                   play_game Setup Setup board nodes turn pass true (add_node list node_index) node_index;
                 end
@@ -272,6 +281,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node=
               let node_index =  select_node()  in
               if (if_neighbor node_index list) then failwith "wrong position" else
                 begin
+                  if pass then Node.give_resource_start (get_index 0 node_index nodes) else ();
                   Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
                   play_game Setup Setup board nodes turn pass true (add_node list node_index) node_index;
                 end
@@ -294,6 +304,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node=
               let node_index =  select_node()  in
               if (if_neighbor node_index list) then failwith "wrong position" else
                 begin
+                  if pass then Node.give_resource_start (get_index 0 node_index nodes) else ();
                   Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
                   play_game Setup Setup board nodes turn pass true (add_node list node_index) node_index;
                 end

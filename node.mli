@@ -48,3 +48,7 @@ val generate_nodes : Board.t -> t list
 
 (**[generateNodes ()] is a generated list of nodes indexed from 1-54 *)
 val generate_empty_nodes : unit -> t list
+
+(**[give_resource_start] gives the player who has placed a settlement at
+   node [node] all the resources from the surrounding tiles *)
+val give_resource_start: t -> unit
