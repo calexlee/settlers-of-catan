@@ -59,6 +59,36 @@ let give_wood t =
 let give_wheat t =
   t.resources <- Wheat :: t.resources
 
+(**[remove_resources resource acc lst] loops through resources returns 
+   reversed list, which does not matter since resources is a set where order
+   does not matter*)
+let rec remove_resource (res:r) (acc:r list) (not_rem:bool)= function
+  |[]->if(not_rem) then failwith "Does not have resource" 
+    else acc
+  |h::t->
+    (if h = res  && not_rem then remove_resource res acc false t 
+     else remove_resource res (h::acc) not_rem t)
+
+(**[take_sheep t] takes a sheep from player [t]*)
+let take_sheep t = 
+  t.resources <- (remove_resource Sheep [] true t.resources)
+
+(**[take_wheat t] takes a wheat from player [t]*)
+let take_wheat t = 
+  t.resources <- (remove_resource Wheat [] true t.resources)
+
+(**[take_rock t] takes a rock from player [t]*)
+let take_rock t = 
+  t.resources <- (remove_resource Rock [] true t.resources)
+
+(**[take_brick t] takes a brick from player [t]*)
+let take_brick t = 
+  t.resources <- (remove_resource Brick [] true t.resources)
+
+(**[take_wood t] takes a wood from player [t]*)
+let take_wood t = 
+  t.resources <- (remove_resource Wood [] true t.resources)
+
 let rec half_resources resources len index = 
   match resources with 
   |[]-> failwith "not possible"
@@ -87,3 +117,12 @@ let resources_to_string player =
         |Rock -> "Rock" :: loop t
         |Desert -> "Dessert" :: loop t 
       end in loop player.resources
+
+let build_settlement player = 
+  failwith""
+
+let build_city player = 
+  failwith""
+
+let build_road player = 
+  failwith""

@@ -39,13 +39,27 @@ val give_wood  : t -> unit
 (**[give_sheep t] gives the player [t] wheat.*)
 val give_wheat : t -> unit
 
-(*[player_to_string player] is a string representation of [player]*)
+(**[player_to_string player] is a string representation of [player]*)
 val player_to_string : t -> string
 
-(*[resources_to_string player] is a string representation of [player.resources]*)
+(**[resources_to_string player] is a string representation of [player.resources]*)
 val resources_to_string : t -> string list
 
-(*[rob_player t] mutates player [t] so that they lose half of their resources*)
+(**[rob_player t] mutates player [t] so that they lose half of their resources*)
 val rob_player : t -> unit
 
+(**[build_settlement player] checks if [player] has enough resources to build
+   a settlement and if they do, then removes those resources from the players
+   inventory*)
+val build_settlement: t->unit
+
+(**[build_city player] checks if [player] has enough resources to build
+   a city and if they do, then removes those resources from the players
+   inventory*)
+val build_city: t->unit
+
+
+(**[build_road player] checks if [player] has enough resources to build a road,
+   if they do then it removes those resources from the players inventory*)
+val build_road: t-> unit
 

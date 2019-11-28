@@ -330,8 +330,9 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node=
       print_endline("\nHelp Menu: The valid commands include");
       print_endline("done - when you are done with your turn");
       print_endline("inventory - access your inventory");
-      print_endline("add city - build a city when it is your turn, and you have required resources");
-      print_endline("add settlement - build a settlement when it is your turn, and you have required resources");
+      print_endline("build city - build a city when it is your turn, and you have required resources");
+      print_endline("build settlement - build a settlement when it is your turn, and you have required resources");
+      print_endline("build road - build a road when it is your turn, and you have required resources");
       print_endline("help- display help menu");
       print_endline("quit- quit the game WARNING: progress will not be saved");
       let input= Command.parse (read_line()) in
