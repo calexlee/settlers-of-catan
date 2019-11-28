@@ -345,13 +345,13 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node=
   |Roll->
     let die_roll = random_roll () in
     distribute_resources nodes die_roll;
-    print_endline(
-      "It is player " ^ Player.player_to_string (get_index 0 turn player_list)
-      ^ " turn.");
     print_endline("The die roll resulted in a " ^ (string_of_int die_roll) ^
                   " and all of the resources have been distributed");
     play_game Interactive Roll board nodes turn pass rd_ph list node
   |Interactive-> 
+    print_endline(
+      "It is player " ^ Player.player_to_string (get_index 0 turn player_list)
+      ^ " turn.");
     print_endline("Enter any command during your turn phase 
     or help to view commands");
     let input= Command.parse (read_line()) in
@@ -418,11 +418,16 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node=
       |_->play_game AddRoad AddRoad board nodes turn pass rd_ph list node);
   |Inventory -> 
     Gamegraphics.draw_board board nodes;
+    print_endline("your inventory includes: ");
     (match turn with 
-     |0 -> let list = (Player.resources_to_string (List.nth player_list 0)) in List.iter print_string list
-     |1 -> let list = (Player.resources_to_string (List.nth player_list 1)) in List.iter print_string list
-     |2 -> let list = (Player.resources_to_string (List.nth player_list 2)) in List.iter print_string list
-     |3 -> let list = (Player.resources_to_string (List.nth player_list 3)) in List.iter print_string list
+     |0 -> let list = (Player.resources_to_string (List.nth player_list 0)) 
+       in List.iter (fun x -> print_string(x ^ ", ")) list
+     |1 -> let list = (Player.resources_to_string (List.nth player_list 1)) 
+       in List.iter (fun x -> print_string(x ^ ", ")) list
+     |2 -> let list = (Player.resources_to_string (List.nth player_list 2)) 
+       in List.iter (fun x -> print_string(x ^ ", ")) list
+     |3 -> let list = (Player.resources_to_string (List.nth player_list 3)) 
+       in List.iter (fun x -> print_string(x ^ ", ")) list
      |_ -> failwith("not a true number"));
     print_endline("");
     play_game prev_phase Inventory board nodes turn pass rd_ph list node;
