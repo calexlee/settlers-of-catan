@@ -56,6 +56,7 @@ let player_list = [Player.make_player "green"; Player.make_player "magenta";
 
 (**[random_die] is a random die between 1 and 6*)
 let random_die () = 
+  Random.self_init ();
   (Random.int 6) + 1
 
 (**[add_node] returns a list of nodes that have been selected by players*)

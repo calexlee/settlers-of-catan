@@ -75,8 +75,10 @@ let grab_resource t n =
 let grab_num t n = 
   Board.grab_num t n |> even_string_number
 
-let rc_to_node rc = 
-  match rc with 
+let rc_to_tile = function 
+  | _ -> raise(Failure("Not a Tile"))
+
+let rc_to_node = function 
   |	(36,40)	-> 53
   |	(36,34)	-> 52
   |	(33,49)	-> 51

@@ -14,3 +14,8 @@ val rc_to_node: (int*int) -> int
    [rc] 
    Raises: Failure "Not an Edge" if the (row,col) is not an edge *)
 val rc_to_edge: (int*int) -> (int*int)
+
+(**[rc_to_tile rc] is the tile number of the tile corresponding to the 
+   row,column pair [rc]
+   Raises: Failure "Not a Tile" if [rc] does not correspond to a tile *)
+val rc_to_tile: (int*int) -> (int)

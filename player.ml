@@ -95,7 +95,8 @@ let rec half_resources resources len index =
   |h::t-> if(len=index) then resources else half_resources t len (index+1) 
 
 let rob_player t = 
-  t.resources <- half_resources t.resources ((List.length t.resources)/2) 0 
+  if List.length (t.resources) > 7 then 
+    t.resources <- half_resources t.resources ((List.length t.resources)/2) 0 
 
 let player_to_string player = 
   match player.color with 

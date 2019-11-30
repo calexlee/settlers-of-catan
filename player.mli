@@ -45,7 +45,8 @@ val player_to_string : t -> string
 (**[resources_to_string player] is a string representation of [player.resources]*)
 val resources_to_string : t -> string list
 
-(**[rob_player t] mutates player [t] so that they lose half of their resources*)
+(**[rob_player t] mutates player [t] so that they lose half of their resources 
+   if the number of resources they have is greater than seven*)
 val rob_player : t -> unit
 
 (**[build_settlement player] checks if [player] has enough resources to build
