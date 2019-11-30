@@ -251,8 +251,8 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
               let node_index =  select_node() in
               if (if_neighbor node_index list) then failwith "wrong position" else
                 begin
-                  if pass then Node.give_resource_start (get_index 0 node_index nodes) else ();
                   Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
+                  if pass then Node.give_resource_start (get_index 0 node_index nodes) else ();
                   play_game Setup Setup board nodes turn pass true (add_node list node_index) ((turn, node_index, -1)::node) message;
                 end
             end
@@ -274,8 +274,8 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
               let node_index =  select_node()  in
               if (if_neighbor node_index list) then failwith "wrong position" else
                 begin
-                  if pass then Node.give_resource_start (get_index 0 node_index nodes) else ();
                   Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
+                  if pass then Node.give_resource_start (get_index 0 node_index nodes) else ();
                   play_game Setup Setup board nodes turn pass true (add_node list node_index) ((turn, node_index, -1)::node) message;
                 end
             end
@@ -297,8 +297,8 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
               let node_index =  select_node()  in
               if (if_neighbor node_index list) then failwith "wrong position" else
                 begin
-                  if pass then Node.give_resource_start (get_index 0 node_index nodes) else ();
                   Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
+                  if pass then Node.give_resource_start (get_index 0 node_index nodes) else ();
                   play_game Setup Setup board nodes turn pass true (add_node list node_index) ((turn, node_index, -1)::node) message;
                 end
             end
@@ -320,8 +320,8 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
               let node_index =  select_node()  in
               if (if_neighbor node_index list) then failwith "wrong position" else
                 begin
-                  if pass then Node.give_resource_start (get_index 0 node_index nodes) else ();
                   Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
+                  if pass then Node.give_resource_start (get_index 0 node_index nodes) else ();
                   play_game Setup Setup board nodes turn pass true (add_node list node_index) ((turn, node_index, -1)::node) message;
                 end
             end
