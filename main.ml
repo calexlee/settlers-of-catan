@@ -366,7 +366,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
               " and all of the resources have been distributed" in
     play_game Interactive Roll board nodes turn pass rd_ph list node mes
   |Interactive-> 
-    if (prev_phase=Roll) then 
+    if (prev_phase=Roll || prev_phase=AddCity || prev_phase=AddRoad || prev_phase=AddSettle) then 
       (Gamegraphics.draw_board board nodes;
        print_endline(message);)
     else if (prev_phase != Points && prev_phase != Inventory) then 
@@ -410,16 +410,16 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
       try(
         Gamegraphics.draw_board board nodes;
         print_endline("select a node to place a settlement");
-        (*WE NEED TO CHECK IF YOU HAVE ENOUGH RESOURCES AND THEN TAKE THEM*)
         let node_index =  select_node() in
         if (if_neighbor node_index list) then failwith "wrong position" else
           begin
             Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
-            play_game Interactive AddSettle board nodes turn pass rd_ph (add_node list node_index) ((turn, node_index, -1)::node) message;
+            play_game Interactive AddSettle board nodes turn pass rd_ph (add_node list node_index) ((turn, node_index, -1)::node) "";
           end)
       with 
       |_->play_game AddSettle AddSettle board nodes turn pass rd_ph list node message);
   |AddCity->(
+      (*This try build the settlement ONLY if the player has enough resources*)
       (try(
          Player.build_city (get_index 0 turn player_list);)
        with |_->
@@ -428,12 +428,11 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
       try(
         Gamegraphics.draw_board board nodes;
         print_endline("select a node to place a settlement");
-        (*WE NEED TO CHECK IF YOU HAVE ENOUGH RESOURCES AND THEN TAKE THEM*)
         let node_index =  select_node() in
         if (if_neighbor node_index list) then failwith "wrong position" else
           begin
             Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
-            play_game Interactive AddCity board nodes turn pass rd_ph (add_node list node_index) ((turn, node_index, -1)::node) message;
+            play_game Interactive AddCity board nodes turn pass rd_ph (add_node list node_index) ((turn, node_index, -1)::node) "";
           end)
       with 
       |_->play_game AddSettle AddCity board nodes turn pass rd_ph list node message);
@@ -451,10 +450,11 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
         if (not (if_edge turn selected_edge node)) then failwith "wrong position" else
           begin
             Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
-            play_game Interactive AddRoad board nodes turn pass rd_ph list ((turn, fst selected_edge, snd selected_edge)::node) message;
+            play_game Interactive AddRoad board nodes turn pass rd_ph list ((turn, fst selected_edge, snd selected_edge)::node) "";
           end) 
       with 
-      |_->play_game AddRoad AddRoad board nodes turn pass rd_ph list node message);
+      |_->
+        play_game AddRoad AddRoad board nodes turn pass rd_ph list node message);
   |Inventory -> 
     Gamegraphics.draw_board board nodes;
     print_endline("your inventory includes: ");
