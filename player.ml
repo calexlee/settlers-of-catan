@@ -113,16 +113,49 @@ let resources_to_string player =
         |Wood -> "Wood" :: loop t
         |Brick -> "Brick" :: loop t
         |Wheat -> "Wheat" :: loop t
-        |Sheep -> "Shhep" :: loop t
+        |Sheep -> "Sheep" :: loop t
         |Rock -> "Rock" :: loop t
         |Desert -> "Dessert" :: loop t 
       end in loop player.resources
 
-let build_settlement player = 
-  failwith""
+(**[subset lst1 lst2] returns true if lst2 is a subset of lst 1 *)
+let rec subset (lst1:r list) (lst2:r list) : bool = 
+  match lst2 with 
+  |[]-> true
+  |h::t-> if(List.mem h lst1) then 
+      let lst1 = remove_resource h [] true lst1 in 
+      subset lst1 t 
+    else false
 
-let build_city player = 
-  failwith""
+let build_settlement (player:t) : unit = 
+  let resoures_req = [Sheep;Wood;Brick;Wheat] in
+  if subset player.resources resoures_req then 
+    (take_sheep player;
+     take_wood player;
+     take_brick player;
+     take_wheat player;
+     ())
+  else 
+    failwith "Not enough resources for settlement"
 
-let build_road player = 
-  failwith""
+let build_city (player:t) : unit = 
+  let resources_req = [Wheat;Wheat;Rock;Rock;Rock] in 
+  if subset player.resources resources_req then 
+    (
+      take_wheat player;
+      take_wheat player; 
+      take_rock player;
+      take_rock player;
+      take_rock player;
+      ())
+  else 
+    failwith "not enough resources for a city"
+
+let build_road (player:t) : unit =
+  let resources_req = [Wood;Brick] in 
+  if subset player.resources resources_req then 
+    (take_wood player;
+     take_brick player;
+     ())
+  else 
+    failwith "not enough resources for a road"
