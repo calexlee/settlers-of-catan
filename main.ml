@@ -356,7 +356,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
         |"help"->play_game Help Help board nodes turn pass rd_ph list node message
         |"done"->play_game prev_phase Help board nodes turn pass rd_ph list node message
         |"quit"->play_game Quit Welcome board nodes turn pass rd_ph list node message
-        |_-> print_endline("Malformed command please re-enter");
+        |_-> ANSITerminal.(print_string [red] "Malformed command please re-enter");
           play_game Help Help board nodes turn pass rd_ph list node message;)
     );
   |Roll->
@@ -368,7 +368,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
   |Interactive-> 
     if (prev_phase=Roll || prev_phase=AddCity || prev_phase=AddRoad || prev_phase=AddSettle) then 
       (Gamegraphics.draw_board board nodes;
-       print_endline(message);)
+       ANSITerminal.(print_string [red] (message^"\n"));)
     else if (prev_phase != Points && prev_phase != Inventory) then 
       (Gamegraphics.draw_board board nodes;)    
     else ();
@@ -386,8 +386,8 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
           play_game Roll Interactive board nodes (turn+1) pass rd_ph list node message
         else 
           play_game Roll Interactive board nodes 0 pass rd_ph list node message
-      |"quit"->
-        play_game Quit Interactive board nodes turn pass rd_ph list node message 
+      |"quit"-> 
+        play_game Quit Interactive board nodes turn pass rd_ph list node message
       |"points"->
         play_game Points Interactive board nodes turn pass rd_ph list node message
       |"inventory"->
@@ -405,11 +405,11 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
       (try(
          Player.build_settlement (get_index 0 turn player_list);)
        with |_->
-         (let msg = "you do not have enough resources to build a settlement" in 
+         (let msg = "You do not have enough resources to build a settlement" in 
           play_game Interactive AddSettle board nodes turn pass rd_ph list node msg));
       try(
         Gamegraphics.draw_board board nodes;
-        print_endline("select a node to place a settlement");
+        print_endline("Select a node to place a settlement");
         let node_index =  select_node() in
         if (if_neighbor node_index list) then failwith "wrong position" else
           begin
@@ -423,11 +423,11 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
       (try(
          Player.build_city (get_index 0 turn player_list);)
        with |_->
-         (let msg = "you do not have enough resources to build a city" in
+         (let msg = "You do not have enough resources to build a city" in
           play_game Interactive AddCity board nodes turn pass rd_ph list node msg));
       try(
         Gamegraphics.draw_board board nodes;
-        print_endline("select a node to place a settlement");
+        print_endline("Select a node to place a settlement");
         let node_index =  select_node() in
         if (if_neighbor node_index list) then failwith "wrong position" else
           begin
@@ -440,11 +440,11 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
       (try(
          Player.build_road (get_index 0 turn player_list);)
        with |_->
-         ( let msg = "you do not have enough resources to build a road" in
+         ( let msg = "You do not have enough resources to build a road" in
            play_game Interactive AddRoad board nodes turn pass rd_ph list node msg));
       try(
         Gamegraphics.draw_board board nodes;
-        print_endline("select an edge to place a road");
+        print_endline("Select an edge to place a road");
         (*WE NEED TO CHECK IF YOU HAVE ENOUGH RESOURCES AND THEN TAKE THEM*)
         let selected_edge =  select_edge() in
         if (not (if_edge turn selected_edge node)) then failwith "wrong position" else
@@ -457,7 +457,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
         play_game AddRoad AddRoad board nodes turn pass rd_ph list node message);
   |Inventory -> 
     Gamegraphics.draw_board board nodes;
-    print_endline("your inventory includes: ");
+    print_endline("Your inventory includes: ");
     (match turn with 
      |0 -> let list = (Player.resources_to_string (List.nth player_list 0)) 
        in List.iter (fun x -> print_string(x ^ ", ")) list
@@ -481,7 +481,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
     print_endline("");
     play_game prev_phase Inventory board nodes turn pass rd_ph list node message;
   |Win->()
-  |Quit->print_endline("\nThank you for playing, all your progress has been lost");()
+  |Quit->print_endline("\nThank you for playing!!!"); exit 0
 
 let main () = 
   let rand_board1 = rand_board () in

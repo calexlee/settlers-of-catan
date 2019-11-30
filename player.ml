@@ -102,7 +102,7 @@ let player_to_string player =
   |Magenta -> "Magenta"
   |Blue -> "Blue"
   |Green -> "Green"
-  |Yellow -> "yellow"
+  |Yellow -> "Yellow"
 
 let resources_to_string player = 
   let rec loop list =
@@ -115,7 +115,7 @@ let resources_to_string player =
         |Wheat -> "Wheat" :: loop t
         |Sheep -> "Sheep" :: loop t
         |Rock -> "Rock" :: loop t
-        |Desert -> "Dessert" :: loop t 
+        |Desert -> "Desert" :: loop t 
       end in loop player.resources
 
 (**[subset lst1 lst2] returns true if lst2 is a subset of lst 1 *)
