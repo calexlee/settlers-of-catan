@@ -26,4 +26,4 @@ exception Malformed
 val parse : string -> command
 
 (*[to_string command] is the command but in a string form *)
-val to_string : command -> string
+val to_data : command -> string * int * string * int * string

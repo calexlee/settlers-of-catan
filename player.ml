@@ -1,12 +1,19 @@
 (* Player to be implemented here *)
 type r = Wood | Brick | Wheat | Sheep | Rock | Desert
+
 type color = Green | Magenta | Yellow | Blue
+
+
+type port = ThreeToOne of bool | TwoToRes of r
+
+
 type t = {
   color : color;
   mutable resources: r list;
   mutable points: int;
   (*mutable card_list: *)
   mutable longest_road: bool;
+  mutable ports: port list;
 }
 
 let make_player color= 
@@ -23,6 +30,7 @@ let make_player color=
     points = 2;
     (*card_list = *)
     longest_road = false;
+    ports = [];
   }
 
 let num_of_res t = 
@@ -59,6 +67,49 @@ let give_wood t =
 let give_wheat t =
   t.resources <- Wheat :: t.resources
 
+let give_port t (threeToOne:bool) (res:string) : unit = 
+  if threeToOne then 
+    t.ports <-  (ThreeToOne true)::t.ports
+  else
+    match res with  
+    |"sheep"-> t.ports <-  (TwoToRes Sheep)::t.ports 
+    |"wheat"-> t.ports <-  (TwoToRes Wheat)::t.ports
+    |"wood"-> t.ports <-  (TwoToRes Wood)::t.ports
+    |"brick"-> t.ports <-  (TwoToRes Brick)::t.ports
+    |"rock"-> t.ports <-  (TwoToRes Rock)::t.ports
+    |_-> failwith "invalid port"
+
+(**[has_three_to_one_help lst] returns true if a [lst] includes a 
+   three to one port*)
+let rec has_three_to_one_help (lst:port list) : bool =
+  match lst with 
+  |[]-> false 
+  |h::t-> if h=ThreeToOne true then true else has_three_to_one_help t
+
+
+let has_three_to_one t : bool = 
+  has_three_to_one_help t.ports
+
+(**[has_three_to_one_help lst] returns true if a [lst] includes a 
+   three to one port*)
+let rec has_two_to_one (lst:port list) (res:string) : bool =
+  match lst with 
+  |[]-> false 
+  |h::t-> let newres = 
+            (match res with 
+             |"sheep"-> Sheep
+             |"wheat"-> Wheat
+             |"wood"-> Wood
+             |"brick"-> Brick
+             |"rock"-> Rock
+             |_->failwith"")in 
+    if h = TwoToRes newres then true else has_three_to_one_help t
+
+let has_two_to_one t (res:string) : bool = 
+  has_two_to_one t.ports res
+
+
+
 (**[remove_resources resource acc lst] loops through resources returns 
    reversed list, which does not matter since resources is a set where order
    does not matter*)
@@ -88,6 +139,43 @@ let take_brick t =
 (**[take_wood t] takes a wood from player [t]*)
 let take_wood t = 
   t.resources <- (remove_resource Wood [] true t.resources)
+
+let bank_trade (player:t) (x:int) (res1:string) (y:int) (res2:string) : unit = 
+  (for var = x downto 0 do
+     match res1 with 
+     |"sheep"-> take_sheep player
+     |"wheat"-> take_wheat player
+     |"wood"-> take_wood player
+     |"brick"-> take_brick player
+     |"rock"-> take_rock player
+     |_-> failwith "Invalid resource"
+   done;
+   for var2 = y downto 0 do
+     match res2 with 
+     |"sheep"-> give_sheep player 
+     |"wheat"-> give_wheat player
+     |"wood"-> give_wood player
+     |"brick"-> give_brick player
+     |"rock"-> give_rock player
+     |_-> failwith "Invalid resource"
+   done)
+
+(**[has_trade_res_helper x res lst] returns true if there are [x] entries
+   of [res] in [lst]*)
+let rec has_trade_res_helper x res lst = 
+  if x = 0 then true 
+  else has_trade_res_helper (x-1) res (remove_resource res [] true lst)
+
+let has_trade_res (player:t) (x:int) (res:string)= 
+  let newres = 
+    (match res with 
+     |"sheep"-> Sheep
+     |"wheat"-> Wheat
+     |"wood"-> Wood
+     |"brick"-> Brick
+     |"rock"-> Rock
+     |_->failwith"") in 
+  has_trade_res_helper x newres player.resources
 
 let rec half_resources resources len index = 
   match resources with 

@@ -6,6 +6,9 @@ type t
 (** The abstract type representing resources.*)
 type r
 
+(* The abstract type reresenting a a players port *)
+type port
+
 (** The abstract type representing color*)
 type color
 
@@ -38,6 +41,16 @@ val give_wood  : t -> unit
 
 (**[give_sheep t] gives the player [t] wheat.*)
 val give_wheat : t -> unit
+
+(**[has_three_to_one t] returns true if the player [t] has a three to one port *)
+val has_three_to_one : t -> bool
+
+(**[has_two_to_one t res] returns true if the player [t] has a three to one port 
+   corresponding to resource [res]*)
+val has_two_to_one : t-> string -> bool
+
+(**[has_trade_res player x res] returns true if [player] has [x] of [res]*)
+val has_trade_res : t -> int -> string -> bool
 
 (**[player_to_string player] is a string representation of [player]*)
 val player_to_string : t -> string
@@ -79,3 +92,6 @@ val build_city: t->unit
    if they do then it removes those resources from the players inventory*)
 val build_road: t-> unit
 
+(**[bank_trade player x res1 y res2] takes [x] of [res1] from player [player]
+   and gives [y] of [res2] to player*)
+val bank_trade: t -> int -> string -> int -> string -> unit
