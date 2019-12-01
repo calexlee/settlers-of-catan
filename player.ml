@@ -120,13 +120,25 @@ let resources_to_string player =
       end in loop player.resources
 
 (**[subset lst1 lst2] returns true if lst2 is a subset of lst 1 *)
-let rec subset (lst1:r list) (lst2:r list) : bool = 
+let rec subset lst1 lst2 : bool = 
   match lst2 with 
   |[]-> true
   |h::t-> if(List.mem h lst1) then 
       let lst1 = remove_resource h [] true lst1 in 
       subset lst1 t 
     else false
+
+let can_build_set (player:t) : bool = 
+  let resources_req = [Sheep;Wood;Brick;Wheat] in 
+  subset player.resources resources_req
+
+let can_build_city (player:t) : bool = 
+  let resources_req = [Wheat;Wheat;Rock;Rock;Rock] in 
+  subset player.resources resources_req
+
+let can_build_road (player:t) : bool = 
+  let resources_req = [Brick;Wood] in 
+  subset player.resources resources_req
 
 let build_settlement (player:t) : unit = 
   let resoures_req = [Sheep;Wood;Brick;Wheat] in

@@ -45,9 +45,25 @@ val player_to_string : t -> string
 (**[resources_to_string player] is a string representation of [player.resources]*)
 val resources_to_string : t -> string list
 
+(**[subset lst1 lst2] is true if lst 2 is a subset of lst1 and false
+   otherwise *)
+val subset : r list -> r list -> bool
+
 (**[rob_player t] mutates player [t] so that they lose half of their resources 
    if the number of resources they have is greater than seven*)
 val rob_player : t -> unit
+
+(**[can_build_set player] returns true or false if player [player] can build
+   a settlement*)
+val can_build_set: t -> bool 
+
+(**[can_build_city player] returns true or false if player [player] can build
+   a city*)
+val can_build_city: t -> bool 
+
+(**[can_build_road player] returns true or false if player [player] can build
+   a road*)
+val can_build_road: t -> bool 
 
 (**[build_settlement player] checks if [player] has enough resources to build
    a settlement and if they do, then removes those resources from the players
@@ -58,7 +74,6 @@ val build_settlement: t->unit
    a city and if they do, then removes those resources from the players
    inventory*)
 val build_city: t->unit
-
 
 (**[build_road player] checks if [player] has enough resources to build a road,
    if they do then it removes those resources from the players inventory*)

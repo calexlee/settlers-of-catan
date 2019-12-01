@@ -403,59 +403,61 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
         play_game Interactive Interactive board nodes turn pass rd_ph list node message)
   |AddSettle->(
       (*This try build the settlement ONLY if the player has enough resources*)
-      (try(
-         Player.build_settlement (get_index 0 turn player_list);)
-       with |_->
-         (let msg = "You do not have enough resources to build a settlement" in 
-          play_game Interactive AddSettle board nodes turn pass rd_ph list node msg));
-      try(
-        Gamegraphics.draw_board board nodes;
-        print_endline("Select a node to place a settlement");
-        let node_index =  select_node() in
-        if (if_neighbor node_index list) then failwith "wrong position" else
-          begin
-            Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
-            play_game Interactive AddSettle board nodes turn pass rd_ph (add_node list node_index) ((turn, node_index, -1)::node) "";
-          end)
-      with 
-      |_->play_game AddSettle AddSettle board nodes turn pass rd_ph list node message);
+
+
+      if not(Player.can_build_set (get_index 0 turn player_list)) then
+        (let msg = "You do not have enough resources to build a settlement" in 
+         play_game Interactive AddSettle board nodes turn pass rd_ph list node msg;)
+      else (
+        try(
+          Gamegraphics.draw_board board nodes;
+          print_endline("Select a node to place a settlement");
+          let node_index =  select_node() in
+          if (if_neighbor node_index list) then failwith "wrong position" else
+            begin
+              Player.build_settlement (get_index 0 turn player_list);
+              Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
+              play_game Interactive AddSettle board nodes turn pass rd_ph (add_node list node_index) ((turn, node_index, -1)::node) "";
+            end)
+        with 
+        |_->play_game AddSettle AddSettle board nodes turn pass rd_ph list node message));
   |AddCity->(
       (*This try build the settlement ONLY if the player has enough resources*)
-      (try(
-         Player.build_city (get_index 0 turn player_list);)
-       with |_->
-         (let msg = "You do not have enough resources to build a city" in
-          play_game Interactive AddCity board nodes turn pass rd_ph list node msg));
-      try(
-        Gamegraphics.draw_board board nodes;
-        print_endline("Select a node to place a settlement");
-        let node_index =  select_node() in
-        if (if_neighbor node_index list) then failwith "wrong position" else
-          begin
-            Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
-            play_game Interactive AddCity board nodes turn pass rd_ph (add_node list node_index) ((turn, node_index, -1)::node) "";
-          end)
-      with 
-      |_->play_game AddSettle AddCity board nodes turn pass rd_ph list node message);
+      if not (Player.can_build_city (get_index 0 turn player_list)) then
+        (let msg = "You do not have enough resources to build a city" in 
+         play_game Interactive AddCity board nodes turn pass rd_ph list node msg;)
+      else (
+        try(
+          Gamegraphics.draw_board board nodes;
+          print_endline("Select a node to place a settlement");
+          let node_index =  select_node() in
+          if (if_neighbor node_index list) then failwith "wrong position" else
+            begin
+              Player.build_city (get_index 0 turn player_list);
+              Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
+              play_game Interactive AddCity board nodes turn pass rd_ph (add_node list node_index) ((turn, node_index, -1)::node) "";
+            end)
+        with 
+        |_->play_game AddSettle AddCity board nodes turn pass rd_ph list node message));
   |AddRoad->(
-      (try(
-         Player.build_road (get_index 0 turn player_list);)
-       with |_->
-         ( let msg = "You do not have enough resources to build a road" in
-           play_game Interactive AddRoad board nodes turn pass rd_ph list node msg));
-      try(
-        Gamegraphics.draw_board board nodes;
-        print_endline("Select an edge to place a road");
-        (*WE NEED TO CHECK IF YOU HAVE ENOUGH RESOURCES AND THEN TAKE THEM*)
-        let selected_edge =  select_edge() in
-        if (not (if_edge turn selected_edge node)) then failwith "wrong position" else
-          begin
-            Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
-            play_game Interactive AddRoad board nodes turn pass rd_ph list ((turn, fst selected_edge, snd selected_edge)::node) "";
-          end) 
-      with 
-      |_->
-        play_game AddRoad AddRoad board nodes turn pass rd_ph list node message);
+      if not (Player.can_build_road (get_index 0 turn player_list)) then
+        (let msg = "You do not have enough resources to build a road" in 
+         play_game Interactive AddRoad board nodes turn pass rd_ph list node msg;)
+      else (
+        try(
+          Gamegraphics.draw_board board nodes;
+          print_endline("Select an edge to place a road");
+          (*WE NEED TO CHECK IF YOU HAVE ENOUGH RESOURCES AND THEN TAKE THEM*)
+          let selected_edge =  select_edge() in
+          if (not (if_edge turn selected_edge node)) then failwith "wrong position" else
+            begin
+              Player.build_road (get_index 0 turn player_list);
+              Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
+              play_game Interactive AddRoad board nodes turn pass rd_ph list ((turn, fst selected_edge, snd selected_edge)::node) "";
+            end) 
+        with 
+        |_->
+          play_game AddRoad AddRoad board nodes turn pass rd_ph list node message));
   |Inventory -> 
     Gamegraphics.draw_board board nodes;
     print_endline("Your inventory includes: ");
