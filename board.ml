@@ -84,7 +84,10 @@ let rec get_tiles_with_num board n =
     else get_tiles_with_num t n
 
 let grab_resource t n =     
-  List.nth t n |> Tile.get_resource 
+  List.nth t n |> Tile.string_of_tile
 
 let grab_num t n = 
   List.nth t n |> Tile.get_number 
+
+let robbers_false t = 
+  ignore(List.map Tile.remove_robber t); ()

@@ -31,25 +31,29 @@ let main () =
        >>= fun () ->
        LTerm.disable_mouse term)
 
-(**[selectNode] the index of the selected Node in the terminal
+(**[select_node] the index of the selected Node in the terminal
    Raises: "Not a Node" if the selection is not a node *)
 let select_node () = let (row,col) = Lwt_main.run (main ()) in 
   Gamegraphics.rc_to_node (row,col)
 
-(**[selectEdge] starts the selection process and prints the edge selected *)
+(**[select_edge] is the pair of nodes connecting the edge selected *)
 let select_edge () = let (row,col) = Lwt_main.run (main ()) in 
   (Gamegraphics.rc_to_edge (row,col)) 
 
-(**[printSelectNode l] takes in all clicks and prints out a list of the (row,col) 
+(**[select_tile] is the index of the selected tile  *)
+let select_tile () = let (row,col) = Lwt_main.run (main ()) in 
+  (Gamegraphics.rc_to_tile (row,col))
+
+(**[print_select_node l] takes in all clicks and prints out a list of the (row,col) 
    which were selected, on key press *)
 let rec print_select_node l = try let (row,col) = Lwt_main.run (main ()) in 
     print_select_node 
       (String.concat "" ["(";(string_of_int row);",";(string_of_int col);")"]::l)
   with
-  |Failure _ -> List.map print_endline (List.rev l)
+  |Failure _ -> ignore(List.map print_endline (List.rev l));()
 
 type phase = Welcome | Setup | Win | Interactive | Roll | Help | Quit |Inventory
-           | Points | AddSettle | AddCity | AddRoad
+           | Points | AddSettle | AddCity | AddRoad | Robbing
 
 let player_list = [Player.make_player "green"; Player.make_player "magenta";
                    Player.make_player "yellow"; Player.make_player "blue"]
@@ -146,9 +150,9 @@ let rec if_edge turn edge list =
 (*[random_roll] generates a random number that corresponds to
   the sum of two random dies*)
 let random_roll () = 
-  let die1 = random_die () in 
-  let die2 = random_die () in 
-  die1 + die2
+  (* let die1 = random_die () in 
+     let die2 = random_die () in 
+     die1 + die2 *) 7
 
 (**[get_index start index lst] is the entry of [lst] at [index]*)
 let rec get_index start index= function
@@ -199,7 +203,7 @@ let rec start_resources turn nodes nodes_index counter =
 (* [rob_players] a function that runs through the players and removes
    half of their hand if they have more then 7 cards*)
 let rec rob_players index = 
-  if(index=4) then ()
+  if index=4 then ()
   else Player.rob_player (get_index 0 index player_list);
   rob_players (index+1)
 
@@ -363,9 +367,14 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
   |Roll->
     let die_roll = random_roll () in
     distribute_resources nodes die_roll;
-    let mes = "The die roll resulted in a " ^ (string_of_int die_roll) ^
-              " and all of the resources have been distributed" in
-    play_game Interactive Roll board nodes turn pass rd_ph list node mes
+    (match die_roll with 
+     |7 -> let mes = "The die roll resulted in a 7, players with more than 7
+      resources have had their resources cut in half,\n 
+      and you may now move the robber to a new position" in 
+       play_game Robbing Roll board nodes turn pass rd_ph list node mes
+     |_ -> let mes = "The die roll resulted in a " ^ (string_of_int die_roll) ^
+                     " and all of the resources have been distributed" in
+       play_game Interactive Roll board nodes turn pass rd_ph list node mes)
   |Interactive-> 
     if (prev_phase=Roll || prev_phase=AddCity || prev_phase=AddRoad || prev_phase=AddSettle) then 
       (Gamegraphics.draw_board board nodes;
@@ -401,9 +410,19 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
         play_game AddRoad Interactive board nodes turn pass rd_ph list node message
       |_-> print_endline("Malformed command please re-enter");
         play_game Interactive Interactive board nodes turn pass rd_ph list node message)
+  |Robbing -> (
+      try (Gamegraphics.draw_board board nodes;
+           print_endline("Select the name (resource) of a tile to place the robber there");
+           let rob_tile = select_tile () in 
+           let n_tile = robbers_false board;
+             List.nth board (rob_tile - 1) in 
+           Tile.add_robber n_tile;
+           play_game Interactive Roll board nodes turn pass rd_ph list node message)
+      with
+      |_ -> play_game Robbing Robbing board nodes turn pass rd_ph list node message
+    )
   |AddSettle->(
       (*This try build the settlement ONLY if the player has enough resources*)
-
 
       if not(Player.can_build_set (get_index 0 turn player_list)) then
         (let msg = "You do not have enough resources to build a settlement" in 

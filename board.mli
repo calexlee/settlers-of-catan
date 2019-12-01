@@ -1,6 +1,6 @@
 (**[type t] represents a list of all of the tiles in the board*)
 (**RI: the index of the list represents what tile it is**)
-type t
+type t = Tile.t list
 
 (**[initial_board] becomes a pre-built standard board of type t*)
 val initial_board : t
@@ -32,3 +32,6 @@ val grab_resource : t -> int -> string
 
 (**[grab_number t n] is the number of the tile at position [n] in [t] *)
 val grab_num : t -> int -> int
+
+(**[robbers_false t] sets all the robbers in [t] to false *)
+val robbers_false: t -> unit

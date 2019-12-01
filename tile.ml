@@ -23,6 +23,12 @@ let make_tile (number:int) (resource:string) (robber:bool)=
     robber=robber;
   }
 
+let add_robber tile =
+  tile.robber <- true
+
+let remove_robber tile = 
+  tile.robber <- false
+
 let get_resource (tile: t)= 
   match tile.resource with
   |Wood->"wood"
@@ -31,6 +37,12 @@ let get_resource (tile: t)=
   |Wheat->"wheat"
   |Rock->"rock"
   |Desert->"desert"
+
+let string_of_tile t = 
+  if t.robber = true 
+  then "robber" 
+  else
+    get_resource t
 
 let get_number (tile: t)= 
   tile.number
