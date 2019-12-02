@@ -444,7 +444,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
         play_game Interactive Interactive board nodes turn pass rd_ph list node msg)
   |Robbing -> (
       try (Gamegraphics.draw_board board nodes;
-           print_endline("The die roll resulted in a 7, so you must now select the name (resource) of a tile to place the robber there");
+           print_endline("The die roll resulted in a 7, so Player " ^Player.player_to_string (get_index 0 turn player_list)^ " must now select the name (resource) of a tile to place the robber there");
            let rob_tile = select_tile () in 
            let n_tile = robbers_false board;
              List.nth (List.rev board) (rob_tile - 1) in 

@@ -62,14 +62,16 @@ let give_resource (dr:int) (node:t)=
 let rec give_resource_start_helper (player:Player.t) (lst: Tile.t list) = 
   match lst with 
   |[]->()
-  |h::t-> 
-    (match Tile.get_resource h with 
-     |"wood"->Player.give_wood player
-     |"sheep"->Player.give_sheep player
-     |"wheat"->Player.give_wheat player
-     |"rock"->Player.give_rock player
-     |"brick"->Player.give_brick player
-     |_->failwith "invalid resource type");
+  |h::t->  if Tile.is_there_robber h = true 
+    then raise(Failure("robber is present"))
+    else
+      (match Tile.get_resource h with 
+       |"wood"->Player.give_wood player
+       |"sheep"->Player.give_sheep player
+       |"wheat"->Player.give_wheat player
+       |"rock"->Player.give_rock player
+       |"brick"->Player.give_brick player
+       |_->failwith "invalid resource type");
     give_resource_start_helper player t
 
 

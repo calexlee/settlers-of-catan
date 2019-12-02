@@ -24,3 +24,6 @@ val remove_robber : t -> unit
 (**[string_of_resource t] is the string of the resource at [t] or "robber" if 
    [t] has a robber *)
 val string_of_tile : t -> string 
+
+(**[is_there_robber t] is true if a robber is present in [t] and false otherwise *)
+val is_there_robber : t -> bool
