@@ -202,11 +202,12 @@ let rec start_resources turn nodes nodes_index counter =
 
 (* [rob_players] a function that runs through the players and removes
    half of their hand if they have more then 7 cards*)
-let rec rob_players index = 
-  if index=4 then ()
-  else Player.rob_player (get_index 0 index player_list);
-  rob_players (index+1)
-
+let rob_players () =
+  Player.rob_player (get_index 0 0 player_list);
+  Player.rob_player (get_index 0 1 player_list);
+  Player.rob_player (get_index 0 2 player_list);
+  Player.rob_player (get_index 0 3 player_list);
+  ()
 (*[give_resources nodes roll] is a recrusrive function that checks through 
   all of the nodes and gives all the players resources based on if they have
   a settlement there*)
@@ -220,11 +221,12 @@ let rec give_resources nodes roll =
 
 (* [distrubute_resources players board roll] distributes the resources to the
    [players] according to the [board] and [roll] condition*)
-let distribute_resources nodes roll = 
+let distribute_resources nodes roll =  
   if roll=7 then 
-    rob_players 0
+    rob_players ()
   else 
     give_resources nodes roll
+
 
 (*[play_game] a recursive function that loops through the game playing where 
   [phase] represents the phase of the game [board] represents the board to 
