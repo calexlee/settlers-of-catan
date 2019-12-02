@@ -1,3 +1,5 @@
+type trade = int*string*int*string
+
 type command = 
   | Quit
   | Inventory
@@ -8,6 +10,11 @@ type command =
   | Help
   | Points
   | Malformed
+  | TradeBank of trade 
+  | TradeGreen of trade
+  | TradeBlue of trade
+  | TradeMagenta of trade
+  | TradeYellow of trade
 
 exception Empty
 
@@ -17,17 +24,28 @@ exception Malformed
 let nonblank string = 
   string <> ""
 
-let to_string command = 
+let to_data command = 
   match command with 
-  |Quit -> "quit"
-  |Inventory -> "inventory"
-  |AddCity -> "addcity"
-  |AddSettle -> "addsettle"
-  |AddRoad -> "addroad"
-  |Done-> "done"
-  |Help -> "help"
-  |Points -> "points"
-  |Malformed -> "malformed"
+  |Quit -> ("quit",0,"",0,"")
+  |Inventory -> ("inventory",0,"",0,"")
+  |AddCity -> ("addcity",0,"",0,"")
+  |AddSettle -> ("addsettle",0,"",0,"")
+  |AddRoad -> ("addroad",0,"",0,"")
+  |Done-> ("done",0,"",0,"")
+  |Help -> ("help",0,"",0,"")
+  |Points -> ("points",0,"",0,"")
+  |Malformed -> ("malformed",0,"",0,"")
+  |TradeBank (x,res1,y,res2)-> ("tradebank",x,res1,y,res2)
+  |TradeGreen (x,res1,y,res2)-> ("tradegreen",x,res1,y,res2)
+  |TradeBlue (x,res1,y,res2)-> ("tradeblue",x,res1,y,res2)
+  |TradeMagenta (x,res1,y,res2)-> ("tradeblue",x,res1,y,res2)
+  |TradeYellow (x,res1,y,res2)-> ("tradeyellow",x,res1,y,res2)
+
+(**[valid_resouces res1 res2] return true if [res1] and [res2] are
+   valid resources and false otherwise *)
+let valid_resources (res1:string) (res2:string) : bool=
+  (res1="sheep" || res1="wheat" || res1="wood" || res1="brick" || res1="rock")
+  && (res2="sheep" || res2="wheat" || res2="wood" || res2="brick" || res2="rock") 
 
 let parse str =
   try (
@@ -47,6 +65,47 @@ let parse str =
         | h::t -> if (h = "city" || h="City")&& t=[] then AddCity
           else if (h = "settlement"|| h= "Settlement") && t=[] then AddSettle 
           else if (h= "road" || h = "Road") && t=[] then AddRoad
+          else raise Malformed
+      end
+      else if h = "trade" || h = "Trade" then begin
+        match t with
+        | [] -> raise Malformed
+        | h::t -> 
+          if (h = "bank" || h="Bank")&& t=[] then 
+            match t with 
+            |x::res1::y::res2::t when t=[]-> 
+              if(valid_resources res2 res2) then 
+                TradeBank (int_of_string x,res1, int_of_string y,res2)
+              else raise Malformed
+            |_-> raise Malformed
+          else if (h = "blue" || h="Blue")&& t=[] then 
+            match t with 
+            |x::res1::y::res2::t when t=[]-> 
+              if(valid_resources res2 res2) then 
+                TradeBlue (int_of_string x,res1, int_of_string y,res2)
+              else raise Malformed
+            |_-> raise Malformed
+          else if (h = "magenta" || h="Magenta")&& t=[] then 
+            match t with 
+            |x::res1::y::res2::t when t=[]-> 
+              if(valid_resources res2 res2) then 
+                TradeMagenta (int_of_string x,res1, int_of_string y,res2)
+              else raise Malformed
+            |_-> raise Malformed
+          else if (h = "green" || h="Green")&& t=[] then 
+            match t with 
+            |x::res1::y::res2::t when t=[]-> 
+              if(valid_resources res2 res2) then 
+                TradeGreen (int_of_string x,res1, int_of_string y,res2)
+              else raise Malformed
+            |_-> raise Malformed
+          else if (h = "yellow" || h="Yellow")&& t=[] then 
+            match t with 
+            |x::res1::y::res2::t when t=[]-> 
+              if(valid_resources res2 res2) then 
+                TradeYellow (int_of_string x,res1, int_of_string y,res2)
+              else raise Malformed
+            |_-> raise Malformed
           else raise Malformed
       end
       else if h= "done" || h = "Done" then begin 

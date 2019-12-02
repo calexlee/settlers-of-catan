@@ -239,10 +239,10 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
   player enter help at any time to get instructions on commands, otherwise enter
   \"done\" to continue");
      let input= Command.parse (read_line()) in
-     ( match Command.to_string input with 
-       |"help"->play_game Help Welcome board nodes turn pass false list node message
-       |"done"->play_game Setup Welcome board nodes turn pass false list node message
-       |"quit"->play_game Quit Welcome board nodes turn pass false list node message
+     ( match Command.to_data input with 
+       |("help",_,_,_,_)->play_game Help Welcome board nodes turn pass false list node message
+       |("done",_,_,_,_)->play_game Setup Welcome board nodes turn pass false list node message
+       |("quit",_,_,_,_)->play_game Quit Welcome board nodes turn pass false list node message
        |_-> print_endline("Malformed command please re-enter");
          play_game Welcome Welcome board nodes turn pass false list node message;)
     )
@@ -357,10 +357,10 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
       print_endline("help- display help menu");
       print_endline("quit- quit the game WARNING: progress will not be saved");
       let input= Command.parse (read_line()) in
-      ( match Command.to_string input with 
-        |"help"->play_game Help Help board nodes turn pass rd_ph list node message
-        |"done"->play_game prev_phase Help board nodes turn pass rd_ph list node message
-        |"quit"->play_game Quit Welcome board nodes turn pass rd_ph list node message
+      ( match Command.to_data input with 
+        |("help",_,_,_,_)->play_game Help Help board nodes turn pass rd_ph list node message
+        |("done",_,_,_,_)->play_game prev_phase Help board nodes turn pass rd_ph list node message
+        |("quit",_,_,_,_)->play_game Quit Welcome board nodes turn pass rd_ph list node message
         |_-> ANSITerminal.(print_string [red] "Malformed command please re-enter");
           play_game Help Help board nodes turn pass rd_ph list node message;)
     );
@@ -388,26 +388,57 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
     print_endline("Enter any command during your turn phase 
     or help to view commands");
     let input= Command.parse (read_line()) in
-    ( match Command.to_string input with 
-      |"help"->
+    ( match Command.to_data input with 
+      |("help",_,_,_,_)->
         play_game Help Interactive board nodes turn pass rd_ph list node message
-      |"done"->
+      |("done",_,_,_,_)->
         if turn!=3 then 
           play_game Roll Interactive board nodes (turn+1) pass rd_ph list node message
         else 
           play_game Roll Interactive board nodes 0 pass rd_ph list node message
-      |"quit"-> 
+      |("quit",_,_,_,_)-> 
         play_game Quit Interactive board nodes turn pass rd_ph list node message
-      |"points"->
+      |("points",_,_,_,_)->
         play_game Points Interactive board nodes turn pass rd_ph list node message
-      |"inventory"->
+      |("inventory",_,_,_,_)->
         play_game Inventory Interactive board nodes turn pass rd_ph list node message
-      |"addcity"-> 
+      |("addcity",_,_,_,_)-> 
         play_game AddCity Interactive board nodes turn pass rd_ph list node message
-      |"addsettle"->
+      |("addsettle",_,_,_,_)->
         play_game AddSettle Interactive board nodes turn pass rd_ph list node message
-      |"addroad"-> 
+      |("addroad",_,_,_,_)-> 
         play_game AddRoad Interactive board nodes turn pass rd_ph list node message
+      |("tradebank",x,res1,y,res2)->
+        let msg = "Invalid trade" in
+        (match x,y with 
+         |(4,1)-> 
+           if Player.has_trade_res (get_index 0 turn player_list) x res1 then 
+             (Player.bank_trade (get_index 0 turn player_list) 4 res1 1 res2;
+              play_game Interactive Interactive board nodes turn pass rd_ph list node 
+                "Your trade has been completed")
+           else play_game Interactive Interactive board nodes turn pass rd_ph list node msg
+         |(3,1)-> if Player.has_three_to_one (get_index 0 turn player_list) &&
+                     (Player.has_trade_res (get_index 0 turn player_list) x res1) then
+             (Player.bank_trade (get_index 0 turn player_list) 3 res1 1 res2;
+              play_game Interactive Interactive board nodes turn pass rd_ph list node 
+                "Your trade has been completed")
+           else play_game Interactive Interactive board nodes turn pass rd_ph list node msg
+         |(2,1)->if Player.has_two_to_one (get_index 0 turn player_list) res1 &&
+                    (Player.has_trade_res (get_index 0 turn player_list) x res1) then
+             (Player.bank_trade (get_index 0 turn player_list) 3 res1 1 res2;
+              play_game Interactive Interactive board nodes turn pass rd_ph list node 
+                "Your trade has been completed")
+           else play_game Interactive Interactive board nodes turn pass rd_ph list node msg
+         |(_,_)->
+           play_game Interactive Interactive board nodes turn pass rd_ph list node msg)
+      |("tradeblue",x,res1,y,res2)->
+        failwith ""
+      |("tradegreen",x,res1,y,res2)->
+        failwith ""
+      |("trademagenta",x,res1,y,res2)->
+        failwith ""
+      |("tradeyellow",x,res1,y,res2)->
+        failwith ""
       |_-> print_endline("Malformed command please re-enter");
         play_game Interactive Interactive board nodes turn pass rd_ph list node message)
   |Robbing -> (
