@@ -235,6 +235,7 @@ let distribute_resources nodes roll =
 let rec play_game phase prev_phase board nodes turn pass rd_ph list node message= 
   match phase with 
   |Welcome-> 
+    print_endline(message);
     ((Gamegraphics.draw_board board nodes);
      print_endline("Welcome to settlers of catan! please decide who will be the 
   green player, magenta player, yellow player and blue player. If you are a new
@@ -245,8 +246,8 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
        |("help",_,_,_,_)->play_game Help Welcome board nodes turn pass false list node message
        |("done",_,_,_,_)->play_game Setup Welcome board nodes turn pass false list node message
        |("quit",_,_,_,_)->play_game Quit Welcome board nodes turn pass false list node message
-       |_-> print_endline("Malformed command please re-enter");
-         play_game Welcome Welcome board nodes turn pass false list node message;)
+       |_-> let msg = "Malformed command please re-enter" in
+         play_game Welcome Welcome board nodes turn pass false list node msg;)
     )
   |Setup -> 
     (try 
@@ -363,8 +364,8 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
         |("help",_,_,_,_)->play_game Help Help board nodes turn pass rd_ph list node message
         |("done",_,_,_,_)->play_game prev_phase Help board nodes turn pass rd_ph list node message
         |("quit",_,_,_,_)->play_game Quit Welcome board nodes turn pass rd_ph list node message
-        |_-> ANSITerminal.(print_string [red] "Malformed command please re-enter");
-          play_game Help Help board nodes turn pass rd_ph list node message;)
+        |_-> let msg = "Malformed command please re-enter" in
+          play_game Help Help board nodes turn pass rd_ph list node msg;)
     );
   |Roll->
     let die_roll = random_roll () in
@@ -439,8 +440,8 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
         failwith ""
       |("tradeyellow",x,res1,y,res2)->
         failwith ""
-      |_-> print_endline("Malformed command please re-enter");
-        play_game Interactive Interactive board nodes turn pass rd_ph list node message)
+      |_-> let msg = "Malformed command please re-enter" in
+        play_game Interactive Interactive board nodes turn pass rd_ph list node msg)
   |Robbing -> (
       try (Gamegraphics.draw_board board nodes;
            print_endline("The die roll resulted in a 7, so you must now select the name (resource) of a tile to place the robber there");
