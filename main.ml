@@ -147,8 +147,8 @@ let rec if_edge turn edge list =
     end
   else false
 
-(*[random_roll] generates a random number that corresponds to
-  the sum of two random dies*)
+(**[random_roll] generates a random number that corresponds to
+   the sum of two random dies*)
 let random_roll () = 
   let die1 = random_die () in 
   let die2 = random_die () in 
@@ -160,7 +160,7 @@ let rec get_index start index= function
   |h::t-> if start=index then h else get_index (start+1) index t
 
 
-(* [build_road turn board node] is a board but with the 
+(**[build_road turn board node] is a board but with the 
    players settlement built RAISES EXCEPTION IF PLAYER CAN NOT BUILD THERE
    condition for exception is that another player has a neighboring node*)
 let rec build_road_helper turn nodes node1 node2 counter acc = 
@@ -180,7 +180,7 @@ let build_road turn nodes node_tup counter acc =
   match node_tup with 
   |(x,y)-> build_road_helper turn nodes x y counter acc
 
-(* [build_settlement turn board node] is a board but with the 
+(**[build_settlement turn board node] is a board but with the 
    players settlement built RAISES EXCEPTION IF PLAYER CAN NOT BUILD THERE
    condition for exception is that another player has a neighboring node*)
 let rec build_settlement turn nodes nodes_index counter acc building= 
@@ -191,8 +191,8 @@ let rec build_settlement turn nodes nodes_index counter acc building=
       build_settlement turn t nodes_index (counter+1) (h::acc) building)
     else build_settlement turn t nodes_index (counter+1) (h::acc) building
 
-(*[start_resources turn nodes nodes_index counter] is a function that returns
-  unit after giving a player all the resources that they start with*)
+(**[start_resources turn nodes nodes_index counter] is a function that returns
+   unit after giving a player all the resources that they start with*)
 let rec start_resources turn nodes nodes_index counter = 
   match nodes with 
   |[]-> ()
@@ -200,7 +200,7 @@ let rec start_resources turn nodes nodes_index counter =
     else start_resources turn nodes nodes_index (counter+1)
 
 
-(* [rob_players] a function that runs through the players and removes
+(**[rob_players] a function that runs through the players and removes
    half of their hand if they have more then 7 cards*)
 let rob_players () =
   Player.rob_player (get_index 0 0 player_list);
@@ -208,9 +208,9 @@ let rob_players () =
   Player.rob_player (get_index 0 2 player_list);
   Player.rob_player (get_index 0 3 player_list);
   ()
-(*[give_resources nodes roll] is a recrusrive function that checks through 
-  all of the nodes and gives all the players resources based on if they have
-  a settlement there*)
+(**[give_resources nodes roll] is a recrusrive function that checks through 
+   all of the nodes and gives all the players resources based on if they have
+   a settlement there*)
 let rec give_resources nodes roll = 
   (match nodes with 
    |[]-> ()
@@ -219,8 +219,8 @@ let rec give_resources nodes roll =
           give_resources t roll)
      with |_-> give_resources t roll)
 
-(* [distrubute_resources players board roll] distributes the resources to the
-   [players] according to the [board] and [roll] condition*)
+(** [distrubute_resources players board roll] distributes the resources to the
+    [players] according to the [board] and [roll] condition*)
 let distribute_resources nodes roll =  
   if roll=7 then 
     rob_players ()
@@ -228,10 +228,10 @@ let distribute_resources nodes roll =
     give_resources nodes roll
 
 
-(*[play_game] a recursive function that loops through the game playing where 
-  [phase] represents the phase of the game [board] represents the board to 
-  be drawn, [players] is the list of all the updated players and [turn] 
-  is the INDEX OF THE PLAYER IN players whose turn it is *)
+(**[play_game] a recursive function that loops through the game playing where 
+   [phase] represents the phase of the game [board] represents the board to 
+   be drawn, [players] is the list of all the updated players and [turn] 
+   is the INDEX OF THE PLAYER IN players whose turn it is *)
 let rec play_game phase prev_phase board nodes turn pass rd_ph list node message= 
   match phase with 
   |Welcome-> 
