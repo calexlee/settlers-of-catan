@@ -150,9 +150,9 @@ let rec if_edge turn edge list =
 (*[random_roll] generates a random number that corresponds to
   the sum of two random dies*)
 let random_roll () = 
-  (* let die1 = random_die () in 
-     let die2 = random_die () in 
-     die1 + die2 *) 7
+  let die1 = random_die () in 
+  let die2 = random_die () in 
+  die1 + die2
 
 (**[get_index start index lst] is the entry of [lst] at [index]*)
 let rec get_index start index= function
@@ -368,9 +368,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
     let die_roll = random_roll () in
     distribute_resources nodes die_roll;
     (match die_roll with 
-     |7 -> let mes = "The die roll resulted in a 7, players with more than 7
-      resources have had their resources cut in half,\n 
-      and you may now move the robber to a new position" in 
+     |7 -> let mes = "Players with more than 7 resources have had their resources cut in half" in 
        play_game Robbing Roll board nodes turn pass rd_ph list node mes
      |_ -> let mes = "The die roll resulted in a " ^ (string_of_int die_roll) ^
                      " and all of the resources have been distributed" in
@@ -443,10 +441,10 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
         play_game Interactive Interactive board nodes turn pass rd_ph list node message)
   |Robbing -> (
       try (Gamegraphics.draw_board board nodes;
-           print_endline("Select the name (resource) of a tile to place the robber there");
+           print_endline("The die roll resulted in a 7, so you must now select the name (resource) of a tile to place the robber there");
            let rob_tile = select_tile () in 
            let n_tile = robbers_false board;
-             List.nth board (rob_tile - 1) in 
+             List.nth (List.rev board) (rob_tile - 1) in 
            Tile.add_robber n_tile;
            play_game Interactive Roll board nodes turn pass rd_ph list node message)
       with
