@@ -454,7 +454,6 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
     )
   |AddSettle->(
       (*This try build the settlement ONLY if the player has enough resources*)
-
       if not(Player.can_build_set (get_index 0 turn player_list)) then
         (let msg = "You do not have enough resources to build a settlement" in 
          play_game Interactive AddSettle board nodes turn pass rd_ph list node msg;)
