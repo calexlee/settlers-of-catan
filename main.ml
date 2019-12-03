@@ -520,7 +520,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
             begin
               Player.build_city (get_index 0 turn player_list);
               Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "city");
-              play_game Interactive AddCity board nodes turn pass rd_ph (add_node list node_index) ((turn, node_index, -1)::node) "";
+              play_game AddCity AddCity board nodes turn pass rd_ph (add_node list node_index) ((turn, node_index, -1)::node) "";
             end)
         with
         |_->play_game Interactive AddCity board nodes turn pass rd_ph list node message));
