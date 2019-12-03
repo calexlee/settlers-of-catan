@@ -260,7 +260,7 @@ let draw_board t n =
   print_string("                                  >-----< \n");
   print_string("                                 /~~~~~~~\\ \n");
   print_string("                                /~~~~~~~~~\\ \n");
-  print_string("                         >-----<~~~~3:1~~~~>-----< ");ANSITerminal.(print_string [white] "                                              Settlers of Catan Tips \n");
+  print_string("                         >-----<~~~~3:1~~~~>-----< ");ANSITerminal.(print_string [default] "                                              ");ANSITerminal.(print_string [default;Bold;Underlined] "Settlers of Catan Tips \n");
   print_string("                        /~~~~~~~\\~~~~~~~~~/~~~~~~~\\ \n");
   print_string("                       /~~~~~~~~~\\*~~~~~*/~~~~~~~~~\\ ");ANSITerminal.(print_string [white] "                                            Building Costs \n");
   print_string("                >-----<~~~~~~~~~~~");settlement_draw n 0;draw_edge "-----" (0,1) n;settlement_draw n 1;print_string("~~~~~~~~~~~>-----< \n");
