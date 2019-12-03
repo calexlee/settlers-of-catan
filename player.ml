@@ -26,7 +26,12 @@ let make_player color=
     |_ -> Green in
   {
     color = colorp; (* Need to make random out of available options*)
-    resources = [];
+    resources = [Wood;Wood;Wood;Wood;Wood;Wood;Wood;Wood;Wood;Wood;Wood;Wood;
+                 Brick;Brick;Brick;Brick;Brick;Brick;Brick;Brick;Brick;Brick;Brick;Brick;Brick;
+                 Wheat;Wheat;Wheat;Wheat;Wheat;Wheat;Wheat;Wheat;Wheat;Wheat;Wheat;Wheat;Wheat;Wheat;
+                 Sheep; Sheep; Sheep; Sheep; Sheep; Sheep; Sheep; Sheep; Sheep; Sheep; Sheep; Sheep; Sheep;
+                 Rock;Rock;Rock;Rock;Rock;Rock;Rock;Rock;Rock;Rock;Rock;Rock;Rock;Rock;Rock;Rock;Rock;Rock;
+                 Desert;Desert;Desert;Desert;Desert;Desert;Desert;Desert;Desert;Desert;Desert;Desert;Desert;Desert;];
     points = 2;
     (*card_list = *)
     longest_road = false;

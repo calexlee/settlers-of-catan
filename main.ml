@@ -121,21 +121,49 @@ let add_node list = function
   | 53 -> 50::52::53::list
   | _ -> failwith "not a node number"
 
+(** [have_road] checks if nodes are connected by roads*)
+let rec have_road turn n e_list = 
+  match e_list with
+  | [] -> false
+  | (a, b, c) :: t -> if turn = a then 
+      begin 
+        if (n = b || n = c) then true else have_road turn n t
+      end 
+    else have_road turn n t
+
+(**[get_nodes] get all the nodes that have been selected*)
+let rec get_nodes ret = function
+  | [] -> ret
+  | (_, n, -1) :: t -> get_nodes (n::ret) t
+  | _ :: t -> get_nodes ret t
+
+(**[get_turn_nodes] get all the nodes belonging to this player that have been selected*)
+let rec get_turn_nodes turn ret = function
+  | [] -> ret
+  | (a, n, -1) :: t -> if a=turn then get_turn_nodes turn (n::ret) t else get_turn_nodes turn ret t
+  | _ :: t -> get_turn_nodes turn ret t
 
 (**[if_neighbor] checks if nodes can be selected by players*)
-let if_neighbor n list =
-  List.mem n list
+let if_neighbor phase turn n n_list e_list = 
+  match phase with
+  | 0 -> List.mem n n_list
+  | 1 -> if List.mem n (get_nodes [] e_list) then true else not (have_road turn n e_list)
+  | _ -> failwith "not a valid phase"
+
+(**[if_city] checks if we can build city here*)
+let if_city turn n e_list = 
+  List.mem n (get_turn_nodes turn [] e_list)
 
 (**[if_edge] checks if this edge is conneted with this node*)
 let rec if_edge turn edge list =
-  if (List.mem (0, fst edge, snd edge) list = false || 
-      List.mem (0, snd edge, fst edge) list = false || 
-      List.mem (1, fst edge, snd edge) list = false || 
-      List.mem (1, snd edge, fst edge) list = false ||
-      List.mem (2, fst edge, snd edge) list = false || 
-      List.mem (2, snd edge, fst edge) list = false ||
-      List.mem (3, fst edge, snd edge) list = false || 
-      List.mem (3, snd edge, fst edge) list = false) then
+  if (List.mem (0, fst edge, snd edge) list || 
+      List.mem (0, snd edge, fst edge) list || 
+      List.mem (1, fst edge, snd edge) list || 
+      List.mem (1, snd edge, fst edge) list ||
+      List.mem (2, fst edge, snd edge) list || 
+      List.mem (2, snd edge, fst edge) list ||
+      List.mem (3, fst edge, snd edge) list || 
+      List.mem (3, snd edge, fst edge) list ) then false else
     begin
       match list with
       | [] -> false
@@ -145,7 +173,6 @@ let rec if_edge turn edge list =
           end 
         else if_edge turn edge t
     end
-  else false
 
 (**[random_roll] generates a random number that corresponds to
    the sum of two random dies*)
@@ -257,7 +284,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
             begin
               print_endline("Green player, please select a node to build a settlement");
               let node_index =  select_node() in
-              if (if_neighbor node_index list) then failwith "wrong position" else
+              if (if_neighbor 0 0 node_index list node) then failwith "wrong position" else
                 begin
                   Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
                   if pass then Node.give_resource_start (get_index 0 node_index nodes) else ();
@@ -280,7 +307,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
             begin
               print_endline("Magenta player, please select a node to build a settlement");
               let node_index =  select_node()  in
-              if (if_neighbor node_index list) then failwith "wrong position" else
+              if (if_neighbor 0 1 node_index list node) then failwith "wrong position" else
                 begin
                   Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
                   if pass then Node.give_resource_start (get_index 0 node_index nodes) else ();
@@ -303,7 +330,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
             begin
               print_endline("Yellow player, please select a node to build a settlement.");
               let node_index =  select_node()  in
-              if (if_neighbor node_index list) then failwith "wrong position" else
+              if (if_neighbor 0 2 node_index list node) then failwith "wrong position" else
                 begin
                   Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
                   if pass then Node.give_resource_start (get_index 0 node_index nodes) else ();
@@ -326,7 +353,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
             begin
               print_endline("Blue player, please select a node to build a settlement.");
               let node_index =  select_node()  in
-              if (if_neighbor node_index list) then failwith "wrong position" else
+              if (if_neighbor 0 3 node_index list node) then failwith "wrong position" else
                 begin
                   Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
                   if pass then Node.give_resource_start (get_index 0 node_index nodes) else ();
@@ -471,7 +498,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
           Gamegraphics.draw_board board nodes;
           print_endline("Select a node to place a settlement");
           let node_index =  select_node() in
-          if (if_neighbor node_index list) then failwith "wrong position" else
+          if (if_neighbor 1 turn node_index list node) then failwith "wrong position" else
             begin
               Player.build_settlement (get_index 0 turn player_list);
               Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
@@ -487,16 +514,16 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
       else (
         try(
           Gamegraphics.draw_board board nodes;
-          print_endline("Select a node to place a settlement");
+          print_endline("Select a node to place a city");
           let node_index =  select_node() in
-          if (if_neighbor node_index list) then failwith "wrong position" else
+          if not (if_city turn node_index node) then failwith "wrong position" else
             begin
               Player.build_city (get_index 0 turn player_list);
               Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
               play_game Interactive AddCity board nodes turn pass rd_ph (add_node list node_index) ((turn, node_index, -1)::node) "";
             end)
         with 
-        |_->play_game AddSettle AddCity board nodes turn pass rd_ph list node message));
+        |_->play_game AddCity AddCity board nodes turn pass rd_ph list node message));
   |AddRoad->(
       if not (Player.can_build_road (get_index 0 turn player_list)) then
         (let msg = "You do not have enough resources to build a road" in 
