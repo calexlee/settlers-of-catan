@@ -219,7 +219,7 @@ let rec give_resources nodes roll =
           give_resources t roll)
      with |_-> give_resources t roll)
 
-(** [distrubute_resources players board roll] distributes the resources to the
+(**[distrubute_resources players board roll] distributes the resources to the
     [players] according to the [board] and [roll] condition*)
 let distribute_resources nodes roll =  
   if roll=7 then 
@@ -379,7 +379,15 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
   |Interactive-> 
     if (prev_phase=Roll || prev_phase=AddCity || prev_phase=AddRoad || prev_phase=AddSettle) then 
       (Gamegraphics.draw_board board nodes;
-       ANSITerminal.(print_string [red] (message^"\n"));)
+       let color = Player.player_to_string (get_index 0 turn player_list) in 
+       (match color with 
+        |"Magenta" -> ANSITerminal.(print_string [magenta] (message^"\n"));
+        |"Yellow" -> ANSITerminal.(print_string [yellow] (message^"\n"));
+        |"Blue" -> ANSITerminal.(print_string [cyan] (message^"\n"));
+        |"Green" -> ANSITerminal.(print_string [green] (message^"\n"));
+        | _ -> raise(Failure("Not a player color"))
+       )
+      )
     else if (prev_phase != Points && prev_phase != Inventory) then 
       (Gamegraphics.draw_board board nodes;)    
     else ();
