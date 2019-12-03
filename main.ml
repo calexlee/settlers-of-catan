@@ -365,7 +365,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
         |("done",_,_,_,_)->play_game prev_phase Help board nodes turn pass rd_ph list node message
         |("quit",_,_,_,_)->play_game Quit Welcome board nodes turn pass rd_ph list node message
         |_-> let msg = "Malformed command please re-enter" in
-          play_game Help Help board nodes turn pass rd_ph list node msg;)
+          play_game Help prev_phase board nodes turn pass rd_ph list node msg;)
     );
   |Roll->
     let die_roll = random_roll () in
@@ -492,11 +492,11 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
           if (if_neighbor node_index list) then failwith "wrong position" else
             begin
               Player.build_city (get_index 0 turn player_list);
-              Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
+              Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "city");
               play_game Interactive AddCity board nodes turn pass rd_ph (add_node list node_index) ((turn, node_index, -1)::node) "";
             end)
         with 
-        |_->play_game AddSettle AddCity board nodes turn pass rd_ph list node message));
+        |_->play_game Interactive AddCity board nodes turn pass rd_ph list node message));
   |AddRoad->(
       if not (Player.can_build_road (get_index 0 turn player_list)) then
         (let msg = "You do not have enough resources to build a road" in 
