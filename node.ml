@@ -44,14 +44,19 @@ let rec give_resource_helper (dr:int) (lst: Tile.t list)=
 let give_resource (dr:int) (node:t)=
   match node.player with 
   |None -> failwith "No player"
-  |Some n -> 
+  |Some n-> 
     try 
       match (give_resource_helper dr node.neigh_tiles) with
-      |"wood"->Player.give_wood n
-      |"sheep"->Player.give_sheep n
-      |"wheat"->Player.give_wheat n
-      |"rock"->Player.give_rock n
-      |"brick"->Player.give_brick n
+      |"wood"->Player.give_wood n; if node.settlement=City then 
+          Player.give_wood n else ();
+      |"sheep"->Player.give_sheep n; if node.settlement=City then 
+          Player.give_sheep n else ();
+      |"wheat"->Player.give_wheat n; if node.settlement=City then 
+          Player.give_wheat n else ();
+      |"rock"->Player.give_rock n; if node.settlement=City then 
+          Player.give_rock n else ();
+      |"brick"->Player.give_brick n; if node.settlement=City then 
+          Player.give_brick n else ();
       |_->failwith "invalid resource type"
     with
     |Failure x->()

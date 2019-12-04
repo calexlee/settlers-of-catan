@@ -412,7 +412,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
                      " and all of the resources have been distributed" in
        play_game Interactive Roll board nodes turn pass rd_ph list node mes card_list)
   |Interactive->
-    if (prev_phase=Roll || prev_phase=AddCity || prev_phase=AddRoad || prev_phase=AddSettle || prev_phase=BuyCard) then
+    if (prev_phase=Roll || prev_phase=AddCity || prev_phase=AddRoad || prev_phase=AddSettle || prev_phase=BuyCard || prev_phase=Interactive) then
       (Gamegraphics.draw_board board nodes;
        let color = Player.player_to_string (get_index 0 turn player_list) in
        (match color with
