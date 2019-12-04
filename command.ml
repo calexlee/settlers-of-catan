@@ -15,6 +15,8 @@ type command =
   | TradeBlue of trade
   | TradeMagenta of trade
   | TradeYellow of trade
+  | BuyCard
+  | Cards
 
 exception Empty
 
@@ -40,6 +42,8 @@ let to_data command =
   |TradeBlue (x,res1,y,res2)-> ("tradeblue",x,res1,y,res2)
   |TradeMagenta (x,res1,y,res2)-> ("tradeblue",x,res1,y,res2)
   |TradeYellow (x,res1,y,res2)-> ("tradeyellow",x,res1,y,res2)
+  |BuyCard -> ("buycard",0,"",0,"")
+  |Cards -> ("cards",0,"",0,"")
 
 (**[valid_resouces res1 res2] return true if [res1] and [res2] are
    valid resources and false otherwise *)
@@ -57,6 +61,14 @@ let parse str =
       end
       else if h = "inventory" || h = "Inventory" then begin
         if t = [] then Inventory
+        else raise Malformed
+      end
+      else if h = "cards" || h = "Cards" then begin
+        if t = [] then Cards
+        else raise Malformed
+      end
+      else if h = "buycard" || h = "Buycard" then begin
+        if t = [] then BuyCard
         else raise Malformed
       end
       else if h = "build" || h = "Build" then begin

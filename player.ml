@@ -3,15 +3,15 @@ type r = Wood | Brick | Wheat | Sheep | Rock | Desert
 
 type color = Green | Magenta | Yellow | Blue
 
-
 type port = ThreeToOne of bool | TwoToRes of r
 
+type card = Knight | Victory | Progress
 
 type t = {
   color : color;
   mutable resources: r list;
   mutable points: int;
-  (*mutable card_list: *)
+  mutable card_list: card list;
   mutable longest_road: bool;
   mutable ports: port list;
 }
@@ -26,17 +26,17 @@ let make_player color=
     |_ -> Green in
   {
     color = colorp; (* Need to make random out of available options*)
-    resources = [Wood;Wood;Wood;Wood;Wood;Wood;Wood;Wood;Wood;Wood;Wood;Wood;
-                 Brick;Brick;Brick;Brick;Brick;Brick;Brick;Brick;Brick;Brick;Brick;Brick;Brick;
-                 Wheat;Wheat;Wheat;Wheat;Wheat;Wheat;Wheat;Wheat;Wheat;Wheat;Wheat;Wheat;Wheat;Wheat;
-                 Sheep; Sheep; Sheep; Sheep; Sheep; Sheep; Sheep; Sheep; Sheep; Sheep; Sheep; Sheep; Sheep;
-                 Rock;Rock;Rock;Rock;Rock;Rock;Rock;Rock;Rock;Rock;Rock;Rock;Rock;Rock;Rock;Rock;Rock;Rock;
-                 Desert;Desert;Desert;Desert;Desert;Desert;Desert;Desert;Desert;Desert;Desert;Desert;Desert;Desert;];
+    resources = [];
     points = 2;
-    (*card_list = *)
+    card_list = [];
     longest_road = false;
     ports = [];
   }
+
+let ini_card = 
+  [Knight;Knight;Knight;Knight;Knight;Knight;Knight;Knight;Knight;Knight;Knight;
+   Knight;Knight;Knight;Victory;Victory;Victory;Victory;Victory;Progress;
+   Progress;Progress;Progress;Progress;Progress]
 
 let num_of_res t = 
   List.length t.resources
@@ -71,6 +71,9 @@ let give_wood t =
 
 let give_wheat t =
   t.resources <- Wheat :: t.resources
+
+let give_card card t =
+  t.card_list <- card :: t.card_list
 
 let give_port t (threeToOne:bool) (res:string) : unit = 
   if threeToOne then 
@@ -112,8 +115,6 @@ let rec has_two_to_one (lst:port list) (res:string) : bool =
 
 let has_two_to_one t (res:string) : bool = 
   has_two_to_one t.ports res
-
-
 
 (**[remove_resources resource acc lst] loops through resources returns 
    reversed list, which does not matter since resources is a set where order
@@ -215,6 +216,17 @@ let resources_to_string player =
         |Desert -> "Desert" :: loop t 
       end in loop player.resources
 
+let cards_to_string player = 
+  let rec loop list =
+    match list with 
+    |[] -> []
+    |h::t -> begin 
+        match h with
+        |Knight -> "knight" :: loop t
+        |Victory -> "victory" :: loop t
+        |Progress -> "progress" :: loop t
+      end in loop player.card_list
+
 (**[subset lst1 lst2] returns true if lst2 is a subset of lst 1 *)
 let rec subset lst1 lst2 : bool = 
   match lst2 with 
@@ -234,6 +246,13 @@ let can_build_city (player:t) : bool =
 
 let can_build_road (player:t) : bool = 
   let resources_req = [Brick;Wood] in 
+  subset player.resources resources_req
+
+let avail_card list = 
+  List.length list > 0
+
+let can_buy_card (player:t) : bool = 
+  let resources_req = [Sheep;Rock;Wheat] in 
   subset player.resources resources_req
 
 let build_settlement (player:t) : unit = 
@@ -268,3 +287,14 @@ let build_road (player:t) : unit =
      ())
   else 
     failwith "not enough resources for a road"
+
+let buy_card (player:t) (card:card): unit =
+  let resources_req = [Sheep;Wheat;Rock] in 
+  if subset player.resources resources_req then 
+    (take_sheep player;
+     take_wheat player;
+     take_rock player;
+     give_card card player;
+     ())
+  else 
+    failwith "not enough resources for a development card"

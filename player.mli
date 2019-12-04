@@ -12,6 +12,12 @@ type port
 (** The abstract type representing color*)
 type color
 
+(** The abstract type representing development card*)
+type card
+
+(**[ini_card] returns the initial development cards.*)
+val ini_card : card list
+
 (*[make_player color] creates a new player with color [color] *)
 val make_player : string -> t
 
@@ -42,6 +48,9 @@ val give_wood  : t -> unit
 (**[give_sheep t] gives the player [t] wheat.*)
 val give_wheat : t -> unit
 
+(**[give_card t] gives the player [t] [card].*)
+val give_card : card -> t -> unit
+
 (**[has_three_to_one t] returns true if the player [t] has a three to one port *)
 val has_three_to_one : t -> bool
 
@@ -57,6 +66,9 @@ val player_to_string : t -> string
 
 (**[resources_to_string player] is a string representation of [player.resources]*)
 val resources_to_string : t -> string list
+
+(**[cards_to_string player] is a string representation of [player.card_list]*)
+val cards_to_string : t -> string list
 
 (**[subset lst1 lst2] is true if lst 2 is a subset of lst1 and false
    otherwise *)
@@ -76,7 +88,14 @@ val can_build_city: t -> bool
 
 (**[can_build_road player] returns true or false if player [player] can build
    a road*)
-val can_build_road: t -> bool 
+val can_build_road: t -> bool
+
+(**[can_buy_card player card_list] returns true or false if player [player] 
+   can buy a card*)
+val can_buy_card: t -> bool
+
+(**[avail_card list] returns true or false if there are available cards*)
+val avail_card : card list -> bool
 
 (**[build_settlement player] checks if [player] has enough resources to build
    a settlement and if they do, then removes those resources from the players
@@ -91,6 +110,11 @@ val build_city: t->unit
 (**[build_road player] checks if [player] has enough resources to build a road,
    if they do then it removes those resources from the players inventory*)
 val build_road: t-> unit
+
+(**[buy_card player card] checks if [player] has enough resources to buy a card,
+   if they do then it removes those resources from the players inventory and add
+   a card to its card list*)
+val buy_card: t-> card -> unit
 
 (**[bank_trade player x res1 y res2] takes [x] of [res1] from player [player]
    and gives [y] of [res2] to player*)
