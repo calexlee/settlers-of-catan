@@ -131,12 +131,6 @@ let rec have_road turn n e_list =
       end
     else have_road turn n t
 
-(**[get_nodes] get all the nodes that have been selected*)
-let rec get_nodes ret = function
-  | [] -> ret
-  | (_, n, -1) :: t -> get_nodes (n::ret) t
-  | _ :: t -> get_nodes ret t
-
 (**[get_turn_nodes] get all the nodes belonging to this player that have been selected*)
 let rec get_turn_nodes turn ret = function
   | [] -> ret
@@ -147,7 +141,7 @@ let rec get_turn_nodes turn ret = function
 let if_neighbor phase turn n n_list e_list =
   match phase with
   | 0 -> List.mem n n_list
-  | 1 -> if List.mem n (get_nodes [] e_list) then true else not (have_road turn n e_list)
+  | 1 -> if List.mem n n_list then true else not (have_road turn n e_list)
   | _ -> failwith "not a valid phase"
 
 (**[if_city] checks if we can build city here*)
