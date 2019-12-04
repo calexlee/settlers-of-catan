@@ -419,8 +419,8 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
       (Gamegraphics.draw_board board nodes;)
     else ();
     print_endline(
-      "It is player " ^ Player.player_to_string (get_index 0 turn player_list)
-      ^ " turn.");
+      "It the " ^ Player.player_to_string (get_index 0 turn player_list)
+      ^ " players turn.");
     print_endline("Enter any command during your turn phase
     or help to view commands");
     let input= Command.parse (read_line()) in
@@ -520,10 +520,10 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
             begin
               Player.build_city (get_index 0 turn player_list);
               Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "city");
-              play_game AddCity AddCity board nodes turn pass rd_ph (add_node list node_index) ((turn, node_index, -1)::node) "";
+              play_game Interactive AddCity board nodes turn pass rd_ph (add_node list node_index) ((turn, node_index, -1)::node) "";
             end)
         with
-        |_->play_game Interactive AddCity board nodes turn pass rd_ph list node message));
+        |_->play_game AddCity AddCity board nodes turn pass rd_ph list node message));
   |AddRoad->(
       if not (Player.can_build_road (get_index 0 turn player_list)) then
         (let msg = "You do not have enough resources to build a road" in
