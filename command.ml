@@ -17,6 +17,9 @@ type command =
   | TradeYellow of trade
   | BuyCard
   | Cards
+  | UseKnight
+  | UseVictory
+  | UseProgress
 
 exception Empty
 
@@ -44,6 +47,9 @@ let to_data command =
   |TradeYellow (x,res1,y,res2)-> ("tradeyellow",x,res1,y,res2)
   |BuyCard -> ("buycard",0,"",0,"")
   |Cards -> ("cards",0,"",0,"")
+  |UseKnight -> ("useknight",0,"",0,"")
+  |UseVictory -> ("usevictory",0,"",0,"")
+  |UseProgress -> ("useprogress",0,"",0,"")
 
 (**[valid_resouces res1 res2] return true if [res1] and [res2] are
    valid resources and false otherwise *)
@@ -70,6 +76,14 @@ let parse str =
       else if h = "buycard" || h = "Buycard" then begin
         if t = [] then BuyCard
         else raise Malformed
+      end
+      else if h = "use" || h = "Use" then begin
+        match t with
+        | [] -> raise Malformed
+        | h::t -> if (h = "knight" || h="Knight")&& t=[] then UseKnight
+          else if (h = "progress"|| h= "Progress") && t=[] then UseProgress
+          else if (h= "Victory" || h = "victory") && t=[] then UseVictory
+          else raise Malformed
       end
       else if h = "build" || h = "Build" then begin
         match t with

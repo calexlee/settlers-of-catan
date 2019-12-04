@@ -90,9 +90,21 @@ val can_build_city: t -> bool
    a road*)
 val can_build_road: t -> bool
 
-(**[can_buy_card player card_list] returns true or false if player [player] 
+(**[can_buy_card player] returns true or false if player [player] 
    can buy a card*)
 val can_buy_card: t -> bool
+
+(**[can_use_knight player] returns true or false if player [player] 
+   can use card Knight*)
+val can_use_knight: t -> bool
+
+(**[can_use_victory player] returns true or false if player [player] 
+   can use card Victory*)
+val can_use_victory: t -> bool
+
+(**[can_use_progress player] returns true or false if player [player] 
+   can use card Progress*)
+val can_use_progress: t -> bool
 
 (**[avail_card list] returns true or false if there are available cards*)
 val avail_card : card list -> bool
@@ -119,3 +131,12 @@ val buy_card: t-> card -> unit
 (**[bank_trade player x res1 y res2] takes [x] of [res1] from player [player]
    and gives [y] of [res2] to player*)
 val bank_trade: t -> int -> string -> int -> string -> unit
+
+(**[take_victory t] takes a victory card from player [t]*)
+val take_victory: t -> unit
+
+(**[take_progress t] takes a progress card from player [t]*)
+val take_progress: t -> unit
+
+(**[take_knight t] takes a knight card from player [t]*)
+val take_knight: t -> unit

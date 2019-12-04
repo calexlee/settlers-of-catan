@@ -54,6 +54,7 @@ let rec print_select_node l = try let (row,col) = Lwt_main.run (main ()) in
 
 type phase = Welcome | Setup | Win | Interactive | Roll | Help | Quit |Inventory
            | Points | AddSettle | AddCity | AddRoad | Robbing | BuyCard | Cards
+           | UseKnight | UseProgress | UseVictory | AddFreeRoad
 
 let player_list = [Player.make_player "green"; Player.make_player "magenta";
                    Player.make_player "yellow"; Player.make_player "blue"]
@@ -393,6 +394,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
       print_endline("help- display help menu");
       print_endline("quit- quit the game WARNING: progress will not be saved");
       print_endline("buycard- buy a development card");
+      print_endline("use + cardname- use a development card you own");
       print_endline("cards- display your development cards");
       let input= Command.parse (read_line()) in
       ( match Command.to_data input with
@@ -412,7 +414,9 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
                      " and all of the resources have been distributed" in
        play_game Interactive Roll board nodes turn pass rd_ph list node mes card_list)
   |Interactive->
-    if (prev_phase=Roll || prev_phase=AddCity || prev_phase=AddRoad || prev_phase=AddSettle || prev_phase=BuyCard) then
+    if (prev_phase=Roll || prev_phase=AddCity || prev_phase=AddRoad || 
+        prev_phase=AddSettle || prev_phase=BuyCard || prev_phase=UseKnight
+        || prev_phase=UseProgress || prev_phase=UseVictory || prev_phase=Interactive) then
       (Gamegraphics.draw_board board nodes;
        let color = Player.player_to_string (get_index 0 turn player_list) in
        (match color with
@@ -423,7 +427,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
         | _ -> raise(Failure("Not a player color"))
        )
       )
-    else if (prev_phase != Points && prev_phase != Inventory) then
+    else if (prev_phase != Points && prev_phase != Inventory && prev_phase != Cards) then
       (Gamegraphics.draw_board board nodes;)
     else ();
     print_endline(
@@ -456,6 +460,12 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
         play_game BuyCard Interactive board nodes turn pass rd_ph list node message card_list
       |("cards",_,_,_,_)->
         play_game Cards Interactive board nodes turn pass rd_ph list node message card_list
+      |("useknight",_,_,_,_)->
+        play_game UseKnight Interactive board nodes turn pass rd_ph list node message card_list
+      |("useprogress",_,_,_,_)->
+        play_game UseProgress Interactive board nodes turn pass rd_ph list node message card_list
+      |("usevictory",_,_,_,_)->
+        play_game UseVictory Interactive board nodes turn pass rd_ph list node message card_list
       |("tradebank",x,res1,y,res2)->
         let msg = "Invalid trade" in
         (match x,y with
@@ -491,7 +501,9 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
         play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list)
   |Robbing -> (
       try (Gamegraphics.draw_board board nodes;
-           print_endline("The die roll resulted in a 7, so Player " ^Player.player_to_string (get_index 0 turn player_list)^ " must now select the name (resource) of a tile to place the robber there");
+           if prev_phase = UseKnight then print_endline("You use knight card, so Player " ^Player.player_to_string (get_index 0 turn player_list)^ " can now select the name (resource) of a tile to place the robber there")
+           else
+             print_endline("The die roll resulted in a 7, so Player " ^Player.player_to_string (get_index 0 turn player_list)^ " must now select the name (resource) of a tile to place the robber there");
            let rob_tile = select_tile () in
            let n_tile = robbers_false board;
              List.nth (List.rev board) (rob_tile - 1) in
@@ -555,6 +567,18 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
         with
         |_->
           play_game AddRoad AddRoad board nodes turn pass rd_ph list node message card_list));
+  |AddFreeRoad->(try(
+      Gamegraphics.draw_board board nodes;
+      print_endline("You use progress card, so you can select an edge to place a road for free");
+      let selected_edge =  select_edge() in
+      if (not (if_edge turn selected_edge node)) then failwith "wrong position" else
+        begin
+          Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
+          play_game Interactive AddFreeRoad board nodes turn pass rd_ph list ((turn, fst selected_edge, snd selected_edge)::node) "" card_list;
+        end)
+     with
+     |_->
+       play_game AddFreeRoad AddFreeRoad board nodes turn pass rd_ph list node message card_list);
   |Inventory ->
     Gamegraphics.draw_board board nodes;
     print_endline("Your inventory includes: ");
@@ -608,6 +632,24 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
         let ran_card = random_card card_list in
         Player.buy_card (get_index 0 turn player_list) ran_card;
         play_game Interactive BuyCard board nodes turn pass rd_ph list node "You got a development card" (delete_card ran_card card_list);));
+  |UseKnight-> (
+      if not (Player.can_use_knight (get_index 0 turn player_list)) then
+        (let msg = "You do not have knight card" in
+         play_game Interactive UseKnight board nodes turn pass rd_ph list node msg card_list;)
+      else ( Player.take_knight (get_index 0 turn player_list);
+             play_game Robbing UseKnight board nodes turn pass rd_ph list node "" card_list;))
+  |UseProgress->(     
+      if not (Player.can_use_progress (get_index 0 turn player_list)) then
+        (let msg = "You do not have progress card" in
+         play_game Interactive UseProgress board nodes turn pass rd_ph list node msg card_list;)
+      else ( Player.take_progress (get_index 0 turn player_list);
+             play_game AddFreeRoad UseProgress board nodes turn pass rd_ph list node "" card_list;))
+  |UseVictory->  (     
+      if not (Player.can_use_victory (get_index 0 turn player_list)) then
+        (let msg = "You do not have victory card" in
+         play_game Interactive UseVictory board nodes turn pass rd_ph list node msg card_list;)
+      else ( Player.take_victory (get_index 0 turn player_list);
+             play_game Interactive UseVictory board nodes turn pass rd_ph list node "" card_list;))
   |Win->()
   |Quit->print_endline("\nThank you for playing!!!"); exit 0
 

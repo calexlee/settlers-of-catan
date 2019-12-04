@@ -146,6 +146,30 @@ let take_brick t =
 let take_wood t = 
   t.resources <- (remove_resource Wood [] true t.resources)
 
+(**[take_knight t] takes a knight card from player [t]*)
+let take_knight player = 
+  let rec res list ret = 
+    match list with
+    | [] -> player.card_list <- ret
+    | h :: t -> if h = Knight then player.card_list <- ret @ t 
+      else res t (h::ret) in res player.card_list []
+
+(**[take_progress t] takes a progress card from player [t]*)
+let take_progress player = 
+  let rec res list ret = 
+    match list with
+    | [] -> player.card_list <- ret
+    | h :: t -> if h = Progress then player.card_list <- ret @ t 
+      else res t (h::ret) in res player.card_list []
+
+(**[take_victory t] takes a victory card from player [t]*)
+let take_victory player = 
+  let rec res list ret = 
+    match list with
+    | [] -> player.card_list <- ret
+    | h :: t -> if h = Victory then player.card_list <- ret @ t 
+      else res t (h::ret) in res player.card_list []
+
 let bank_trade (player:t) (x:int) (res1:string) (y:int) (res2:string) : unit = 
   (for var = x downto 0 do
      match res1 with 
@@ -254,6 +278,15 @@ let avail_card list =
 let can_buy_card (player:t) : bool = 
   let resources_req = [Sheep;Rock;Wheat] in 
   subset player.resources resources_req
+
+let can_use_knight (player:t) : bool = 
+  List.mem Knight player.card_list
+
+let can_use_victory (player:t) : bool = 
+  List.mem Victory player.card_list
+
+let can_use_progress (player:t) : bool = 
+  List.mem Progress player.card_list
 
 let build_settlement (player:t) : unit = 
   let resoures_req = [Sheep;Wood;Brick;Wheat] in
