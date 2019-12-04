@@ -246,9 +246,9 @@ let cards_to_string player =
     |[] -> []
     |h::t -> begin 
         match h with
-        |Knight -> "knight" :: loop t
-        |Victory -> "victory" :: loop t
-        |Progress -> "progress" :: loop t
+        |Knight -> "Knight" :: loop t
+        |Victory -> "Victory" :: loop t
+        |Progress -> "Progress" :: loop t
       end in loop player.card_list
 
 (**[subset lst1 lst2] returns true if lst2 is a subset of lst 1 *)

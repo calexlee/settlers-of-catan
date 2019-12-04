@@ -596,7 +596,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
     play_game prev_phase Inventory board nodes turn pass rd_ph list node message card_list;
   |Cards ->
     Gamegraphics.draw_board board nodes;
-    print_endline("Your development cards includes: ");
+    print_endline("Your development cards include: ");
     (match turn with
      |0 -> let list = (Player.cards_to_string (List.nth player_list 0))
        in List.iter (fun x -> print_string(x ^ ", ")) list
