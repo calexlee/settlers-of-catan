@@ -241,6 +241,19 @@ let rob_players () =
   Player.rob_player (get_index 0 2 player_list);
   Player.rob_player (get_index 0 3 player_list);
   ()
+
+let win_check = 
+  if Player.get_points (get_index 0 0 player_list) >= 10 
+  then (true,"Green Wins!")
+  else if Player.get_points (get_index 0 1 player_list) >= 10
+  then (true,"Magenta Wins")
+  else if Player.get_points (get_index 0 2 player_list) >= 10
+  then (true,"Yellow Wins")
+  else if Player.get_points (get_index 0 3 player_list) >= 10
+  then (true,"Blue Wins")
+  else 
+    (false,"")
+
 (**[give_resources nodes roll] is a recrusrive function that checks through
    all of the nodes and gives all the players resources based on if they have
    a settlement there*)
@@ -428,91 +441,94 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
                      " and all of the resources have been distributed" in
        play_game Interactive Roll board nodes turn pass rd_ph list node mes card_list)
   |Interactive->
-    if (prev_phase=Roll || prev_phase=AddCity || prev_phase=AddRoad || 
-        prev_phase=AddSettle || prev_phase=BuyCard || prev_phase=UseKnight
-        || prev_phase=UseProgress || prev_phase=UseVictory || prev_phase=Interactive) then
-      (Gamegraphics.draw_board board nodes;
-       let color = Player.player_to_string (get_index 0 turn player_list) in
-       (match color with
-        |"Magenta" -> ANSITerminal.(print_string [magenta] (message^"\n"));
-        |"Yellow" -> ANSITerminal.(print_string [yellow] (message^"\n"));
-        |"Blue" -> ANSITerminal.(print_string [cyan] (message^"\n"));
-        |"Green" -> ANSITerminal.(print_string [green] (message^"\n"));
-        | _ -> raise(Failure("Not a player color"))
-       )
-      )
-    else if (prev_phase != Points && prev_phase != Inventory && prev_phase != Cards) then
-      (Gamegraphics.draw_board board nodes;)
-    else ();
-    print_endline(
-      "It the " ^ Player.player_to_string (get_index 0 turn player_list)
-      ^ " players turn.");
-    print_endline("Enter any command during your turn phase
+    ( match win_check with
+      |(true,msg) -> play_game Win Interactive board nodes turn pass rd_ph list node msg card_list;
+      |(false,_) -> (
+          if (prev_phase=Roll || prev_phase=AddCity || prev_phase=AddRoad || 
+              prev_phase=AddSettle || prev_phase=BuyCard || prev_phase=UseKnight
+              || prev_phase=UseProgress || prev_phase=UseVictory || prev_phase=Interactive) then
+            (Gamegraphics.draw_board board nodes;
+             let color = Player.player_to_string (get_index 0 turn player_list) in
+             (match color with
+              |"Magenta" -> ANSITerminal.(print_string [magenta] (message^"\n"));
+              |"Yellow" -> ANSITerminal.(print_string [yellow] (message^"\n"));
+              |"Blue" -> ANSITerminal.(print_string [cyan] (message^"\n"));
+              |"Green" -> ANSITerminal.(print_string [green] (message^"\n"));
+              | _ -> raise(Failure("Not a player color"))
+             )
+            )
+          else if (prev_phase != Points && prev_phase != Inventory && prev_phase != Cards) then
+            (Gamegraphics.draw_board board nodes;)
+          else ();
+          print_endline(
+            "It the " ^ Player.player_to_string (get_index 0 turn player_list)
+            ^ " players turn.");
+          print_endline("Enter any command during your turn phase
     or help to view commands");
-    let input= Command.parse (read_line()) in
-    ( match Command.to_data input with
-      |("help",_,_,_,_)->
-        play_game Help Interactive board nodes turn pass rd_ph list node message card_list
-      |("done",_,_,_,_)->
-        if turn!=3 then
-          play_game Roll Interactive board nodes (turn+1) pass rd_ph list node message card_list
-        else
-          play_game Roll Interactive board nodes 0 pass rd_ph list node message card_list
-      |("quit",_,_,_,_)->
-        play_game Quit Interactive board nodes turn pass rd_ph list node message card_list
-      |("points",_,_,_,_)->
-        play_game Points Interactive board nodes turn pass rd_ph list node message card_list
-      |("inventory",_,_,_,_)->
-        play_game Inventory Interactive board nodes turn pass rd_ph list node message card_list
-      |("addcity",_,_,_,_)->
-        play_game AddCity Interactive board nodes turn pass rd_ph list node message card_list
-      |("addsettle",_,_,_,_)->
-        play_game AddSettle Interactive board nodes turn pass rd_ph list node message card_list
-      |("addroad",_,_,_,_)->
-        play_game AddRoad Interactive board nodes turn pass rd_ph list node message card_list
-      |("buycard",_,_,_,_)->
-        play_game BuyCard Interactive board nodes turn pass rd_ph list node message card_list
-      |("cards",_,_,_,_)->
-        play_game Cards Interactive board nodes turn pass rd_ph list node message card_list
-      |("useknight",_,_,_,_)->
-        play_game UseKnight Interactive board nodes turn pass rd_ph list node message card_list
-      |("useprogress",_,_,_,_)->
-        play_game UseProgress Interactive board nodes turn pass rd_ph list node message card_list
-      |("usevictory",_,_,_,_)->
-        play_game UseVictory Interactive board nodes turn pass rd_ph list node message card_list
-      |("tradebank",x,res1,y,res2)->
-        let msg = "Invalid trade" in
-        (match x,y with
-         |(4,1)->
-           if Player.has_trade_res (get_index 0 turn player_list) x res1 then
-             (Player.bank_trade (get_index 0 turn player_list) 4 res1 1 res2;
-              play_game Interactive Interactive board nodes turn pass rd_ph list node
-                "Your trade has been completed" card_list)
-           else play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list
-         |(3,1)-> if Player.has_three_to_one (get_index 0 turn player_list) &&
-                     (Player.has_trade_res (get_index 0 turn player_list) x res1) then
-             (Player.bank_trade (get_index 0 turn player_list) 3 res1 1 res2;
-              play_game Interactive Interactive board nodes turn pass rd_ph list node
-                "Your trade has been completed" card_list)
-           else play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list
-         |(2,1)->if Player.has_two_to_one (get_index 0 turn player_list) res1 &&
-                    (Player.has_trade_res (get_index 0 turn player_list) x res1) then
-             (Player.bank_trade (get_index 0 turn player_list) 3 res1 1 res2;
-              play_game Interactive Interactive board nodes turn pass rd_ph list node
-                "Your trade has been completed" card_list)
-           else play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list
-         |(_,_)->
-           play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list)
-      |("tradeblue",x,res1,y,res2)->
-        failwith ""
-      |("tradegreen",x,res1,y,res2)->
-        failwith ""
-      |("trademagenta",x,res1,y,res2)->
-        failwith ""
-      |("tradeyellow",x,res1,y,res2)->
-        failwith ""
-      |_-> let msg = "Malformed command please re-enter" in
-        play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list)
+          let input= Command.parse (read_line()) in
+          ( match Command.to_data input with
+            |("help",_,_,_,_)->
+              play_game Help Interactive board nodes turn pass rd_ph list node message card_list
+            |("done",_,_,_,_)->
+              if turn!=3 then
+                play_game Roll Interactive board nodes (turn+1) pass rd_ph list node message card_list
+              else
+                play_game Roll Interactive board nodes 0 pass rd_ph list node message card_list
+            |("quit",_,_,_,_)->
+              play_game Quit Interactive board nodes turn pass rd_ph list node message card_list
+            |("points",_,_,_,_)->
+              play_game Points Interactive board nodes turn pass rd_ph list node message card_list
+            |("inventory",_,_,_,_)->
+              play_game Inventory Interactive board nodes turn pass rd_ph list node message card_list
+            |("addcity",_,_,_,_)->
+              play_game AddCity Interactive board nodes turn pass rd_ph list node message card_list
+            |("addsettle",_,_,_,_)->
+              play_game AddSettle Interactive board nodes turn pass rd_ph list node message card_list
+            |("addroad",_,_,_,_)->
+              play_game AddRoad Interactive board nodes turn pass rd_ph list node message card_list
+            |("buycard",_,_,_,_)->
+              play_game BuyCard Interactive board nodes turn pass rd_ph list node message card_list
+            |("cards",_,_,_,_)->
+              play_game Cards Interactive board nodes turn pass rd_ph list node message card_list
+            |("useknight",_,_,_,_)->
+              play_game UseKnight Interactive board nodes turn pass rd_ph list node message card_list
+            |("useprogress",_,_,_,_)->
+              play_game UseProgress Interactive board nodes turn pass rd_ph list node message card_list
+            |("usevictory",_,_,_,_)->
+              play_game UseVictory Interactive board nodes turn pass rd_ph list node message card_list
+            |("tradebank",x,res1,y,res2)->
+              let msg = "Invalid trade" in
+              (match x,y with
+               |(4,1)->
+                 if Player.has_trade_res (get_index 0 turn player_list) x res1 then
+                   (Player.bank_trade (get_index 0 turn player_list) 4 res1 1 res2;
+                    play_game Interactive Interactive board nodes turn pass rd_ph list node
+                      "Your trade has been completed" card_list)
+                 else play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list
+               |(3,1)-> if Player.has_three_to_one (get_index 0 turn player_list) &&
+                           (Player.has_trade_res (get_index 0 turn player_list) x res1) then
+                   (Player.bank_trade (get_index 0 turn player_list) 3 res1 1 res2;
+                    play_game Interactive Interactive board nodes turn pass rd_ph list node
+                      "Your trade has been completed" card_list)
+                 else play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list
+               |(2,1)->if Player.has_two_to_one (get_index 0 turn player_list) res1 &&
+                          (Player.has_trade_res (get_index 0 turn player_list) x res1) then
+                   (Player.bank_trade (get_index 0 turn player_list) 3 res1 1 res2;
+                    play_game Interactive Interactive board nodes turn pass rd_ph list node
+                      "Your trade has been completed" card_list)
+                 else play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list
+               |(_,_)->
+                 play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list)
+            |("tradeblue",x,res1,y,res2)->
+              failwith ""
+            |("tradegreen",x,res1,y,res2)->
+              failwith ""
+            |("trademagenta",x,res1,y,res2)->
+              failwith ""
+            |("tradeyellow",x,res1,y,res2)->
+              failwith ""
+            |_-> let msg = "Malformed command please re-enter" in
+              play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list)))
   |Robbing -> (
       try (Gamegraphics.draw_board board nodes;
            if prev_phase = UseKnight then print_endline("You use knight card, so Player " ^Player.player_to_string (get_index 0 turn player_list)^ " can now select the name (resource) of a tile to place the robber there")
@@ -628,10 +644,18 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
   |Points->
     Gamegraphics.draw_board board nodes;
     (match turn with
-     |0 -> print_int(Player.get_points(List.nth player_list 0))
-     |1 -> print_int(Player.get_points(List.nth player_list 0))
-     |2 -> print_int(Player.get_points(List.nth player_list 0))
-     |3 -> print_int(Player.get_points(List.nth player_list 0))
+     |0 -> print_string("You have ");
+       print_int(Player.get_points(List.nth player_list 0));
+       print_endline(" points");
+     |1 -> print_string("You have ");
+       print_int(Player.get_points(List.nth player_list 0));
+       print_endline(" points");
+     |2 -> print_string("You have ");
+       print_int(Player.get_points(List.nth player_list 0));
+       print_endline(" points");
+     |3 -> print_string("You have ");
+       print_int(Player.get_points(List.nth player_list 0));
+       print_endline(" points");
      |_ -> failwith("not a true number"));
     print_endline("");
     play_game prev_phase Inventory board nodes turn pass rd_ph list node message card_list;
@@ -665,8 +689,9 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
         (let msg = "You do not have victory card" in
          play_game Interactive UseVictory board nodes turn pass rd_ph list node msg card_list;)
       else ( Player.take_victory (get_index 0 turn player_list);
+             Player.add_points (get_index 0 turn player_list) 1;
              play_game Interactive UseVictory board nodes turn pass rd_ph list node "" card_list;))
-  |Win->()
+  |Win->print_endline(message); print_endline("Thank you for playing"); exit 0
   |Quit->print_endline("\nThank you for playing!!!"); exit 0
 
 let main () =
