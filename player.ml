@@ -12,7 +12,10 @@ type t = {
   mutable resources: r list;
   mutable points: int;
   mutable card_list: card list;
-  mutable longest_road: bool;
+  mutable longest_road: int;
+  mutable has_l_road : bool;
+  mutable army : int;
+  mutable has_l_army : bool;
   mutable ports: port list;
 }
 
@@ -29,7 +32,10 @@ let make_player color=
     resources = [];
     points = 0;
     card_list = [];
-    longest_road = false;
+    longest_road = 0;
+    has_l_road = false;
+    army = 0;
+    has_l_army = false;
     ports = [];
   }
 
@@ -42,10 +48,36 @@ let num_of_res t =
   List.length t.resources
 
 let get_points t =
-  t.points
+  if t.has_l_army && t.has_l_road 
+  then t.points + 4 
+  else if t.has_l_army || t.has_l_road
+  then t.points + 2
+  else 
+    t.points
+
+let get_army t =
+  t.army
+
+let get_longest_road t = 
+  t.longest_road
+
+let get_army_l t = 
+  t.has_l_army
+
+let get_road_l t =
+  t.has_l_road
+
+let set_l_army t b = 
+  t.has_l_army <- b
+
+let set_l_road t b = 
+  t.has_l_road <- b
 
 let add_points t p = 
   t.points <- t.points + p
+
+let add_army t =
+  t.army <- t.army + 1
 
 let get_resources t =
   t.resources

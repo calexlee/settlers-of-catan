@@ -274,6 +274,46 @@ let distribute_resources nodes roll =
   else
     give_resources nodes roll
 
+(**[set_new_l_army l plist] sets the largest army value to true if > 3 for the 
+   largest army in [plist] *)
+let set_new_l_army l plist = 
+  if List.nth plist 0 = l && l >= 3
+  then Player.set_l_army (get_index 0 0 player_list) true
+  else if List.nth plist 1 = l && l >= 3
+  then Player.set_l_army (get_index 0 1 player_list) true
+  else if List.nth plist 2 = l && l >= 3
+  then Player.set_l_army (get_index 0 2 player_list) true
+  else if List.nth plist 3 = l && l >= 3
+  then Player.set_l_army (get_index 0 3 player_list) true
+
+
+(**[give_points_for_army] updates the points with the person who has the 
+   largest army *)
+let give_points_for_army =
+  let ilist = [Player.get_army (get_index 0 0 player_list);
+               Player.get_army (get_index 0 1 player_list);
+               Player.get_army (get_index 0 2 player_list);
+               Player.get_army (get_index 0 3 player_list);] 
+  in 
+  let max_num = List.fold_left max 0 ilist
+  in (*checks if someone already has an army that large*)
+  let p1,p2,p3,p4 = Player.get_army_l (get_index 0 0 player_list),
+                    Player.get_army_l (get_index 0 0 player_list),
+                    Player.get_army_l (get_index 0 0 player_list),
+                    Player.get_army_l (get_index 0 0 player_list) in 
+  if  p1 && List.nth ilist 0 < max_num
+  then (Player.set_l_army (get_index 0 0 player_list) false;
+        set_new_l_army max_num ilist;)
+  else if  p2 && List.nth ilist 0 < max_num
+  then (Player.set_l_army (get_index 0 0 player_list) false;
+        set_new_l_army max_num ilist;)
+  else if  p1 && List.nth ilist 0 < max_num
+  then (Player.set_l_army (get_index 0 0 player_list) false;
+        set_new_l_army max_num ilist;)
+  else if  p1 && List.nth ilist 0 < max_num
+  then (Player.set_l_army (get_index 0 0 player_list) false;
+        set_new_l_army max_num ilist; )
+
 
 (**[play_game] a recursive function that loops through the game playing where
    [phase] represents the phase of the game [board] represents the board to
@@ -661,6 +701,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
         (let msg = "You do not have knight card" in
          play_game Interactive UseKnight board nodes turn pass rd_ph list node msg card_list;)
       else ( Player.take_knight (get_index 0 turn player_list);
+             Player.add_army (get_index 0 turn player_list);
              play_game Robbing UseKnight board nodes turn pass rd_ph list node "" card_list;))
   |UseProgress->(     
       if not (Player.can_use_progress (get_index 0 turn player_list)) then

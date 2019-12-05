@@ -24,44 +24,69 @@ val make_player : string -> t
 (**[add_points t p] adds [p] points to [t] *)
 val add_points : t -> int -> unit
 
-(**[get_points t] returns the points of player [t].*)
+(**[add_army t] adds one to the army of [t] *)
+val add_army : t -> unit
+
+(**[get_army t] is the size of the army of [t] *)
+val get_army : t -> int
+
+(**[get_longest_road t] is the length of the longest road of [t] *)
+val get_longest_road : t -> int
+
+(**[get_army_l t] is true if the army is the largest in the game or false 
+   otherwise *)
+val get_army_l : t -> bool
+
+(**[get_road_l t] is true if the road is the longest in the game or false 
+   otherwise *)
+val get_road_l : t -> bool
+
+(**[get_points t] is the points of [t] which is a combination of unlosable points
+   from settlements/cities/development cards, and if they currently have the longest
+   road and/or largest army.*)
 val get_points : t -> int
 
 (**[get_color t] is the color of player [t]  *)
 val get_color : t -> color
 
+(**[set_l_army t b] sets the value of having the largest army in [t] to [b] *)
+val set_l_army : t -> bool -> unit
+
+(**[set_l_road t b] set the value of having the longest road in [t] to [b] *)
+val set_l_road : t -> bool -> unit
+
 (**[color_to_string c] is the string representing [c] *)
 val color_to_string : color -> string
 
-(**[get_resources t] returns the resouces number list of player [t]*)
+(**[get_resources t] returns the resouces number list of [t]*)
 val get_resources : t -> r list
 
-(**[give_sheep t] gives the player [t] sheep.*)
+(**[give_sheep t] gives the [t] sheep.*)
 val give_sheep : t -> unit
 
 (**[give_rock t] gives the player [t] rock.*)
 val give_rock : t -> unit
 
-(**[give_ brick t] gives the player [t] brick.*)
+(**[give_ brick t] gives [t] brick.*)
 val give_brick : t -> unit
 
-(**[give_sheep t] gives the player [t] wood.*)
+(**[give_sheep t] gives [t] wood.*)
 val give_wood  : t -> unit
 
-(**[give_sheep t] gives the player [t] wheat.*)
+(**[give_sheep t] gives [t] wheat.*)
 val give_wheat : t -> unit
 
-(**[give_card t] gives the player [t] [card].*)
+(**[give_card t] gives [t] [card].*)
 val give_card : card -> t -> unit
 
-(**[has_three_to_one t] returns true if the player [t] has a three to one port *)
+(**[has_three_to_one t] is true if [t] has a three to one port *)
 val has_three_to_one : t -> bool
 
-(**[has_two_to_one t res] returns true if the player [t] has a three to one port 
+(**[has_two_to_one t res] is true if [t] has a three to one port 
    corresponding to resource [res]*)
 val has_two_to_one : t-> string -> bool
 
-(**[has_trade_res player x res] returns true if [player] has [x] of [res]*)
+(**[has_trade_res player x res] is true if [player] has [x] of [res]*)
 val has_trade_res : t -> int -> string -> bool
 
 (**[player_to_string player] is a string representation of [player]*)
@@ -81,35 +106,35 @@ val subset : r list -> r list -> bool
    if the number of resources they have is greater than seven*)
 val rob_player : t -> unit
 
-(**[can_build_set player] returns true or false if player [player] can build
+(**[can_build_set player] is true or false if [player] can build
    a settlement*)
 val can_build_set: t -> bool 
 
-(**[can_build_city player] returns true or false if player [player] can build
+(**[can_build_city player] is true or false if [player] can build
    a city*)
 val can_build_city: t -> bool 
 
-(**[can_build_road player] returns true or false if player [player] can build
+(**[can_build_road player] is true or false if [player] can build
    a road*)
 val can_build_road: t -> bool
 
-(**[can_buy_card player] returns true or false if player [player] 
+(**[can_buy_card player] is true or false if [player] 
    can buy a card*)
 val can_buy_card: t -> bool
 
-(**[can_use_knight player] returns true or false if player [player] 
+(**[can_use_knight player] is true or false if [player] 
    can use card Knight*)
 val can_use_knight: t -> bool
 
-(**[can_use_victory player] returns true or false if player [player] 
+(**[can_use_victory player] is true or false if [player] 
    can use card Victory*)
 val can_use_victory: t -> bool
 
-(**[can_use_progress player] returns true or false if player [player] 
+(**[can_use_progress player] is true or false if [player] 
    can use card Progress*)
 val can_use_progress: t -> bool
 
-(**[avail_card list] returns true or false if there are available cards*)
+(**[avail_card list] is true or false if there are available cards*)
 val avail_card : card list -> bool
 
 (**[build_settlement player] checks if [player] has enough resources to build
@@ -135,11 +160,11 @@ val buy_card: t-> card -> unit
    and gives [y] of [res2] to player*)
 val bank_trade: t -> int -> string -> int -> string -> unit
 
-(**[take_victory t] takes a victory card from player [t]*)
+(**[take_victory t] takes a victory card from [t]*)
 val take_victory: t -> unit
 
-(**[take_progress t] takes a progress card from player [t]*)
+(**[take_progress t] takes a progress card from [t]*)
 val take_progress: t -> unit
 
-(**[take_knight t] takes a knight card from player [t]*)
+(**[take_knight t] takes a knight card from [t]*)
 val take_knight: t -> unit
