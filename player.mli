@@ -52,8 +52,8 @@ val get_color : t -> color
 (**[set_l_army t b] sets the value of having the largest army in [t] to [b] *)
 val set_l_army : t -> bool -> unit
 
-(**[set_l_road t b] set the value of having the longest road in [t] to [b] *)
-val set_l_road : t -> bool -> unit
+(**[set_l_road b t] set the value of having the longest road in [t] to [b] *)
+val set_l_road : bool-> t -> unit
 
 (**[color_to_string c] is the string representing [c] *)
 val color_to_string : color -> string

@@ -2,9 +2,6 @@
 (**The type of a settlement *)
 type s
 
-(**The type of some player *)
-type node_player
-
 (**the abstract type of a port *)
 type port
 
@@ -52,6 +49,10 @@ val has_edge : t -> (int*int) -> Player.t option
 (*[get_edge neigh node] is the edge leaving node [node] going to 
   a neighboring node with index [neigh]*)
 val get_edge : int -> t -> Edge.t
+
+(**[find_longest_road player node nlist curlong visited acc] is the length of the
+   longest path of edges starting at [node] for [player]*)
+val find_longest_road : Player.t option -> t -> t list -> int -> int list-> int -> int
 
 (**[generateNodes ()] is a generated list of nodes indexed from 1-54 *)
 val generate_nodes : Board.t -> t list

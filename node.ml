@@ -1,14 +1,12 @@
 type s = None | Settlement | City
 
-type node_player = None | Some of Player.t
-
 
 type port = ThreeToOne of bool | TwoToRes of string | NoPort
 
 type t = {
   neigh_tiles: Tile.t list;
   mutable settlement : s;
-  mutable player : node_player;
+  mutable player : Player.t option;
   index: int;
   edges: Edge.t list;
   port: port;
@@ -160,6 +158,21 @@ let rec get_edge_helper neigh edge_list =
 
 let rec get_edge neigh node = 
   get_edge_helper neigh (get_edges node)
+
+let rec find_longest_road player node nlist curlong visited acc = 
+  if List.length visited = List.length nlist then acc
+  else 
+    let n_visited = (get_index node)::visited in 
+    let rec loop list = 
+      match list with 
+      |[] -> acc
+      |h::t -> (*Current finds all paths without outputing longest WIP *)
+        if not (List.mem (Edge.get_index h) n_visited) && node.player = player 
+        then (find_longest_road player (List.nth nlist (Edge.get_index h)) nlist 
+                curlong n_visited (acc+1) )
+        else 
+          loop t
+    in loop node.edges
 
 let generate_nodes board= 
   [make_node [Board.get_tile board 0] 0 [Edge.make_edge 1; Edge.make_edge 3] true "";
