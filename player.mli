@@ -79,7 +79,12 @@ val give_wheat : t -> unit
 (**[give_card t] gives [t] [card].*)
 val give_card : card -> t -> unit
 
-(**[has_three_to_one t] is true if [t] has a three to one port *)
+(**[give_port t threeToOne res] gives player [t] a three to one port if
+   [threeToOne] and if  [res] is not empty it gives plyaer a [res] port otherwise 
+   fails*)
+val give_port : t -> bool -> string -> unit
+
+(**[has_three_to_one t] returns true if the player [t] has a three to one port *)
 val has_three_to_one : t -> bool
 
 (**[has_two_to_one t res] is true if [t] has a three to one port 

@@ -29,7 +29,7 @@ let make_player color=
     |_ -> Green in
   {
     color = colorp; (* Need to make random out of available options*)
-    resources = [];
+    resources = [Sheep;Sheep;Sheep;Sheep;Sheep;Sheep;Sheep;Sheep;Wood;Wood;Wood];
     points = 0;
     card_list = [];
     longest_road = 0;
@@ -146,7 +146,7 @@ let rec has_two_to_one (lst:port list) (res:string) : bool =
              |"brick"-> Brick
              |"rock"-> Rock
              |_->failwith"")in 
-    if h = TwoToRes newres then true else has_three_to_one_help t
+    if h = (TwoToRes newres) then true else has_two_to_one t res
 
 let has_two_to_one t (res:string) : bool = 
   has_two_to_one t.ports res
@@ -206,7 +206,7 @@ let take_victory player =
       else res t (h::ret) in res player.card_list []
 
 let bank_trade (player:t) (x:int) (res1:string) (y:int) (res2:string) : unit = 
-  (for var = x downto 0 do
+  (for var = x downto 1 do
      match res1 with 
      |"sheep"-> take_sheep player
      |"wheat"-> take_wheat player
@@ -215,7 +215,7 @@ let bank_trade (player:t) (x:int) (res1:string) (y:int) (res2:string) : unit =
      |"rock"-> take_rock player
      |_-> failwith "Invalid resource"
    done;
-   for var2 = y downto 0 do
+   for var2 = y downto 1 do
      match res2 with 
      |"sheep"-> give_sheep player 
      |"wheat"-> give_wheat player
@@ -229,7 +229,8 @@ let bank_trade (player:t) (x:int) (res1:string) (y:int) (res2:string) : unit =
    of [res] in [lst]*)
 let rec has_trade_res_helper x res lst = 
   if x = 0 then true 
-  else has_trade_res_helper (x-1) res (remove_resource res [] true lst)
+  else try (has_trade_res_helper (x-1) res (remove_resource res [] true lst)) 
+    with |_-> false
 
 let has_trade_res (player:t) (x:int) (res:string)= 
   let newres = 

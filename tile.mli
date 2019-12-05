@@ -7,7 +7,7 @@ type t
 
 (**[make_tile number resource] is a tile with the number [number] and 
    with the resource [resource]*)
-val make_tile : int -> string -> bool -> t
+val make_tile : int -> string -> bool-> t
 
 (**[get_reosurce tile] is the resource of tile [tile]*)
 val get_resource : t -> string
