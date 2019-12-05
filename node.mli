@@ -5,17 +5,27 @@ type s
 (**The type of some player *)
 type node_player
 
+(**the abstract type of a port *)
+type port
+
 (**The type of a Node *)
 type t
 
 (**[make_node list n edge] returns a new node t.*)
-val make_node : Tile.t list -> int -> Edge.t list -> t
+val make_node : Tile.t list -> int -> Edge.t list -> bool -> string -> t
 
 (** [add_settlement a p t] can add a new settlement belonging to p to t.*)
 val add_settlement : string -> Player.t -> t -> unit
 
 (** [remove_settlement] can remove the settlement on t.*)
 val remove_settlement : t -> unit
+
+(**[has_three_to_one node] is true if this node has a three to one port*)
+val has_three_to_one : t -> bool
+
+(**[has_res_port node] returns the type of resource port the node has or 
+   an empty string if the node does not have a port *)
+val has_res_port : t -> string
 
 (**[give_resource dr node] give the player who has a settlement on node [node] 
    all resources corresponding to die roll [dr]*)

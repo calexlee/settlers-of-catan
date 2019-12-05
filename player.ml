@@ -26,7 +26,7 @@ let make_player color=
     |_ -> Green in
   {
     color = colorp; (* Need to make random out of available options*)
-    resources = [];
+    resources = [Sheep;Sheep;Sheep;Sheep;Sheep;Sheep;Sheep;Sheep;Sheep;Sheep;Sheep;Sheep;Sheep;Sheep;Sheep;];
     points = 2;
     card_list = [];
     longest_road = false;
@@ -171,7 +171,7 @@ let take_victory player =
       else res t (h::ret) in res player.card_list []
 
 let bank_trade (player:t) (x:int) (res1:string) (y:int) (res2:string) : unit = 
-  (for var = x downto 0 do
+  (for var = x downto 1 do
      match res1 with 
      |"sheep"-> take_sheep player
      |"wheat"-> take_wheat player
@@ -180,7 +180,7 @@ let bank_trade (player:t) (x:int) (res1:string) (y:int) (res2:string) : unit =
      |"rock"-> take_rock player
      |_-> failwith "Invalid resource"
    done;
-   for var2 = y downto 0 do
+   for var2 = y downto 1 do
      match res2 with 
      |"sheep"-> give_sheep player 
      |"wheat"-> give_wheat player

@@ -93,39 +93,39 @@ let parse str =
           else if (h= "road" || h = "Road") && t=[] then AddRoad
           else raise Malformed
       end
-      else if h = "trade" || h = "Trade" then begin
+      else if (h = "trade" || h = "Trade") then begin
         match t with
         | [] -> raise Malformed
         | h::t -> 
-          if (h = "bank" || h="Bank")&& t=[] then 
+          if (h = "bank" || h="Bank") then 
             match t with 
             |x::res1::y::res2::t when t=[]-> 
               if(valid_resources res2 res2) then 
                 TradeBank (int_of_string x,res1, int_of_string y,res2)
               else raise Malformed
             |_-> raise Malformed
-          else if (h = "blue" || h="Blue")&& t=[] then 
+          else if (h = "blue" || h="Blue")then 
             match t with 
             |x::res1::y::res2::t when t=[]-> 
               if(valid_resources res2 res2) then 
                 TradeBlue (int_of_string x,res1, int_of_string y,res2)
               else raise Malformed
             |_-> raise Malformed
-          else if (h = "magenta" || h="Magenta")&& t=[] then 
+          else if (h = "magenta" || h="Magenta") then 
             match t with 
             |x::res1::y::res2::t when t=[]-> 
               if(valid_resources res2 res2) then 
                 TradeMagenta (int_of_string x,res1, int_of_string y,res2)
               else raise Malformed
             |_-> raise Malformed
-          else if (h = "green" || h="Green")&& t=[] then 
+          else if (h = "green" || h="Green") then 
             match t with 
             |x::res1::y::res2::t when t=[]-> 
               if(valid_resources res2 res2) then 
                 TradeGreen (int_of_string x,res1, int_of_string y,res2)
               else raise Malformed
             |_-> raise Malformed
-          else if (h = "yellow" || h="Yellow")&& t=[] then 
+          else if (h = "yellow" || h="Yellow") then 
             match t with 
             |x::res1::y::res2::t when t=[]-> 
               if(valid_resources res2 res2) then 

@@ -233,7 +233,6 @@ let rec start_resources turn nodes nodes_index counter =
   |h::t-> if nodes_index=counter then failwith ""
     else start_resources turn nodes nodes_index (counter+1)
 
-
 (**[rob_players] a function that runs through the players and removes
    half of their hand if they have more then 7 cards*)
 let rob_players () =
@@ -260,6 +259,17 @@ let distribute_resources nodes roll =
     rob_players ()
   else
     give_resources nodes roll
+
+(**[give_port node_index nodes turn] gives the player corresponding to [turn]
+   if the node_index has a a port on it *)
+let give_port node_index nodes turn=
+  try (
+    if Node.has_three_to_one (get_index 0 node_index nodes) then 
+      (Player.give_port (get_index 0 turn player_list) true "")
+    else if Node.has_res_port (get_index 0 node_index nodes)!="" then 
+      (Player.give_port (get_index 0 turn player_list) false  
+         (Node.has_res_port (get_index 0 node_index nodes)))
+    else ()) with |_->()
 
 
 (**[play_game] a recursive function that loops through the game playing where
@@ -292,7 +302,8 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
               print_endline("Green player, please select a node to build a settlement");
               let node_index =  select_node() in
               if (if_neighbor 0 0 node_index list node) then failwith "wrong position" else
-                begin
+                begin 
+                  give_port node_index nodes turn;
                   Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
                   if pass then Node.give_resource_start (get_index 0 node_index nodes) else ();
                   play_game Setup Setup board nodes turn pass true (add_node list node_index) ((turn, node_index, -1)::node) message card_list;
@@ -316,6 +327,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
               let node_index =  select_node()  in
               if (if_neighbor 0 1 node_index list node) then failwith "wrong position" else
                 begin
+                  give_port node_index nodes turn;
                   Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
                   if pass then Node.give_resource_start (get_index 0 node_index nodes) else ();
                   play_game Setup Setup board nodes turn pass true (add_node list node_index) ((turn, node_index, -1)::node) message card_list;
@@ -339,6 +351,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
               let node_index =  select_node()  in
               if (if_neighbor 0 2 node_index list node) then failwith "wrong position" else
                 begin
+                  give_port node_index nodes turn;
                   Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
                   if pass then Node.give_resource_start (get_index 0 node_index nodes) else ();
                   play_game Setup Setup board nodes turn pass true (add_node list node_index) ((turn, node_index, -1)::node) message card_list;
@@ -362,6 +375,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
               let node_index =  select_node()  in
               if (if_neighbor 0 3 node_index list node) then failwith "wrong position" else
                 begin
+                  give_port node_index nodes turn;
                   Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
                   if pass then Node.give_resource_start (get_index 0 node_index nodes) else ();
                   play_game Setup Setup board nodes turn pass true (add_node list node_index) ((turn, node_index, -1)::node) message card_list;
@@ -524,6 +538,8 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
           let node_index =  select_node() in
           if (if_neighbor 1 turn node_index list node) then failwith "wrong position" else
             begin
+              (*you will have to build a settlement and pass in (get_index 0 node_index nodes) *)
+              give_port node_index nodes turn;
               Player.build_settlement (get_index 0 turn player_list);
               Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
               play_game Interactive AddSettle board nodes turn pass rd_ph (add_node list node_index) ((turn, node_index, -1)::node) "" card_list;
