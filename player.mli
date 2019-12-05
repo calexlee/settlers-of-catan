@@ -18,8 +18,11 @@ type card
 (**[ini_card] returns the initial development cards.*)
 val ini_card : card list
 
-(*[make_player color] creates a new player with color [color] *)
+(**[make_player color] creates a new player with color [color] *)
 val make_player : string -> t
+
+(**[add_points t p] adds [p] points to [t] *)
+val add_points : t -> int -> unit
 
 (**[get_points t] returns the points of player [t].*)
 val get_points : t -> int

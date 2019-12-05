@@ -27,7 +27,7 @@ let make_player color=
   {
     color = colorp; (* Need to make random out of available options*)
     resources = [];
-    points = 2;
+    points = 0;
     card_list = [];
     longest_road = false;
     ports = [];
@@ -43,6 +43,9 @@ let num_of_res t =
 
 let get_points t =
   t.points
+
+let add_points t p = 
+  t.points <- t.points + p
 
 let get_resources t =
   t.resources
