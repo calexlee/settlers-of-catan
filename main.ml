@@ -513,7 +513,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
                  else play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list
                |(2,1)->if Player.has_two_to_one (get_index 0 turn player_list) res1 &&
                           (Player.has_trade_res (get_index 0 turn player_list) x res1) then
-                   (Player.bank_trade (get_index 0 turn player_list) 3 res1 1 res2;
+                   (Player.bank_trade (get_index 0 turn player_list) 2 res1 1 res2;
                     play_game Interactive Interactive board nodes turn pass rd_ph list node
                       "Your trade has been completed" card_list)
                  else play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list
