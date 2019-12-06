@@ -31,6 +31,8 @@ let board_tests =
     (*Unit testing can not be used well to test random boards
       We used Utop and extensivly printed boards and ensured
       all the conditions were met for the board being correct manually*)
+
+
   ]
 
 let node1 = Node.make_node [] 2 []

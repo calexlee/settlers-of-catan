@@ -165,6 +165,12 @@ val buy_card: t-> card -> unit
    and gives [y] of [res2] to player*)
 val bank_trade: t -> int -> string -> int -> string -> unit
 
+(**[take_player_trade player x res1] takes [x] of [res1] from [player] *)
+val take_player_trade : t -> int -> string -> unit
+
+(**[give_player_trade player y res2] gives [y] of [res2] to [player]*)
+val give_player_trade : t -> int -> string-> unit 
+
 (**[take_victory t] takes a victory card from [t]*)
 val take_victory: t -> unit
 
