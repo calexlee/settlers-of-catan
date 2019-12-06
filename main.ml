@@ -289,6 +289,7 @@ let set_new_l_army l plist =
 (**[give_points_for_army] updates the points with the person who has the 
    largest army *)
 let give_points_for_army =
+  print_endline (string_of_int (Player.get_army (get_index 0 0 player_list)));
   let ilist = [Player.get_army (get_index 0 0 player_list);
                Player.get_army (get_index 0 1 player_list);
                Player.get_army (get_index 0 2 player_list);
@@ -751,9 +752,10 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
       if not (Player.can_use_knight (get_index 0 turn player_list)) then
         (let msg = "You do not have a knight card" in
          play_game Interactive UseKnight board nodes turn pass rd_ph list node msg card_list gmax;)
-      else ( Player.take_knight (get_index 0 turn player_list);
-             Player.add_army (get_index 0 turn player_list);
-             play_game Robbing UseKnight board nodes turn pass rd_ph list node "" card_list gmax;))
+      else (Player.take_knight (get_index 0 turn player_list);
+            Player.add_army (get_index 0 turn player_list);
+            give_points_for_army;
+            play_game Robbing UseKnight board nodes turn pass rd_ph list node "" card_list gmax;))
   |UseProgress->(     
       if not (Player.can_use_progress (get_index 0 turn player_list)) then
         (let msg = "You do not have a progress card" in
