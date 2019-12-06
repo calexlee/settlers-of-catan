@@ -324,37 +324,23 @@ let give_port node_index nodes turn=
          (Node.has_res_port (get_index 0 node_index nodes)))
     else ()) with |_->()
 
-(**[look_for_longest_road max nlist] finds the longest road for each player in 
-   [nlist], and sets has_longest_road of the player with the longest to [true]
-   if it is greater than 5 *)
-let rec look_for_longest_road max maxplayer nlist nnlist =
-  match nlist with  
-  |[] -> (max,maxplayer)
-  |h::t -> try 
-      (let player = Node.get_player h in 
-       let n_max = 
-         Node.find_longest_road (Some player) h nnlist 
-           (Player.get_longest_road player) [] 1
-       in 
-       if n_max > max 
-       then look_for_longest_road n_max player t nnlist 
-       else
-         look_for_longest_road max maxplayer t nnlist)
-    with 
-    |Not_found -> look_for_longest_road max maxplayer t nnlist
+(**[look_for_longest] is the longest road of all the players *)
+let look_for_longest = 
+  (* Unimplemented *)
+  0 
 
 (**[set_lroad_false] the has_longest_road of all players to false *)
 let set_lroad_false players = 
-ignore(List.map (Player.set_l_road false) players); ()
+  ignore(List.map (Player.set_l_road false) players); ()
 
 (**[longest_road] uses [look_for_longest_road] to find the longest road in the 
    game, and if that road is greater than 5  *)
 let longest_road players nlist gmax= 
-  let (max,maxplayer) = look_for_longest_road 0 (get_index 0 0 players) nlist nlist
-  in 
+  let (max,maxplayer) = look_for_longest
+  in print_endline(string_of_int max);
   if (max >= 5 )
   then (set_lroad_false players; Player.set_l_road true maxplayer; 
-  max )
+        max )
   else gmax
 
 (**[play_game] a recursive function that loops through the game playing where
@@ -513,7 +499,6 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
                      " and all of the resources have been distributed" in
        play_game Interactive Roll board nodes turn pass rd_ph list node mes card_list gmax)
   |Interactive->
-    print_endline(string_of_int gmax);
     ( match win_check with
       |(true,msg) -> play_game Win Interactive board nodes turn pass rd_ph list node msg card_list gmax;
       |(false,_) -> (
