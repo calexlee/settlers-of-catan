@@ -336,7 +336,7 @@ let set_lroad_false players =
 (**[longest_road] uses [look_for_longest_road] to find the longest road in the 
    game, and if that road is greater than 5  *)
 let longest_road players nlist gmax= 
-  let (max,maxplayer) = look_for_longest
+  let (max,maxplayer) = (look_for_longest, List.hd players)
   in print_endline(string_of_int max);
   if (max >= 5 )
   then (set_lroad_false players; Player.set_l_road true maxplayer; 
