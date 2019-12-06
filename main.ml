@@ -634,8 +634,13 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
               Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
               play_game Interactive AddSettle board nodes turn pass rd_ph (add_node list node_index) ((turn, node_index, -1)::node) "" card_list gmax;
             end)
-        with
-        |_->play_game AddSettle AddSettle board nodes turn pass rd_ph list node message card_list gmax));
+        with  
+        |_-> 
+          if(prev_phase=Interactive) then 
+            (play_game AddSettle AddSettle board nodes turn pass rd_ph list node message card_list gmax)
+          else 
+            (let msg = "Build failure- please click directly on the node" in
+             play_game Interactive AddSettle board nodes turn pass rd_ph list node msg card_list gmax)));
   |AddCity->(
       (*This try build the settlement ONLY if the player has enough resources*)
       if not (Player.can_build_city (get_index 0 turn player_list)) then
@@ -653,7 +658,8 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
               play_game Interactive AddCity board nodes turn pass rd_ph (add_node list node_index) ((turn, node_index, -1)::node) "" card_list gmax;
             end)
         with
-        |_->play_game AddCity AddCity board nodes turn pass rd_ph list node message card_list gmax));
+        |_-> 
+          play_game AddCity AddCity board nodes turn pass rd_ph list node message card_list gmax));
   |AddRoad->(
       if not (Player.can_build_road (get_index 0 turn player_list)) then
         (let msg = "You do not have enough resources to build a road" in
