@@ -29,10 +29,10 @@ let make_player color=
     |_ -> Green in
   {
     color = colorp; (* Need to make random out of available options*)
-    resources = [Wood;Brick;Wood;Brick];
+    resources = [Wood;Brick;Wood;Brick;Wood;Brick;Wood;Brick;Wood;Brick;];
     points = 0;
     card_list = [Victory;Victory;Victory;Victory;Victory;Victory;Victory;Victory;Knight;Knight;Knight;Knight];
-    longest_road = 1;
+    longest_road = 2;
     has_l_road = false;
     army = 0;
     has_l_army = false;
@@ -78,6 +78,9 @@ let add_points t p =
 
 let add_army t =
   t.army <- t.army + 1
+
+let add_road t =
+  t.longest_road <- t.longest_road + 1
 
 let get_resources t =
   t.resources

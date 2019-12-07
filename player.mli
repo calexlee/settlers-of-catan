@@ -27,6 +27,9 @@ val add_points : t -> int -> unit
 (**[add_army t] adds one to the army of [t] *)
 val add_army : t -> unit
 
+(**[add_road t] adds one to the longest road of [t] *)
+val add_road : t -> unit
+
 (**[get_army t] is the size of the army of [t] *)
 val get_army : t -> int
 

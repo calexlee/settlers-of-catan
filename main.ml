@@ -328,23 +328,15 @@ let give_port node_index nodes turn=
          (Node.has_res_port (get_index 0 node_index nodes)))
     else ()) with |_->()
 
-(**[look_for_longest_road max nlist] finds the longest road for each player in 
-   [nlist], and sets has_longest_road of the player with the longest to [true]
-   if it is greater than 5 *)
-let rec look_for_longest_road max maxplayer nlist nnlist =
-  match nlist with  
-  |[] -> (max,maxplayer)
-  |h::t -> try 
-      (let player = Node.get_player h in 
-       let n_max = 
-         0
-       in 
-       if n_max > max 
-       then look_for_longest_road n_max player t nnlist 
-       else
-         look_for_longest_road max maxplayer t nnlist)
-    with 
-    |Not_found -> look_for_longest_road max maxplayer t nnlist
+(**[longest_road_help players gmax] is the max value for the longest road in
+   [players] and the corresponding [mp]*)
+let rec longest_road_help players gmax maxp=
+  match players with 
+  |[] -> (gmax,maxp)
+  |h::t -> let cur = max (Player.get_longest_road h) gmax in 
+    if cur != gmax then longest_road_help t cur h
+    else 
+      longest_road_help t cur maxp
 
 (**[set_lroad_false] the has_longest_road of all players to false *)
 let set_lroad_false players = 
@@ -352,8 +344,8 @@ let set_lroad_false players =
 
 (**[longest_road] uses [look_for_longest_road] to find the longest road in the 
    game, and if that road is greater than 5  *)
-let longest_road players nlist gmax= 
-  let (max,maxplayer) = look_for_longest_road 0 (get_index 0 0 players) nlist nlist
+let longest_road players gmax= 
+  let (max,maxplayer) = longest_road_help players gmax (get_index 0 0 players)
   in 
   if (max >= 5 )
   then (set_lroad_false players; Player.set_l_road true maxplayer; 
@@ -669,7 +661,8 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
             begin
               Player.build_road (get_index 0 turn player_list);
               Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
-              let n_max = longest_road player_list nodes gmax in 
+              Player.add_road (get_index 0 turn player_list);
+              let n_max = longest_road player_list gmax in 
               play_game Interactive AddRoad board nodes turn pass rd_ph list ((turn, fst selected_edge, snd selected_edge)::node) "" card_list n_max;
             end)
         with
@@ -682,7 +675,8 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
       if (not (if_edge turn selected_edge node)) then failwith "wrong position" else
         begin
           Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
-          let n_max = longest_road player_list nodes gmax in 
+          Player.add_road (get_index 0 turn player_list);
+          let n_max = longest_road player_list gmax in 
           play_game Interactive AddFreeRoad board nodes turn pass rd_ph list ((turn, fst selected_edge, snd selected_edge)::node) "" card_list n_max;
         end)
      with
@@ -755,7 +749,6 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
       else (Player.take_knight (get_index 0 turn player_list);
             Player.add_army (get_index 0 turn player_list);
             give_points_for_army ();
-            print_endline(string_of_bool (Player.get_army_l (get_index 0 turn player_list)));
             play_game Robbing UseKnight board nodes turn pass rd_ph list node "You have used a knight card" card_list gmax;))
   |UseProgress->(     
       if not (Player.can_use_progress (get_index 0 turn player_list)) then
