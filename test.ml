@@ -27,12 +27,6 @@ let board_tests =
     get_index_test "remove index test 1" 0 0 [1;2;3;4] 1;
     get_index_test "remove index test 2" 0 2 [1;2;3;4] 3;
     get_index_test "remove index test 3" 0 3 [1;2;3;4] 4;
-
-    (*Unit testing can not be used well to test random boards
-      We used Utop and extensivly printed boards and ensured
-      all the conditions were met for the board being correct manually*)
-
-
   ]
 
 let node1 = Node.make_node [] 2 []
@@ -47,10 +41,61 @@ let node_tests =
                                  ((Node.add_settlement "settlement" player1 node1);
                                   (Node.get_settlement node1)));
   ]
-let playertest = 
-  [
+(* 
+-------------------------------------------------------------------------------
+========================PLAY TESTING DOCUMENTATION==========================
+Most of our testing consisted of play testing. For every function and seperate 
+piece of functionality we created the implementer extensively used glass box
+testing in order to test all the edge cases and corner cases of their 
+implementation to make sure the game functioned correctly. We used this type of
+testing because we wanted to make sure the game actually behaved in the terminal
+as it should, and test it in the enviroment the user would play the game in
 
-  ]
+After The implementer of the functions glass-box tested them- the rest of the 
+used black box play testing by testing the game without knowing how it was 
+implemented this provided great feedback and checking to make sure everything 
+actually worked as expected
+
+
+================================Board Testing===================================
+Board Testing-
+
+==================================Help Tab======================================
+
+
+=================================Setup Phase====================================
+
+
+============================Resource Distribution===============================
+
+
+==================================Die Rolling===================================
+
+
+==============================Giving Players Ports==============================
+
+
+=================================Bank Trading===================================
+
+
+=================================Player Trading=================================
+
+
+====================================Robbing=====================================
+
+
+
+
+
+
+
+
+
+
+
+*)
+
+
 let suite =
   "test suite for Final Project"  >::: List.flatten [
     board_tests;
