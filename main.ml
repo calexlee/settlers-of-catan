@@ -242,15 +242,15 @@ let rob_players () =
   Player.rob_player (get_index 0 3 player_list);
   ()
 
-let win_check = 
+let win_check ()= 
   if Player.get_points (get_index 0 0 player_list) >= 10 
-  then (true,"Green Wins!")
+  then (true,"Green")
   else if Player.get_points (get_index 0 1 player_list) >= 10
-  then (true,"Magenta Wins")
+  then (true,"Magenta")
   else if Player.get_points (get_index 0 2 player_list) >= 10
-  then (true,"Yellow Wins")
+  then (true,"Yellow")
   else if Player.get_points (get_index 0 3 player_list) >= 10
-  then (true,"Blue Wins")
+  then (true,"Blue")
   else 
     (false,"")
 
@@ -288,8 +288,8 @@ let set_new_l_army l plist =
 
 (**[give_points_for_army] updates the points with the person who has the 
    largest army *)
-let give_points_for_army =
-  print_endline (string_of_int (Player.get_army (get_index 0 0 player_list)));
+let give_points_for_army () =
+  (* print_endline (string_of_int (Player.get_army (get_index 0 0 player_list))); *)
   let ilist = [Player.get_army (get_index 0 0 player_list);
                Player.get_army (get_index 0 1 player_list);
                Player.get_army (get_index 0 2 player_list);
@@ -304,15 +304,18 @@ let give_points_for_army =
   if  p1 && List.nth ilist 0 < max_num
   then (Player.set_l_army (get_index 0 0 player_list) false;
         set_new_l_army max_num ilist;)
-  else if  p2 && List.nth ilist 0 < max_num
+  else if  p2 && List.nth ilist 1 < max_num
   then (Player.set_l_army (get_index 0 0 player_list) false;
         set_new_l_army max_num ilist;)
-  else if  p1 && List.nth ilist 0 < max_num
+  else if  p3 && List.nth ilist 2 < max_num
   then (Player.set_l_army (get_index 0 0 player_list) false;
         set_new_l_army max_num ilist;)
-  else if  p1 && List.nth ilist 0 < max_num
+  else if  p4 && List.nth ilist 3 < max_num
   then (Player.set_l_army (get_index 0 0 player_list) false;
         set_new_l_army max_num ilist; )
+  else if not p1 && not p2 && not p3 && not p4 
+  then 
+    ( set_new_l_army max_num ilist;)
 
 (**[give_port node_index nodes turn] gives the player corresponding to [turn]
    if the node_index has a a port on it *)
@@ -334,8 +337,7 @@ let rec look_for_longest_road max maxplayer nlist nnlist =
   |h::t -> try 
       (let player = Node.get_player h in 
        let n_max = 
-         Node.find_longest_road (Some player) h nnlist 
-           (Player.get_longest_road player) [] 1
+         0
        in 
        if n_max > max 
        then look_for_longest_road n_max player t nnlist 
@@ -514,8 +516,7 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
                      " and all of the resources have been distributed" in
        play_game Interactive Roll board nodes turn pass rd_ph list node mes card_list gmax)
   |Interactive->
-    print_endline(string_of_int gmax);
-    ( match win_check with
+    ( match win_check () with
       |(true,msg) -> play_game Win Interactive board nodes turn pass rd_ph list node msg card_list gmax;
       |(false,_) -> (
           if (prev_phase=Roll || prev_phase=AddCity || prev_phase=AddRoad || 
@@ -724,16 +725,15 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
        print_int(Player.get_points(List.nth player_list 0));
        print_endline(" points");
      |1 -> print_string("You have ");
-       print_int(Player.get_points(List.nth player_list 0));
+       print_int(Player.get_points(List.nth player_list 1));
        print_endline(" points");
      |2 -> print_string("You have ");
-       print_int(Player.get_points(List.nth player_list 0));
+       print_int(Player.get_points(List.nth player_list 2));
        print_endline(" points");
      |3 -> print_string("You have ");
-       print_int(Player.get_points(List.nth player_list 0));
+       print_int(Player.get_points(List.nth player_list 3));
        print_endline(" points");
      |_ -> failwith("not a true number"));
-    print_endline("");
     play_game prev_phase Inventory board nodes turn pass rd_ph list node message card_list gmax;
   |BuyCard->(
       (*This try buy development cards ONLY if the player has enough resources*)
@@ -754,22 +754,23 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
          play_game Interactive UseKnight board nodes turn pass rd_ph list node msg card_list gmax;)
       else (Player.take_knight (get_index 0 turn player_list);
             Player.add_army (get_index 0 turn player_list);
-            give_points_for_army;
-            play_game Robbing UseKnight board nodes turn pass rd_ph list node "" card_list gmax;))
+            give_points_for_army ();
+            print_endline(string_of_bool (Player.get_army_l (get_index 0 turn player_list)));
+            play_game Robbing UseKnight board nodes turn pass rd_ph list node "You have used a knight card" card_list gmax;))
   |UseProgress->(     
       if not (Player.can_use_progress (get_index 0 turn player_list)) then
         (let msg = "You do not have a progress card" in
          play_game Interactive UseProgress board nodes turn pass rd_ph list node msg card_list gmax;)
       else ( Player.take_progress (get_index 0 turn player_list);
-             play_game AddFreeRoad UseProgress board nodes turn pass rd_ph list node "" card_list gmax;))
+             play_game AddFreeRoad UseProgress board nodes turn pass rd_ph list node "You have used a progress card" card_list gmax;))
   |UseVictory->  (     
       if not (Player.can_use_victory (get_index 0 turn player_list)) then
         (let msg = "You do not have a victory card" in
          play_game Interactive UseVictory board nodes turn pass rd_ph list node msg card_list gmax;)
       else ( Player.take_victory (get_index 0 turn player_list);
              Player.add_points (get_index 0 turn player_list) 1;
-             play_game Interactive UseVictory board nodes turn pass rd_ph list node "" card_list gmax;))
-  |Win->print_endline(message); print_endline("Thank you for playing"); exit 0
+             play_game Interactive UseVictory board nodes turn pass rd_ph list node "You have successfully used a victory card" card_list gmax;))
+  |Win->Gamegraphics.draw_win message; print_endline("Thank you for playing"); exit 0
   |Quit->print_endline("\nThank you for playing!!!"); exit 0
 
 let main () =

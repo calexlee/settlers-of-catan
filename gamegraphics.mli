@@ -6,6 +6,9 @@
 (**[draw_board t] draws the board [t] in the terminal *) 
 val draw_board : Board.t -> Node.t list -> unit
 
+(**[draw_win wp] draws the winning display for [wp] *)
+val draw_win : string -> unit
+
 (**[rc_to_node rc] is the node index of the row,column pair [rc]
    Raises: Failure "Not a Node" if [rc] does not correspond to a node *)
 val rc_to_node: (int*int) -> int

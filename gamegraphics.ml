@@ -299,4 +299,35 @@ let draw_board t n =
   print_string("                         >-----<~~~~~~~~~~~>-----< \n");
   print_string("                                \\~~~~~~~~~/ \n");
   print_string("                                 \\~~~~~~~/ \n");
-  print_string("                                  >-----< \n");
+  print_string("                                  >-----< \n"); 
+  ()
+
+let draw_win winp = 
+  let p = match winp with 
+    |"Magenta" -> "Magenta"
+    |"Yellow"  -> "Yellow "
+    |"Green"   -> "Green  "
+    |"Blue"    -> "Blue   " 
+    |_ -> raise(Failure("Not a player color"))
+  in 
+  ignore(Sys.command "clear");
+  print_string("          '\n");
+  print_string("              .      '      .\n");
+  print_string("        .      .     :     .      .\n");
+  print_string("         '.        ______       .'\n");
+  print_string("           '  _.-\"`      `\"-._ '\n");
+  print_string("            .'                '.       \n");
+  print_string("     `'--. /                    \\ .--'`\n");
+  print_string("          /                      \\ \n");
+  print_string("         ;   Player ");print_string(p);print_string(" Wins  ;\n");
+  print_string("    - -- |                        | -- -\n");
+  print_string("         |     _.                 |\n");
+  print_string("         ;    /__`A   ,_          ; \n");
+  print_string("     .-'  \\   |= |;._.}{__       /  '-.\n");
+  print_string("        _.-\"\"-|.' # '. `  `.-\"{}<._\n");
+  print_string("              / [][]  \\     \\  x   `\"\n");
+  print_string("         ----/         \\_.-'|--X----\n");
+  print_string("         -=_ |         |    |- X.  =_\n");
+  print_string("        - __ |_________|_.-'|_X-X##\n");
+  print_string("        .:: `'-._|_|;:;_.-'` '::.  `\"-\n");
+  print_string("         .:;.      .:.   ::.     '::.\n");
