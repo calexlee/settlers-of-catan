@@ -587,13 +587,81 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
                |(_,_)->
                  play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list gmax)
             |("tradeblue",x,res1,y,res2)->
-              failwith ""
+              if (Player.has_trade_res (get_index 0 turn player_list) x res1) 
+              && (Player.has_trade_res (get_index 0 3 player_list) y res2)
+              then 
+                (print_endline("blue player enter \"confirm\" to accept trade");
+                 let input = read_line() in 
+                 if input = "confirm" then 
+                   (Player.give_player_trade (get_index 0 3 player_list) x res1;
+                    Player.take_player_trade (get_index 0 3 player_list) y res2;
+                    Player.take_player_trade (get_index 0 turn player_list) y res2;
+                    Player.give_player_trade (get_index 0 turn player_list) x res1;
+                    let msg= "Trade with Blue player completed" in 
+                    play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list gmax;)
+                 else 
+                   let msg= "Trade was declined by the blue player" in 
+                   play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list gmax)
+              else 
+                let msg= "Players do not have enough resources to complete trade" in 
+                play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list gmax
             |("tradegreen",x,res1,y,res2)->
-              failwith ""
+              if (Player.has_trade_res (get_index 0 turn player_list) x res1) 
+              && (Player.has_trade_res (get_index 0 0 player_list) y res2)
+              then 
+                (print_endline("Green player enter \"confirm\" to accept trade");
+                 let input = read_line() in 
+                 if input = "confirm" then 
+                   (Player.give_player_trade (get_index 0 0 player_list) x res1;
+                    Player.take_player_trade (get_index 0 0 player_list) y res2;
+                    Player.take_player_trade (get_index 0 turn player_list) y res2;
+                    Player.give_player_trade (get_index 0 turn player_list) x res1;
+                    let msg= "Trade with green player completed" in 
+                    play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list gmax;)
+                 else 
+                   let msg= "Trade was declined by the green player" in 
+                   play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list gmax)
+              else 
+                let msg= "Players do not have enough resources to complete trade" in 
+                play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list gmax
             |("trademagenta",x,res1,y,res2)->
-              failwith ""
+              if (Player.has_trade_res (get_index 0 turn player_list) x res1) 
+              && (Player.has_trade_res (get_index 0 1 player_list) y res2)
+              then 
+                (print_endline("Magenta player enter \"confirm\" to accept trade");
+                 let input = read_line() in 
+                 if input = "confirm" then 
+                   (Player.give_player_trade (get_index 0 1 player_list) x res1;
+                    Player.take_player_trade (get_index 0 1 player_list) y res2;
+                    Player.take_player_trade (get_index 0 turn player_list) y res2;
+                    Player.give_player_trade (get_index 0 turn player_list) x res1;
+                    let msg= "Trade with magenta player completed" in 
+                    play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list gmax;)
+                 else 
+                   let msg= "Trade was declined by the magenta player" in 
+                   play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list gmax)
+              else 
+                let msg= "Players do not have enough resources to complete trade" in 
+                play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list gmax
             |("tradeyellow",x,res1,y,res2)->
-              failwith ""
+              if (Player.has_trade_res (get_index 0 turn player_list) x res1) 
+              && (Player.has_trade_res (get_index 0 2 player_list) y res2)
+              then 
+                (print_endline("Yellow player enter \"confirm\" to accept trade");
+                 let input = read_line() in 
+                 if input = "confirm" then 
+                   (Player.give_player_trade (get_index 0 2 player_list) x res1;
+                    Player.take_player_trade (get_index 0 2 player_list) y res2;
+                    Player.take_player_trade (get_index 0 turn player_list) y res2;
+                    Player.give_player_trade (get_index 0 turn player_list) x res1;
+                    let msg= "Trade with yellow player completed" in 
+                    play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list gmax;)
+                 else 
+                   let msg= "Trade was declined by the yellow player" in 
+                   play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list gmax)
+              else 
+                let msg= "Players do not have enough resources to complete trade" in 
+                play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list gmax
             |_-> let msg = "Malformed command please re-enter" in
               play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list gmax)))
   |Robbing -> (
@@ -627,8 +695,13 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
               Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
               play_game Interactive AddSettle board nodes turn pass rd_ph (add_node list node_index) ((turn, node_index, -1)::node) "" card_list gmax;
             end)
-        with
-        |_->play_game AddSettle AddSettle board nodes turn pass rd_ph list node message card_list gmax));
+        with  
+        |_-> 
+          if(prev_phase=Interactive) then 
+            (play_game AddSettle AddSettle board nodes turn pass rd_ph list node message card_list gmax)
+          else 
+            (let msg = "Build failure- please click directly on the node" in
+             play_game Interactive AddSettle board nodes turn pass rd_ph list node msg card_list gmax)));
   |AddCity->(
       (*This try build the settlement ONLY if the player has enough resources*)
       if not (Player.can_build_city (get_index 0 turn player_list)) then
@@ -646,7 +719,8 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
               play_game Interactive AddCity board nodes turn pass rd_ph (add_node list node_index) ((turn, node_index, -1)::node) "" card_list gmax;
             end)
         with
-        |_->play_game AddCity AddCity board nodes turn pass rd_ph list node message card_list gmax));
+        |_-> 
+          play_game AddCity AddCity board nodes turn pass rd_ph list node message card_list gmax));
   |AddRoad->(
       if not (Player.can_build_road (get_index 0 turn player_list)) then
         (let msg = "You do not have enough resources to build a road" in
