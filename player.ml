@@ -161,7 +161,9 @@ let has_two_to_one t (res:string) : bool =
    reversed list, which does not matter since resources is a set where order
    does not matter*)
 let rec remove_resource (res:r) (acc:r list) (not_rem:bool)= function
-  |[]->if(not_rem) then failwith "Does not have resource" 
+  |[]->
+    if(not_rem) 
+    then failwith "Does not have resource" 
     else acc
   |h::t->
     (if h = res  && not_rem 
@@ -267,7 +269,8 @@ let give_player_trade (player:t) (y:int) (res2:string) : unit =
 (**[has_trade_res_helper x res lst] returns true if there are [x] entries
    of [res] in [lst]*)
 let rec has_trade_res_helper x res lst = 
-  if x = 0 then true 
+  if x = 0
+  then true 
   else try (has_trade_res_helper (x-1) res (remove_resource res [] true lst)) 
     with |_-> false
 
@@ -288,8 +291,6 @@ let rec half_resources resources len index =
   |h::t-> if(len=index) then resources else half_resources t len (index+1) 
 
 let rob_player t = 
-  if List.length t.resources > 7 then 
-    (t.resources <- half_resources t.resources ((List.length t.resources)/2) 0);
   if List.length t.resources > 7 
   then 
     (t.resources <- (half_resources t.resources ((List.length t.resources)/2) 

@@ -141,7 +141,8 @@ let add_node list = function
 let rec have_road turn n e_list =
   match e_list with
   | [] -> false
-  | (a, b, c) :: t -> if turn = a 
+  | (a, b, c) :: t -> 
+    if turn = a 
     then
       begin
         if (n = b || n = c) 
