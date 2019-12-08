@@ -55,7 +55,8 @@ let to_data command =
    valid resources and false otherwise *)
 let valid_resources (res1:string) (res2:string) : bool=
   (res1="sheep" || res1="wheat" || res1="wood" || res1="brick" || res1="rock")
-  && (res2="sheep" || res2="wheat" || res2="wood" || res2="brick" || res2="rock") 
+  && (res2="sheep" || res2="wheat" || res2="wood" || res2="brick" || 
+      res2="rock") 
 
 let parse str =
   try (

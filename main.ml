@@ -44,11 +44,12 @@ let select_edge () = let (row,col) = Lwt_main.run (main ()) in
 let select_tile () = let (row,col) = Lwt_main.run (main ()) in
   (Gamegraphics.rc_to_tile (row,col))
 
-(**[print_select_node l] takes in all clicks and prints out a list of the (row,col)
-   which were selected, on key press *)
+(**[print_select_node l] takes in all clicks and prints out a list of the 
+   (row,col) which were selected, on key press *)
 let rec print_select_node l = try let (row,col) = Lwt_main.run (main ()) in
     print_select_node
-      (String.concat "" ["(";(string_of_int row);",";(string_of_int col);")"]::l)
+      (String.concat "" ["(";(string_of_int row);","
+                        ;(string_of_int col);")"]::l)
   with
   |Failure _ -> ignore(List.map print_endline (List.rev l));()
 
@@ -74,7 +75,9 @@ let delete_card (card:Player.card) (list:Player.card list) =
   let rec res card list ret = 
     match list with
     | [] -> ret
-    | h :: t -> if h = card then ret @ t else res card t (h::ret) in res card list []
+    | h :: t -> if h = card 
+      then ret @ t 
+      else res card t (h::ret) in res card list []
 
 (**[add_node] returns a list of nodes that have been selected by players*)
 let add_node list = function
@@ -138,23 +141,31 @@ let add_node list = function
 let rec have_road turn n e_list =
   match e_list with
   | [] -> false
-  | (a, b, c) :: t -> if turn = a then
+  | (a, b, c) :: t -> if turn = a 
+    then
       begin
-        if (n = b || n = c) then true else have_road turn n t
+        if (n = b || n = c) 
+        then true 
+        else have_road turn n t
       end
     else have_road turn n t
 
-(**[get_turn_nodes] get all the nodes belonging to this player that have been selected*)
+(**[get_turn_nodes] get all the nodes belonging to this player that have been 
+   selected*)
 let rec get_turn_nodes turn ret = function
   | [] -> ret
-  | (a, n, -1) :: t -> if a=turn then get_turn_nodes turn (n::ret) t else get_turn_nodes turn ret t
+  | (a, n, -1) :: t -> if a=turn 
+    then get_turn_nodes turn (n::ret) t 
+    else get_turn_nodes turn ret t
   | _ :: t -> get_turn_nodes turn ret t
 
 (**[if_neighbor] checks if nodes can be selected by players*)
 let if_neighbor phase turn n n_list e_list =
   match phase with
   | 0 -> List.mem n n_list
-  | 1 -> if List.mem n n_list then true else not (have_road turn n e_list)
+  | 1 -> if List.mem n n_list 
+    then true 
+    else not (have_road turn n e_list)
   | _ -> failwith "not a valid phase"
 
 (**[if_city] checks if we can build city here*)
@@ -174,9 +185,12 @@ let rec if_edge turn edge list =
     begin
       match list with
       | [] -> false
-      | (a, b, c) :: t -> if turn = a then
+      | (a, b, c) :: t -> if turn = a 
+        then
           begin
-            if (fst edge = b || fst edge = c || snd edge = b || snd edge = c) then true else if_edge turn edge t
+            if (fst edge = b || fst edge = c || snd edge = b || snd edge = c) 
+            then true 
+            else if_edge turn edge t
           end
         else if_edge turn edge t
     end
@@ -215,7 +229,8 @@ let build_road turn nodes node_tup counter acc =
 let rec build_settlement turn nodes nodes_index counter acc building=
   match nodes with
   |[]-> List.rev acc
-  |h::t-> if (nodes_index=counter) then (
+  |h::t-> if (nodes_index=counter) 
+    then (
       (Node.add_settlement building (List.nth player_list turn) h);
       build_settlement turn t nodes_index (counter+1) (h::acc) building)
     else build_settlement turn t nodes_index (counter+1) (h::acc) building
@@ -237,6 +252,8 @@ let rob_players () =
   Player.rob_player (List.nth player_list 3);
   ()
 
+(**[win_check] returns a pair with [true] and a winning player if a player has 
+   10 or more points, otherwise [false] and the empty string*)
 let win_check ()= 
   if Player.get_points (List.nth player_list 0) >= 10 
   then (true,"Green")
@@ -284,14 +301,13 @@ let set_new_l_army l plist =
 (**[give_points_for_army] updates the points with the person who has the 
    largest army *)
 let give_points_for_army () =
-  (* print_endline (string_of_int (Player.get_army (get_index 0 0 player_list))); *)
   let ilist = [Player.get_army (List.nth player_list 0);
                Player.get_army (List.nth player_list 1);
                Player.get_army (List.nth player_list 2);
                Player.get_army (List.nth player_list 3);] 
   in 
   let max_num = List.fold_left max 0 ilist
-  in (*checks if someone already has an army that large*)
+  in 
   let p1,p2,p3,p4 = Player.get_army_l (List.nth player_list 0),
                     Player.get_army_l (List.nth player_list 1),
                     Player.get_army_l (List.nth player_list 2),
@@ -316,12 +332,13 @@ let give_points_for_army () =
    if the node_index has a a port on it *)
 let give_port node_index nodes turn=
   try (
-    if Node.has_three_to_one (List.nth nodes node_index) then 
-      (Player.give_port (List.nth player_list turn) true "")
-    else if Node.has_res_port (List.nth nodes node_index)!="" then 
-      (Player.give_port (List.nth player_list turn) false  
-         (Node.has_res_port (List.nth nodes node_index)))
-    else ()) with |_->()
+    if Node.has_three_to_one (List.nth nodes node_index) 
+    then (Player.give_port (List.nth player_list turn) true "")
+    else if Node.has_res_port (List.nth nodes node_index)!="" 
+    then (Player.give_port (List.nth player_list turn) false  
+            (Node.has_res_port (List.nth nodes node_index)))
+    else ()) 
+  with |_->()
 
 (**[longest_road_help players gmax] is the max value for the longest road in
    [players] and the corresponding [mp]*)
@@ -329,7 +346,8 @@ let rec longest_road_help players gmax maxp=
   match players with 
   |[] -> (gmax,maxp)
   |h::t -> let cur = max (Player.get_longest_road h) gmax in 
-    if cur != gmax then longest_road_help t cur h
+    if cur != gmax 
+    then longest_road_help t cur h
     else 
       longest_road_help t cur maxp
 
@@ -351,7 +369,8 @@ let longest_road players gmax=
    [phase] represents the phase of the game [board] represents the board to
    be drawn, [players] is the list of all the updated players and [turn]
    is the INDEX OF THE PLAYER IN players whose turn it is *)
-let rec play_game phase prev_phase board nodes turn pass rd_ph list node message card_list gmax=
+let rec play_game phase prev_phase board nodes turn pass rd_ph list node message 
+    card_list gmax=
   match phase with
   |Welcome->
     print_endline(message);
@@ -376,11 +395,15 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
             begin
               print_endline("Green player, please select a node to build a settlement");
               let node_index =  select_node() in
-              if (if_neighbor 0 0 node_index list node) then failwith "wrong position" else
+              if (if_neighbor 0 0 node_index list node) 
+              then failwith "wrong position" 
+              else
                 begin 
                   give_port node_index nodes turn;
                   Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
-                  if pass then Node.give_resource_start (List.nth nodes node_index) else ();
+                  if pass 
+                  then Node.give_resource_start (List.nth nodes node_index) 
+                  else ();
                   play_game Setup Setup board nodes turn pass true (add_node list node_index) ((turn, node_index, -1)::node) message card_list gmax;
                 end
             end
@@ -388,23 +411,31 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
             begin
               print_endline("Green Player, please select an edge next to your settlement to place a road");
               let selected_edge = select_edge () in
-              if (not (if_edge turn selected_edge node)) then failwith "wrong position" else
+              if (not (if_edge turn selected_edge node)) 
+              then failwith "wrong position" 
+              else
                 begin
                   Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
-                  if (pass)then play_game Roll Setup board nodes turn pass false list ((turn, fst selected_edge, snd selected_edge)::node) message card_list gmax
+                  if (pass)
+                  then play_game Roll Setup board nodes turn pass false list ((turn, fst selected_edge, snd selected_edge)::node) message card_list gmax
                   else play_game Setup Setup board nodes (turn+1) pass false list ((turn, fst selected_edge, snd selected_edge)::node) message card_list gmax
                 end
             end
         |1->
-          if(not rd_ph) then
+          if(not rd_ph) 
+          then
             begin
               print_endline("Magenta player, please select a node to build a settlement");
               let node_index =  select_node()  in
-              if (if_neighbor 0 1 node_index list node) then failwith "wrong position" else
+              if (if_neighbor 0 1 node_index list node) 
+              then failwith "wrong position" 
+              else
                 begin
                   give_port node_index nodes turn;
                   Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
-                  if pass then Node.give_resource_start (List.nth nodes node_index) else ();
+                  if pass 
+                  then Node.give_resource_start (List.nth nodes node_index) 
+                  else ();
                   play_game Setup Setup board nodes turn pass true (add_node list node_index) ((turn, node_index, -1)::node) message card_list gmax;
                 end
             end
@@ -412,23 +443,31 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
             begin
               print_endline("Magenta Player, please select an edge next to your settlement to place a road");
               let selected_edge = select_edge () in
-              if (not (if_edge turn selected_edge node)) then failwith "wrong position" else
+              if (not (if_edge turn selected_edge node)) 
+              then failwith "wrong position" 
+              else
                 begin
                   Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
-                  if (pass) then play_game Setup Setup board nodes (turn-1) pass false list ((turn, fst selected_edge, snd selected_edge)::node) message card_list gmax
+                  if (pass) 
+                  then play_game Setup Setup board nodes (turn-1) pass false list ((turn, fst selected_edge, snd selected_edge)::node) message card_list gmax
                   else play_game Setup Setup board nodes (turn+1) pass false list ((turn, fst selected_edge, snd selected_edge)::node) message card_list gmax
                 end
             end
         |2->
-          if(not rd_ph) then
+          if(not rd_ph) 
+          then
             begin
               print_endline("Yellow player, please select a node to build a settlement.");
               let node_index =  select_node()  in
-              if (if_neighbor 0 2 node_index list node) then failwith "wrong position" else
+              if (if_neighbor 0 2 node_index list node) 
+              then failwith "wrong position" 
+              else
                 begin
                   give_port node_index nodes turn;
                   Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
-                  if pass then Node.give_resource_start (List.nth nodes node_index) else ();
+                  if pass 
+                  then Node.give_resource_start (List.nth nodes node_index) 
+                  else ();
                   play_game Setup Setup board nodes turn pass true (add_node list node_index) ((turn, node_index, -1)::node) message card_list gmax;
                 end
             end
@@ -436,10 +475,12 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
             begin
               print_endline("Yellow Player, please select an edge next to your settlement to place a road");
               let selected_edge = select_edge () in
-              if (not (if_edge turn selected_edge node)) then failwith "wrong position" else
+              if (not (if_edge turn selected_edge node)) 
+              then failwith "wrong position" else
                 begin
                   Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
-                  if (pass)then play_game Setup Setup board nodes (turn-1) pass false list ((turn, fst selected_edge, snd selected_edge)::node) message card_list gmax
+                  if (pass)
+                  then play_game Setup Setup board nodes (turn-1) pass false list ((turn, fst selected_edge, snd selected_edge)::node) message card_list gmax
                   else play_game Setup Setup board nodes (turn+1) pass false list ((turn, fst selected_edge, snd selected_edge)::node) message card_list gmax
                 end
             end
@@ -448,11 +489,15 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
             begin
               print_endline("Blue player, please select a node to build a settlement.");
               let node_index =  select_node()  in
-              if (if_neighbor 0 3 node_index list node) then failwith "wrong position" else
+              if (if_neighbor 0 3 node_index list node) 
+              then failwith "wrong position" 
+              else
                 begin
                   give_port node_index nodes turn;
                   Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "settlement");
-                  if pass then Node.give_resource_start (List.nth nodes node_index) else ();
+                  if pass 
+                  then Node.give_resource_start (List.nth nodes node_index) 
+                  else ();
                   play_game Setup Setup board nodes turn pass true (add_node list node_index) ((turn, node_index, -1)::node) message card_list gmax;
                 end
             end
@@ -460,10 +505,13 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
             begin
               print_endline("Blue Player, please select an edge next to your settlement to place a road");
               let selected_edge = select_edge () in
-              if (not (if_edge turn selected_edge node)) then failwith "wrong position" else
+              if (not (if_edge turn selected_edge node)) 
+              then failwith "wrong position" 
+              else
                 begin
                   Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
-                  if(pass)then play_game Setup Setup board nodes (turn-1) pass false list ((turn, fst selected_edge, snd selected_edge)::node) message card_list gmax
+                  if(pass)
+                  then play_game Setup Setup board nodes (turn-1) pass false list ((turn, fst selected_edge, snd selected_edge)::node) message card_list gmax
                   else play_game Setup Setup board nodes turn true false list ((turn, fst selected_edge, snd selected_edge)::node) message card_list gmax
                 end
             end
@@ -508,7 +556,8 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
       |(false,_) -> (
           if (prev_phase=Roll || prev_phase=AddCity || prev_phase=AddRoad || 
               prev_phase=AddSettle || prev_phase=BuyCard || prev_phase=UseKnight
-              || prev_phase=UseProgress || prev_phase=UseVictory || prev_phase=Interactive) then
+              || prev_phase=UseProgress || prev_phase=UseVictory || prev_phase=Interactive) 
+          then
             (Gamegraphics.draw_board board nodes;
              let color = Player.player_to_string (List.nth player_list turn) in
              (match color with
@@ -519,7 +568,8 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
               | _ -> raise(Failure("Not a player color"))
              )
             )
-          else if (prev_phase != Points && prev_phase != Inventory && prev_phase != Cards) then
+          else if (prev_phase != Points && prev_phase != Inventory && prev_phase != Cards) 
+          then
             (Gamegraphics.draw_board board nodes;)
           else ();
           print_endline(
@@ -562,19 +612,22 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
               let msg = "Invalid trade" in
               (match x,y with
                |(4,1)->
-                 if Player.has_trade_res (List.nth player_list turn) x res1 then
+                 if Player.has_trade_res (List.nth player_list turn) x res1 
+                 then
                    (Player.bank_trade (List.nth player_list turn) 4 res1 1 res2;
                     play_game Interactive Interactive board nodes turn pass rd_ph list node
                       "Your trade has been completed" card_list gmax)
                  else play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list gmax
                |(3,1)-> if Player.has_three_to_one (List.nth player_list turn) &&
-                           (Player.has_trade_res (List.nth player_list turn) x res1) then
+                           (Player.has_trade_res (List.nth player_list turn) x res1) 
+                 then
                    (Player.bank_trade (List.nth player_list turn) 3 res1 1 res2;
                     play_game Interactive Interactive board nodes turn pass rd_ph list node
                       "Your trade has been completed" card_list gmax)
                  else play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list gmax
                |(2,1)->if Player.has_two_to_one (List.nth player_list turn) res1 &&
-                          (Player.has_trade_res (List.nth player_list turn) x res1) then
+                          (Player.has_trade_res (List.nth player_list turn) x res1) 
+                 then
                    (Player.bank_trade (List.nth player_list turn) 2 res1 1 res2;
                     play_game Interactive Interactive board nodes turn pass rd_ph list node
                       "Your trade has been completed" card_list gmax)
@@ -665,7 +718,8 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
               play_game Interactive Interactive board nodes turn pass rd_ph list node msg card_list gmax)))
   |Robbing -> (
       try (Gamegraphics.draw_board board nodes;
-           if prev_phase = UseKnight then print_endline("You use knight card, so Player " ^Player.player_to_string (List.nth player_list turn)^ " can now select the name (resource) of a tile to place the robber there")
+           if prev_phase = UseKnight 
+           then print_endline("You use knight card, so Player " ^Player.player_to_string (List.nth player_list turn)^ " can now select the name (resource) of a tile to place the robber there")
            else
              print_endline("The die roll resulted in a 7, so Player " ^Player.player_to_string (List.nth player_list turn)^ " must now select the name (resource) of a tile to place the robber there");
            let rob_tile = select_tile () in
@@ -678,7 +732,8 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
     )
   |AddSettle->(
       (*This try build the settlement ONLY if the player has enough resources*)
-      if not(Player.can_build_set (List.nth player_list turn)) then
+      if not(Player.can_build_set (List.nth player_list turn)) 
+      then
         (let msg = "You do not have enough resources to build a settlement" in
          play_game Interactive AddSettle board nodes turn pass rd_ph list node msg card_list gmax;)
       else (
@@ -686,7 +741,9 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
           Gamegraphics.draw_board board nodes;
           print_endline("Select a node to place a settlement");
           let node_index =  select_node() in
-          if (if_neighbor 1 turn node_index list node) then failwith "wrong position" else
+          if (if_neighbor 1 turn node_index list node) 
+          then failwith "wrong position" 
+          else
             begin
               give_port node_index nodes turn;
               Player.build_settlement (List.nth player_list turn);
@@ -695,14 +752,16 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
             end)
         with  
         |_-> 
-          if(prev_phase=Interactive) then 
+          if(prev_phase=Interactive) 
+          then 
             (play_game AddSettle AddSettle board nodes turn pass rd_ph list node message card_list gmax)
           else 
             (let msg = "Build failure- please click directly on the node" in
              play_game Interactive AddSettle board nodes turn pass rd_ph list node msg card_list gmax)));
   |AddCity->(
       (*This try build the settlement ONLY if the player has enough resources*)
-      if not (Player.can_build_city (List.nth player_list turn)) then
+      if not (Player.can_build_city (List.nth player_list turn)) 
+      then
         (let msg = "You do not have enough resources to build a city" in
          play_game Interactive AddCity board nodes turn pass rd_ph list node msg card_list gmax;)
       else (
@@ -710,7 +769,9 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
           Gamegraphics.draw_board board nodes;
           print_endline("Select a node to place a city");
           let node_index =  select_node() in
-          if not (if_city turn node_index node) then failwith "wrong position" else
+          if not (if_city turn node_index node) 
+          then failwith "wrong position" 
+          else
             begin
               Player.build_city (List.nth player_list turn);
               Gamegraphics.draw_board board (build_settlement turn nodes node_index 0 [] "city");
@@ -720,7 +781,8 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
         |_-> 
           play_game AddCity AddCity board nodes turn pass rd_ph list node message card_list gmax));
   |AddRoad->(
-      if not (Player.can_build_road (List.nth player_list turn)) then
+      if not (Player.can_build_road (List.nth player_list turn)) 
+      then
         (let msg = "You do not have enough resources to build a road" in
          play_game Interactive AddRoad board nodes turn pass rd_ph list node msg card_list gmax;)
       else (
@@ -729,7 +791,9 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
           print_endline("Select an edge to place a road");
           (*WE NEED TO CHECK IF YOU HAVE ENOUGH RESOURCES AND THEN TAKE THEM*)
           let selected_edge =  select_edge() in
-          if (not (if_edge turn selected_edge node)) then failwith "wrong position" else
+          if (not (if_edge turn selected_edge node)) 
+          then failwith "wrong position" 
+          else
             begin
               Player.build_road (List.nth player_list turn);
               Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
@@ -744,7 +808,9 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
       Gamegraphics.draw_board board nodes;
       print_endline("You use progress card, so you can select an edge to place a road for free");
       let selected_edge =  select_edge() in
-      if (not (if_edge turn selected_edge node)) then failwith "wrong position" else
+      if (not (if_edge turn selected_edge node)) 
+      then failwith "wrong position" 
+      else
         begin
           Gamegraphics.draw_board board (build_road turn nodes selected_edge 0 []);
           Player.add_road (List.nth player_list turn);
@@ -803,10 +869,12 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
     play_game prev_phase Inventory board nodes turn pass rd_ph list node message card_list gmax;
   |BuyCard->(
       (*This try buy development cards ONLY if the player has enough resources*)
-      if not (Player.avail_card card_list) then 
+      if not (Player.avail_card card_list) 
+      then 
         (let msg = "There is no available card" in
          play_game Interactive BuyCard board nodes turn pass rd_ph list node msg card_list gmax;)
-      else if not(Player.can_buy_card (List.nth player_list turn)) then
+      else if not(Player.can_buy_card (List.nth player_list turn)) 
+      then
         (let msg = "You do not have enough resources to buy a card" in
          play_game Interactive BuyCard board nodes turn pass rd_ph list node msg card_list gmax;)
       else (
@@ -815,7 +883,8 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
         Player.buy_card (List.nth player_list turn) ran_card;
         play_game Interactive BuyCard board nodes turn pass rd_ph list node "You got a development card" (delete_card ran_card card_list) gmax;));
   |UseKnight-> (
-      if not (Player.can_use_knight (List.nth player_list turn)) then
+      if not (Player.can_use_knight (List.nth player_list turn)) 
+      then
         (let msg = "You do not have a knight card" in
          play_game Interactive UseKnight board nodes turn pass rd_ph list node msg card_list gmax;)
       else (Player.take_knight (List.nth player_list turn);
@@ -823,13 +892,15 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
             give_points_for_army ();
             play_game Robbing UseKnight board nodes turn pass rd_ph list node "You have used a knight card" card_list gmax;))
   |UseProgress->(     
-      if not (Player.can_use_progress (List.nth player_list turn)) then
+      if not (Player.can_use_progress (List.nth player_list turn)) 
+      then
         (let msg = "You do not have a progress card" in
          play_game Interactive UseProgress board nodes turn pass rd_ph list node msg card_list gmax;)
       else ( Player.take_progress (List.nth player_list turn);
              play_game AddFreeRoad UseProgress board nodes turn pass rd_ph list node "You have used a progress card" card_list gmax;))
   |UseVictory->  (     
-      if not (Player.can_use_victory (List.nth player_list turn)) then
+      if not (Player.can_use_victory (List.nth player_list turn)) 
+      then
         (let msg = "You do not have a victory card" in
          play_game Interactive UseVictory board nodes turn pass rd_ph list node msg card_list gmax;)
       else ( Player.take_victory (List.nth player_list turn);
