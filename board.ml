@@ -38,13 +38,18 @@ let number_list =
 let rec remove_index start index lst=
   match lst with
   |[]-> lst
-  |h::t-> if start=index then remove_index (start+1) index t
+  |h::t-> 
+    if start=index 
+    then remove_index (start+1) index t
     else h::(remove_index (start+1) index t)
 
 (**[get_index start index lst] is the entry of [lst] at [index]*)
 let rec get_index start index= function
   |[]-> failwith "index out of bounds"
-  |h::t-> if start=index then h else get_index (start+1) index t
+  |h::t-> 
+    if start=index 
+    then h 
+    else get_index (start+1) index t
 
 (**[random_resources acc lst] is [lst] but with its entries in a random order*)
 let rec random_resources acc lst=
@@ -52,7 +57,7 @@ let rec random_resources acc lst=
   |[]->acc
   |x-> 
     let rand = Random.int (List.length lst) in
-    random_resources ((get_index 0 rand lst)::acc) (remove_index 0 rand lst)
+    random_resources ((List.nth lst rand)::acc) (remove_index 0 rand lst)
 
 (**[rand_board_helper start num_lst rand_res_lst acc] is generates a 
    random board from [rand_res_lst] using the indexing of [num_lst]*)
@@ -60,14 +65,17 @@ let rec rand_board_helper start num_lst rand_res_lst acc=
   match num_lst with
   |[]->acc
   |h_int::t_int-> 
-    if (h_int=0) then 
-      rand_board_helper (start+1) t_int rand_res_lst ((Tile.make_tile h_int "desert" true)::acc)
+    if (h_int=0) 
+    then 
+      rand_board_helper (start+1) t_int rand_res_lst 
+        ((Tile.make_tile h_int "desert" true)::acc)
     else
       match rand_res_lst with
       |[]-> failwith "not enough resources"
       |h_res::t_res-> 
         print_endline(h_res);
-        rand_board_helper (start+1) t_int t_res ((Tile.make_tile h_int h_res false)::acc)
+        rand_board_helper (start+1) t_int t_res 
+          ((Tile.make_tile h_int h_res false)::acc)
 
 
 let rand_board () = 
@@ -80,7 +88,9 @@ let get_tile n t =
 let rec get_tiles_with_num board n = 
   match board with
   | [] -> []
-  | h::t -> if ((Tile.get_number h) = n) then h :: get_tiles_with_num t n 
+  | h::t -> 
+    if ((Tile.get_number h) = n) 
+    then h :: get_tiles_with_num t n 
     else get_tiles_with_num t n
 
 let grab_resource t n =     

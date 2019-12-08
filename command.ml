@@ -43,7 +43,7 @@ let to_data command =
   |TradeBank (x,res1,y,res2)-> ("tradebank",x,res1,y,res2)
   |TradeGreen (x,res1,y,res2)-> ("tradegreen",x,res1,y,res2)
   |TradeBlue (x,res1,y,res2)-> ("tradeblue",x,res1,y,res2)
-  |TradeMagenta (x,res1,y,res2)-> ("tradeblue",x,res1,y,res2)
+  |TradeMagenta (x,res1,y,res2)-> ("trademagenta",x,res1,y,res2)
   |TradeYellow (x,res1,y,res2)-> ("tradeyellow",x,res1,y,res2)
   |BuyCard -> ("buycard",0,"",0,"")
   |Cards -> ("cards",0,"",0,"")
@@ -55,7 +55,8 @@ let to_data command =
    valid resources and false otherwise *)
 let valid_resources (res1:string) (res2:string) : bool=
   (res1="sheep" || res1="wheat" || res1="wood" || res1="brick" || res1="rock")
-  && (res2="sheep" || res2="wheat" || res2="wood" || res2="brick" || res2="rock") 
+  && (res2="sheep" || res2="wheat" || res2="wood" || res2="brick" || 
+      res2="rock") 
 
 let parse str =
   try (

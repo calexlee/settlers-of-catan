@@ -1,1 +1,0 @@
-(* A card that has the attributes of a certain development card*)

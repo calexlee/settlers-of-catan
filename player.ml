@@ -130,8 +130,9 @@ let give_port t (threeToOne:bool) (res:string) : unit =
 let rec has_three_to_one_help (lst:port list) : bool =
   match lst with 
   |[]-> false 
-  |h::t-> if h=ThreeToOne true then true else has_three_to_one_help t
-
+  |h::t-> if h=ThreeToOne true 
+    then true 
+    else has_three_to_one_help t
 
 let has_three_to_one t : bool = 
   has_three_to_one_help t.ports
@@ -149,7 +150,9 @@ let rec has_two_to_one (lst:port list) (res:string) : bool =
              |"brick"-> Brick
              |"rock"-> Rock
              |_->failwith"")in 
-    if h = (TwoToRes newres) then true else has_two_to_one t res
+    if h = (TwoToRes newres) 
+    then true 
+    else has_two_to_one t res
 
 let has_two_to_one t (res:string) : bool = 
   has_two_to_one t.ports res
@@ -158,10 +161,13 @@ let has_two_to_one t (res:string) : bool =
    reversed list, which does not matter since resources is a set where order
    does not matter*)
 let rec remove_resource (res:r) (acc:r list) (not_rem:bool)= function
-  |[]->if(not_rem) then failwith "Does not have resource" 
+  |[]->
+    if(not_rem) 
+    then failwith "Does not have resource" 
     else acc
   |h::t->
-    (if h = res  && not_rem then remove_resource res acc false t 
+    (if h = res  && not_rem 
+     then remove_resource res acc false t 
      else remove_resource res (h::acc) not_rem t)
 
 (**[take_sheep t] takes a sheep from player [t]*)
@@ -189,7 +195,9 @@ let take_knight player =
   let rec res list ret = 
     match list with
     | [] -> player.card_list <- ret
-    | h :: t -> if h = Knight then player.card_list <- ret @ t 
+    | h :: t -> 
+      if h = Knight 
+      then player.card_list <- ret @ t 
       else res t (h::ret) in res player.card_list []
 
 (**[take_progress t] takes a progress card from player [t]*)
@@ -197,7 +205,9 @@ let take_progress player =
   let rec res list ret = 
     match list with
     | [] -> player.card_list <- ret
-    | h :: t -> if h = Progress then player.card_list <- ret @ t 
+    | h :: t -> 
+      if h = Progress 
+      then player.card_list <- ret @ t 
       else res t (h::ret) in res player.card_list []
 
 (**[take_victory t] takes a victory card from player [t]*)
@@ -205,7 +215,9 @@ let take_victory player =
   let rec res list ret = 
     match list with
     | [] -> player.card_list <- ret
-    | h :: t -> if h = Victory then player.card_list <- ret @ t 
+    | h :: t -> 
+      if h = Victory 
+      then player.card_list <- ret @ t 
       else res t (h::ret) in res player.card_list []
 
 let bank_trade (player:t) (x:int) (res1:string) (y:int) (res2:string) : unit = 
@@ -229,31 +241,36 @@ let bank_trade (player:t) (x:int) (res1:string) (y:int) (res2:string) : unit =
    done)
 
 let take_player_trade (player:t) (x:int) (res1:string) : unit = 
-  (for var = x downto 1 do
-     match res1 with 
-     |"sheep"-> take_sheep player
-     |"wheat"-> take_wheat player
-     |"wood"-> take_wood player
-     |"brick"-> take_brick player
-     |"rock"-> take_rock player
-     |_-> failwith "Invalid resource"
-   done;)
+  try (for var = x downto 1 do
+         match res1 with 
+         |"sheep"-> take_sheep player
+         |"wheat"-> take_wheat player
+         |"wood"-> take_wood player
+         |"brick"-> take_brick player
+         |"rock"-> take_rock player
+         |_-> failwith "Invalid resource"
+       done;)
+  with 
+  |Failure x-> print_endline x
 
 let give_player_trade (player:t) (y:int) (res2:string) : unit = 
-  (for var = y downto 1 do
-     match res2 with 
-     |"sheep"-> give_sheep player
-     |"wheat"-> give_wheat player
-     |"wood"-> give_wood player
-     |"brick"-> give_brick player
-     |"rock"-> give_rock player
-     |_-> failwith "Invalid resource"
-   done;)
+  try (for var = y downto 1 do
+         match res2 with 
+         |"sheep"-> give_sheep player
+         |"wheat"-> give_wheat player
+         |"wood"-> give_wood player
+         |"brick"-> give_brick player
+         |"rock"-> give_rock player
+         |_-> failwith "Invalid resource"
+       done;)
+  with 
+  | Failure x -> print_endline x
 
 (**[has_trade_res_helper x res lst] returns true if there are [x] entries
    of [res] in [lst]*)
 let rec has_trade_res_helper x res lst = 
-  if x = 0 then true 
+  if x = 0
+  then true 
   else try (has_trade_res_helper (x-1) res (remove_resource res [] true lst)) 
     with |_-> false
 
@@ -274,8 +291,10 @@ let rec half_resources resources len index =
   |h::t-> if(len=index) then resources else half_resources t len (index+1) 
 
 let rob_player t = 
-  if List.length t.resources > 7 then 
-    (t.resources <- (half_resources t.resources ((List.length t.resources)/2) 0);
+  if List.length t.resources > 7 
+  then 
+    (t.resources <- (half_resources t.resources ((List.length t.resources)/2) 
+                       0);
      ()
     )
   else ()
@@ -316,8 +335,9 @@ let cards_to_string player =
 let rec subset lst1 lst2 : bool = 
   match lst2 with 
   |[]-> true
-  |h::t-> if(List.mem h lst1) then 
-      let lst1 = remove_resource h [] true lst1 in 
+  |h::t-> 
+    if(List.mem h lst1)
+    then let lst1 = remove_resource h [] true lst1 in 
       subset lst1 t 
     else false
 
@@ -351,7 +371,8 @@ let can_use_progress (player:t) : bool =
 
 let build_settlement (player:t) : unit = 
   let resoures_req = [Sheep;Wood;Brick;Wheat] in
-  if subset player.resources resoures_req then 
+  if subset player.resources resoures_req 
+  then 
     (take_sheep player;
      take_wood player;
      take_brick player;
@@ -362,7 +383,8 @@ let build_settlement (player:t) : unit =
 
 let build_city (player:t) : unit = 
   let resources_req = [Wheat;Wheat;Rock;Rock;Rock] in 
-  if subset player.resources resources_req then 
+  if subset player.resources resources_req 
+  then 
     (
       take_wheat player;
       take_wheat player; 
@@ -375,7 +397,8 @@ let build_city (player:t) : unit =
 
 let build_road (player:t) : unit =
   let resources_req = [Wood;Brick] in 
-  if subset player.resources resources_req then 
+  if subset player.resources resources_req 
+  then 
     (take_wood player;
      take_brick player;
      ())
@@ -384,7 +407,8 @@ let build_road (player:t) : unit =
 
 let buy_card (player:t) (card:card): unit =
   let resources_req = [Sheep;Wheat;Rock] in 
-  if subset player.resources resources_req then 
+  if subset player.resources resources_req 
+  then 
     (take_sheep player;
      take_wheat player;
      take_rock player;

@@ -30,7 +30,9 @@ let remove_robber tile =
   tile.robber <- false
 
 let is_there_robber tile = 
-  if tile.robber = true then true else false
+  if tile.robber = true 
+  then true 
+  else false
 
 let get_resource (tile: t)= 
   match tile.resource with

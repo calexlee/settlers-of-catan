@@ -20,8 +20,10 @@ let make_node list n edge three_to_one res_port=
     player = None;
     index = n;
     edges = edge;
-    port = if three_to_one then ThreeToOne true
-      else if res_port != "" then TwoToRes res_port
+    port = if three_to_one 
+      then ThreeToOne true
+      else if res_port != "" 
+      then TwoToRes res_port
       else NoPort
   }
 
@@ -48,7 +50,8 @@ let remove_settlement t =
 let rec give_resource_helper (dr:int) (lst: Tile.t list)=
   match lst with 
   |[]-> failwith "none"
-  |h::t-> if((Tile.get_number h) = dr) then (Tile.get_resource h)
+  |h::t-> if((Tile.get_number h) = dr) 
+    then (Tile.get_resource h)
     else give_resource_helper dr t
 
 let give_resource (dr:int) (node:t)=
@@ -57,16 +60,25 @@ let give_resource (dr:int) (node:t)=
   |Some n-> 
     try 
       match (give_resource_helper dr node.neigh_tiles) with
-      |"wood"->Player.give_wood n; if node.settlement=City then 
-          Player.give_wood n else ();
-      |"sheep"->Player.give_sheep n; if node.settlement=City then 
-          Player.give_sheep n else ();
-      |"wheat"->Player.give_wheat n; if node.settlement=City then 
-          Player.give_wheat n else ();
-      |"rock"->Player.give_rock n; if node.settlement=City then 
-          Player.give_rock n else ();
-      |"brick"->Player.give_brick n; if node.settlement=City then 
-          Player.give_brick n else ();
+      |"wood"->Player.give_wood n; 
+        if node.settlement=City 
+        then Player.give_wood n 
+        else ();
+      |"sheep"->Player.give_sheep n; 
+        if node.settlement=City 
+        then Player.give_sheep n 
+        else ();
+      |"wheat"->Player.give_wheat n; 
+        if node.settlement=City 
+        then Player.give_wheat n 
+        else ();
+      |"rock"->Player.give_rock n; 
+        if node.settlement=City 
+        then Player.give_rock n 
+        else ();
+      |"brick"->Player.give_brick n; 
+        if node.settlement=City 
+        then Player.give_brick n else ();
       |_->failwith "invalid resource type"
     with
     |Failure x->()
@@ -90,7 +102,8 @@ let has_res_port (node:t) =
 let rec give_resource_start_helper (player:Player.t) (lst: Tile.t list) = 
   match lst with 
   |[]->()
-  |h::t->  if Tile.is_there_robber h = true 
+  |h::t->  
+    if Tile.is_there_robber h = true 
     then raise(Failure("robber is present"))
     else
       (match Tile.get_resource h with 
@@ -133,7 +146,8 @@ let get_player t =
   |Some p -> p
 
 let rec add_nodes acc counter=
-  if counter=54 then acc 
+  if counter=54 
+  then acc 
   else add_nodes ((make_node [] counter [] false "")::acc) (counter+1)
 
 let generate_empty_nodes () = 
@@ -143,7 +157,8 @@ let generate_empty_nodes () =
 let rec find_edges elist e = 
   match elist with 
   | [] -> raise(Failure("No edge at position"))
-  | h::t -> if (Edge.get_index h) == e 
+  | h::t -> 
+    if (Edge.get_index h) == e 
     then Edge.get_player h 
     else 
       find_edges t e
@@ -154,7 +169,9 @@ let has_edge node = function
 let rec get_edge_helper neigh edge_list = 
   match edge_list with 
   |[]->failwith"no such neighboring node"
-  |h::t-> if Edge.get_index h = neigh then h 
+  |h::t-> 
+    if Edge.get_index h = neigh 
+    then h 
     else get_edge_helper neigh t
 
 let rec get_edge neigh node = 
