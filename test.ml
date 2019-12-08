@@ -29,7 +29,7 @@ let board_tests =
     get_index_test "remove index test 3" 0 3 [1;2;3;4] 4;
   ]
 
-let node1 = Node.make_node [] 2 []
+let node1 = Node.make_node [] 2 [] true ""
 let player1 = Player.make_player "green"
 
 let node_tests = 
