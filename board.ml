@@ -41,18 +41,13 @@ let rec remove_index start index lst=
   |h::t-> if start=index then remove_index (start+1) index t
     else h::(remove_index (start+1) index t)
 
-(**[get_index start index lst] is the entry of [lst] at [index]*)
-let rec get_index start index= function
-  |[]-> failwith "index out of bounds"
-  |h::t-> if start=index then h else get_index (start+1) index t
-
 (**[random_resources acc lst] is [lst] but with its entries in a random order*)
 let rec random_resources acc lst=
   match lst with 
   |[]->acc
   |x-> 
     let rand = Random.int (List.length lst) in
-    random_resources ((get_index 0 rand lst)::acc) (remove_index 0 rand lst)
+    random_resources ((List.nth lst rand)::acc) (remove_index 0 rand lst)
 
 (**[rand_board_helper start num_lst rand_res_lst acc] is generates a 
    random board from [rand_res_lst] using the indexing of [num_lst]*)

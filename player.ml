@@ -279,7 +279,7 @@ let rec half_resources resources len index =
 
 let rob_player t = 
   if List.length t.resources > 7 then 
-    (t.resources <- (half_resources t.resources ((List.length t.resources)/2) 0);
+    (t.resources <- half_resources t.resources ((List.length t.resources)/2)0;
      ()
     )
   else ()

@@ -485,6 +485,8 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
       print_endline("buycard- buy a development card");
       print_endline("use + cardname- use a development card you own");
       print_endline("cards- display your development cards");
+      print_endline("trade bank #1 resource1 #2 resource2- if you want to give the bank #1 of res1 and get #2 of resource2");
+      print_endline("trade playercolor #1 resource1 #2 resource2- if you want to give the playercolor #1 of res1 and get #2 of resource2");
       let input= Command.parse (read_line()) in
       ( match Command.to_data input with
         |("help",_,_,_,_)->play_game Help Help board nodes turn pass rd_ph list node message card_list gmax
@@ -727,7 +729,6 @@ let rec play_game phase prev_phase board nodes turn pass rd_ph list node message
         try(
           Gamegraphics.draw_board board nodes;
           print_endline("Select an edge to place a road");
-          (*WE NEED TO CHECK IF YOU HAVE ENOUGH RESOURCES AND THEN TAKE THEM*)
           let selected_edge =  select_edge() in
           if (not (if_edge turn selected_edge node)) then failwith "wrong position" else
             begin
