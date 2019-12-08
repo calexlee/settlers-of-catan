@@ -35,7 +35,7 @@ let board_tests =
 
   ]
 
-let node1 = Node.make_node [] 2 []
+let node1 = Node.make_node [] 2 [] true ""
 let player1 = Player.make_player "green"
 
 let node_tests = 
