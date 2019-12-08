@@ -293,20 +293,20 @@ let give_points_for_army () =
   let max_num = List.fold_left max 0 ilist
   in (*checks if someone already has an army that large*)
   let p1,p2,p3,p4 = Player.get_army_l (List.nth player_list 0),
-                    Player.get_army_l (List.nth player_list 0),
-                    Player.get_army_l (List.nth player_list 0),
-                    Player.get_army_l (List.nth player_list 0) in 
+                    Player.get_army_l (List.nth player_list 1),
+                    Player.get_army_l (List.nth player_list 2),
+                    Player.get_army_l (List.nth player_list 3) in 
   if  p1 && List.nth ilist 0 < max_num
   then (Player.set_l_army (List.nth player_list 0) false;
         set_new_l_army max_num ilist;)
   else if  p2 && List.nth ilist 1 < max_num
-  then (Player.set_l_army (List.nth player_list 0) false;
+  then (Player.set_l_army (List.nth player_list 1) false;
         set_new_l_army max_num ilist;)
   else if  p3 && List.nth ilist 2 < max_num
-  then (Player.set_l_army (List.nth player_list 0) false;
+  then (Player.set_l_army (List.nth player_list 2) false;
         set_new_l_army max_num ilist;)
   else if  p4 && List.nth ilist 3 < max_num
-  then (Player.set_l_army (List.nth player_list 0) false;
+  then (Player.set_l_army (List.nth player_list 3) false;
         set_new_l_army max_num ilist; )
   else if not p1 && not p2 && not p3 && not p4 
   then 
