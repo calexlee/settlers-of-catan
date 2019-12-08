@@ -229,26 +229,30 @@ let bank_trade (player:t) (x:int) (res1:string) (y:int) (res2:string) : unit =
    done)
 
 let take_player_trade (player:t) (x:int) (res1:string) : unit = 
-  (for var = x downto 1 do
-     match res1 with 
-     |"sheep"-> take_sheep player
-     |"wheat"-> take_wheat player
-     |"wood"-> take_wood player
-     |"brick"-> take_brick player
-     |"rock"-> take_rock player
-     |_-> failwith "Invalid resource"
-   done;)
+  try (for var = x downto 1 do
+         match res1 with 
+         |"sheep"-> take_sheep player
+         |"wheat"-> take_wheat player
+         |"wood"-> take_wood player
+         |"brick"-> take_brick player
+         |"rock"-> take_rock player
+         |_-> failwith "Invalid resource"
+       done;)
+  with 
+  |Failure x-> print_endline x
 
 let give_player_trade (player:t) (y:int) (res2:string) : unit = 
-  (for var = y downto 1 do
-     match res2 with 
-     |"sheep"-> give_sheep player
-     |"wheat"-> give_wheat player
-     |"wood"-> give_wood player
-     |"brick"-> give_brick player
-     |"rock"-> give_rock player
-     |_-> failwith "Invalid resource"
-   done;)
+  try (for var = y downto 1 do
+         match res2 with 
+         |"sheep"-> give_sheep player
+         |"wheat"-> give_wheat player
+         |"wood"-> give_wood player
+         |"brick"-> give_brick player
+         |"rock"-> give_rock player
+         |_-> failwith "Invalid resource"
+       done;)
+  with 
+  | Failure x -> print_endline x
 
 (**[has_trade_res_helper x res lst] returns true if there are [x] entries
    of [res] in [lst]*)

@@ -43,7 +43,7 @@ let to_data command =
   |TradeBank (x,res1,y,res2)-> ("tradebank",x,res1,y,res2)
   |TradeGreen (x,res1,y,res2)-> ("tradegreen",x,res1,y,res2)
   |TradeBlue (x,res1,y,res2)-> ("tradeblue",x,res1,y,res2)
-  |TradeMagenta (x,res1,y,res2)-> ("tradeblue",x,res1,y,res2)
+  |TradeMagenta (x,res1,y,res2)-> ("trademagenta",x,res1,y,res2)
   |TradeYellow (x,res1,y,res2)-> ("tradeyellow",x,res1,y,res2)
   |BuyCard -> ("buycard",0,"",0,"")
   |Cards -> ("cards",0,"",0,"")
