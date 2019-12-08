@@ -57,7 +57,7 @@ let rec random_resources acc lst=
   |[]->acc
   |x-> 
     let rand = Random.int (List.length lst) in
-    random_resources ((get_index 0 rand lst)::acc) (remove_index 0 rand lst)
+    random_resources ((List.nth lst rand)::acc) (remove_index 0 rand lst)
 
 (**[rand_board_helper start num_lst rand_res_lst acc] is generates a 
    random board from [rand_res_lst] using the indexing of [num_lst]*)

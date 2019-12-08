@@ -25,5 +25,5 @@ exception Malformed
     or if the verb is "add" and there is an empty object phrase.*)
 val parse : string -> command
 
-(*[to_string command] is the command but in a string form *)
+(**[to_string command] is the command but in a string form *)
 val to_data : command -> string * int * string * int * string
