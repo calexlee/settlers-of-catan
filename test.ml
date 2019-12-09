@@ -60,8 +60,16 @@ We play tested by watching die rolls, observing they were random and the game
 game the resources corresponding to that random die roll.
 
 ==============================Building Settlements==============================
+We ensured that a settlement appeared where the players clicked and
+that they begin to recieve resources from that settlement. 
+We also checked to make sure that players could only build on nodes that 
+are not adjacent to other nodes but are also connected to their civilation via
+road. 
 
 ===============================Building Cities==================================
+We ensured that players could only place cities on nodes where they already 
+have settlements. And that players began recieving two times as many resources
+from that node
 
 ==============================Giving Players Ports==============================
 We checked many different cobinations of players and ports. We then ensured that
@@ -85,6 +93,7 @@ and esnuring that
 
 ====================================Robbing=====================================
 
+=====================================Win========================================
 
 ==================================Conlcusion====================================
 Bescause we observed no faulty behavior after play testing the game with as many
