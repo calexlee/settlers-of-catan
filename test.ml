@@ -6,40 +6,90 @@ piece of functionality we created the implementer extensively used glass box
 testing in order to test all the edge cases and corner cases of their 
 implementation to make sure the game functioned correctly. We used this type of
 testing because we wanted to make sure the game actually behaved in the terminal
-as it should, and test it in the enviroment the user would play the game in
+as it should, and test it in the enviroment the user would play the game in.
 
 After The implementer of the functions glass-box tested them- the rest of the 
-used black box play testing by testing the game without knowing how it was 
+group used black box play testing by testing the game without knowing how it was 
 implemented this provided great feedback and checking to make sure everything 
-actually worked as expected
+actually worked as expected.
+
+OUnit Testing VS Manual Testing
+Ounit: We tested the index removal function which was important for random board
+        generation
+      We tested nodes to make sure they were initialized correctly because
+        if the indexing was off the entire game would be messed up
+
+Manual Testing Explanations/ Proofs of why all aspects of out code work
+==================================Graphics======================================
+To test graphics we simply ran make play and drew out the board and interacted
+with it. This was the best way to test our graphics module
 
 ================================Board Testing===================================
-Board Testing-
+Board Testing- To test the board we wrote a few Ounit tests, but mainly tested
+the board using by printing it using graphics. We ensured
+  1. The board generations of resources were random
+  2. The file and node attributed were properly displayed
 
 ==================================Help Tab======================================
-
+We called the help function and ensured that
+  1.The help commands were properly displayed
+  2.You could return to the game, with its state being preserved 
 
 =================================Setup Phase====================================
-
+We tested the setup phase by running through it multiple times. We verified
+  1. The proper ordering of player settlement and roads
+  2. The proper ordering of player turn placement
+  3. We checked every possible corner case of players placing settlements
+  4. We ensured players could only place settlements on a node that is
+  empty and has no neighboring settlements
+  5.We ensured that players could only place a road on an edge next to their 
+  settlement
+  6.If players clicked anywhere besides their node they would get another chance
+  7.Players recieved resources from all the tiles that neighbor the
+  second node they placed
 
 ============================Resource Distribution===============================
-
+We tested resource distribution by keeping track of players resources and 
+while playing the game ensuring that their inventory was always properly updated
+We checked to make sure that the resources corresponding to their die rolls
+were always given to them And if they had a city on the node they got two
+resources. 
 
 ==================================Die Rolling===================================
+We play tested by watching die rolls, observing they were random and the game
+game the resources corresponding to that random die roll.
 
+==============================Building Settlements==============================
+
+===============================Building Cities==================================
 
 ==============================Giving Players Ports==============================
-
+We checked many different cobinations of players and ports. We then ensured that
+the player could only use the boosted trading rate if they had the port.
 
 =================================Bank Trading===================================
-
+We play tested bank trading by trying all the different combinations of
+  1. A trade where the player does not have the port and it fails but recovers
+  2. A trade where the player does have the 3:1 port and it sucseeds
+  3. A general 4:1 ration trade
+  4. A trade where the player does have the 2:1 port and it sucseeds
+  5. A trade where the player does not have the resources but it recovers
 
 =================================Player Trading=================================
-
+We play tested player trading by keeping track of all the players inventories 
+and esnuring that
+  1. Players could only trade when both players had the resources
+  2. Players lost their resources they traded away
+  3. Players gained the resources they traded for
+  4. The correct players recieved the resources
 
 ====================================Robbing=====================================
 
 
+==================================Conlcusion====================================
+Bescause we observed no faulty behavior after play testing the game with as many
+possible combinations and corner cases we could think of in the enviroment that
+the user would play the game in, We can assume that the game if fully functional
 *)
 
 open OUnit2
