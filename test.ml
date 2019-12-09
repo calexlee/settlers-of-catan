@@ -5,6 +5,7 @@ Most of our testing consisted of play testing. For every function and seperate
 piece of functionality we created the implementer extensively used glass box
 testing in order to test all the edge cases and corner cases of their 
 implementation to make sure the game functioned correctly. We used this type of
+testing because we wanted to make sure the game actually behaved in the terminal
 as it should, and test it in the enviroment the user would play the game in
 
 After The implementer of the functions glass-box tested them- the rest of the 
