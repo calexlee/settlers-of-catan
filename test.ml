@@ -1,3 +1,131 @@
+(* 
+-------------------------------------------------------------------------------
+========================PLAY TESTING DOCUMENTATION==========================
+Most of our testing consisted of play testing. For every function and seperate 
+piece of functionality we created the implementer extensively used glass box
+testing in order to test all the edge cases and corner cases of their 
+implementation to make sure the game functioned correctly. We used this type of
+testing because we wanted to make sure the game actually behaved in the terminal
+as it should, and test it in the enviroment the user would play the game in.
+
+After The implementer of the functions glass-box tested them- the rest of the 
+group used black box play testing by testing the game without knowing how it was 
+implemented this provided great feedback and checking to make sure everything 
+actually worked as expected.
+
+OUnit Testing VS Manual Testing
+Ounit: We tested the index removal function which was important for random board
+        generation
+      We tested nodes to make sure they were initialized correctly because
+        if the indexing was off the entire game would be messed up
+
+Manual Testing Explanations/ Proofs of why all aspects of out code work
+==================================Graphics======================================
+To test graphics we simply ran make play and drew out the board and interacted
+with it. This was the best way to test our graphics module
+
+================================Board Testing===================================
+Board Testing- To test the board we wrote a few Ounit tests, but mainly tested
+the board using by printing it using graphics. We ensured
+  1. The board generations of resources were random
+  2. The file and node attributed were properly displayed
+
+==================================Help Tab======================================
+We called the help function and ensured that
+  1.The help commands were properly displayed
+  2.You could return to the game, with its state being preserved 
+
+=================================Setup Phase====================================
+We tested the setup phase by running through it multiple times. We verified
+  1. The proper ordering of player settlement and roads
+  2. The proper ordering of player turn placement
+  3. We checked every possible corner case of players placing settlements
+  4. We ensured players could only place settlements on a node that is
+  empty and has no neighboring settlements
+  5.We ensured that players could only place a road on an edge next to their 
+  settlement
+  6.If players clicked anywhere besides their node they would get another chance
+  7.Players recieved resources from all the tiles that neighbor the
+  second node they placed
+
+============================Resource Distribution===============================
+We tested resource distribution by keeping track of players resources and 
+while playing the game ensuring that their inventory was always properly updated
+We checked to make sure that the resources corresponding to their die rolls
+were always given to them And if they had a city on the node they got two
+resources. 
+
+==================================Die Rolling===================================
+We play tested by watching die rolls, observing they were random and the game
+game the resources corresponding to that random die roll.
+
+==============================Building Settlements==============================
+We first made sure that if players had enough resources to build a settlement. 
+And We ensured that a settlement appeared where the players clicked and that 
+they begin to recieve resources from that settlement. We also checked to make 
+sure that players could only build on nodes that are not adjacent to other nodes 
+but are also connected to their civilation via road. 
+
+===============================Building Cities==================================
+We first made sure that if players had enough resources to build a city. And we
+ensured that players could only place cities on nodes where they already have 
+settlements. And that players began recieving two times as many resources from 
+that node.
+
+==============================Giving Players Ports==============================
+We checked many different cobinations of players and ports. We then ensured that
+the player could only use the boosted trading rate if they had the port.
+
+=================================Bank Trading===================================
+We play tested bank trading by trying all the different combinations of
+  1. A trade where the player does not have the port and it fails but recovers
+  2. A trade where the player does have the 3:1 port and it sucseeds
+  3. A general 4:1 ration trade
+  4. A trade where the player does have the 2:1 port and it sucseeds
+  5. A trade where the player does not have the resources but it recovers
+
+=================================Player Trading=================================
+We play tested player trading by keeping track of all the players inventories 
+and esnuring that
+  1. Players could only trade when both players had the resources
+  2. Players lost their resources they traded away
+  3. Players gained the resources they traded for
+  4. The correct players recieved the resources
+
+====================================Robbing=====================================
+
+=====================================Win========================================
+
+====================================Points======================================
+
+============================Buying Development Card=============================
+We tested buying development card by running through it multiple times. We 
+verified that
+  1. Players could only buy development cards when they had enough resources.
+  2. Players could get a random development card when they succeed buying a card
+  buy checking their cards list.
+  3. Players lost their resources they used to buy cards.
+  4. We ensured players couldn't buy cards when all the cards had been sold out.
+
+============================Using Development Card==============================
+We tested using development card by running through it multiple times. We 
+verified that
+  1. Players could only use the development cards they owned.
+  2. Players lost corresponding cards after using them.
+  3. Players could go into the correct phase after using corresponding cards.
+
+================================Building Roads==================================
+We first made sure that if players had enough resources to build a road. And We 
+ensured that a road appeared where the players clicked. We also checked to make 
+sure that players could only build on edges that are adjacent to their 
+settlements or other roads.
+
+==================================Conlcusion====================================
+Bescause we observed no faulty behavior after play testing the game with as many
+possible combinations and corner cases we could think of in the enviroment that
+the user would play the game in, We can assume that the game if fully functional
+*)
+
 open OUnit2
 open Board
 open Player
@@ -162,58 +290,6 @@ let player_test = [
     give_port "gives player 2 a three to one port" player1 false "wood";
     has_two_to_one_test "tests if player gets a two to one port" player1 "wood" true;*)
 ]
-(* 
--------------------------------------------------------------------------------
-========================PLAY TESTING DOCUMENTATION==========================
-Most of our testing consisted of play testing. For every function and seperate 
-piece of functionality we created the implementer extensively used glass box
-testing in order to test all the edge cases and corner cases of their 
-implementation to make sure the game functioned correctly. We used this type of
-testing because we wanted to make sure the game actually behaved in the terminal
-as it should, and test it in the enviroment the user would play the game in
-
-After The implementer of the functions glass-box tested them- the rest of the 
-used black box play testing by testing the game without knowing how it was 
-implemented this provided great feedback and checking to make sure everything 
-actually worked as expected
-
-================================Board Testing===================================
-Board Testing-
-
-==================================Help Tab======================================
-
-
-=================================Setup Phase====================================
-
-
-============================Resource Distribution===============================
-
-
-==================================Die Rolling===================================
-
-
-==============================Giving Players Ports==============================
-
-
-=================================Bank Trading===================================
-
-
-=================================Player Trading=================================
-
-
-====================================Robbing=====================================
-
-
-
-
-
-
-
-
-
-
-
-*)
 
 
 let suite =
