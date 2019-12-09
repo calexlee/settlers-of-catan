@@ -28,10 +28,11 @@ let make_player color=
     |x when x="blue" -> Blue 
     |_ -> Green in
   {
-    color = colorp; (* Need to make random out of available options*)
-    resources = [];
+    color = colorp; 
+    resources = [Wheat;Wheat;Rock;Rock;Sheep;Sheep;Wood;Wood;Brick;Brick];
     points = 0;
-    card_list = [];
+    card_list = [Knight;Knight;Knight;Knight;Progress;Progress;Victory;Victory;
+                 Victory;Victory];
     longest_road = 2;
     has_l_road = false;
     army = 0;
