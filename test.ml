@@ -1,3 +1,46 @@
+(* 
+-------------------------------------------------------------------------------
+========================PLAY TESTING DOCUMENTATION==========================
+Most of our testing consisted of play testing. For every function and seperate 
+piece of functionality we created the implementer extensively used glass box
+testing in order to test all the edge cases and corner cases of their 
+implementation to make sure the game functioned correctly. We used this type of
+as it should, and test it in the enviroment the user would play the game in
+
+After The implementer of the functions glass-box tested them- the rest of the 
+used black box play testing by testing the game without knowing how it was 
+implemented this provided great feedback and checking to make sure everything 
+actually worked as expected
+
+================================Board Testing===================================
+Board Testing-
+
+==================================Help Tab======================================
+
+
+=================================Setup Phase====================================
+
+
+============================Resource Distribution===============================
+
+
+==================================Die Rolling===================================
+
+
+==============================Giving Players Ports==============================
+
+
+=================================Bank Trading===================================
+
+
+=================================Player Trading=================================
+
+
+====================================Robbing=====================================
+
+
+*)
+
 open OUnit2
 open Board
 open Player
@@ -162,58 +205,6 @@ let player_test = [
     give_port "gives player 2 a three to one port" player1 false "wood";
     has_two_to_one_test "tests if player gets a two to one port" player1 "wood" true;*)
 ]
-(* 
--------------------------------------------------------------------------------
-========================PLAY TESTING DOCUMENTATION==========================
-Most of our testing consisted of play testing. For every function and seperate 
-piece of functionality we created the implementer extensively used glass box
-testing in order to test all the edge cases and corner cases of their 
-implementation to make sure the game functioned correctly. We used this type of
-testing because we wanted to make sure the game actually behaved in the terminal
-as it should, and test it in the enviroment the user would play the game in
-
-After The implementer of the functions glass-box tested them- the rest of the 
-used black box play testing by testing the game without knowing how it was 
-implemented this provided great feedback and checking to make sure everything 
-actually worked as expected
-
-================================Board Testing===================================
-Board Testing-
-
-==================================Help Tab======================================
-
-
-=================================Setup Phase====================================
-
-
-============================Resource Distribution===============================
-
-
-==================================Die Rolling===================================
-
-
-==============================Giving Players Ports==============================
-
-
-=================================Bank Trading===================================
-
-
-=================================Player Trading=================================
-
-
-====================================Robbing=====================================
-
-
-
-
-
-
-
-
-
-
-
-*)
 
 
 let suite =
