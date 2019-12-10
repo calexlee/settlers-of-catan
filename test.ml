@@ -146,11 +146,11 @@ let give_port
 
 let has_three_to_one_test 
     test player expected_output : test = test>:: (fun _-> 
-    assert_equal expected_output (Player.has_three_to_one player))
+    assert_equal expected_output ((Player.has_three_to_one player)) ~printer:string_of_bool)
 
 let has_two_to_one_test 
     test player string expected_output : test = test>:: (fun _-> 
-    assert_equal expected_output (Player.has_two_to_one player string))
+    assert_equal expected_output ((Player.has_two_to_one player string)) ~printer:string_of_bool)
 
 let board = Board.rand_board
 
@@ -237,9 +237,10 @@ let node_tests =
   ]
 
 let player_test = [
-  (*get_resources_test "tests if player initialized to no resources" player1 [];
-    give_sheep "gives player 1 a sheep" player1;
-
+  get_resources_test "tests if player initialized to no resources" player1 [];
+  give_sheep "gives player 1 a sheep" player1;
+  (*
+  these tests should fail
     get_resources_test "tests if player has a sheep" player1 ["Sheep"];
     give_wood "gives player 1 a wood" player1;
     get_resources_test "tests if player has a sheep" player1 ["Wood";"Sheep"];
@@ -249,11 +250,11 @@ let player_test = [
     get_resources_test "tests if player has a brick" player1 ["Brick";"Rock";"Wood";"Sheep"];
     give_wheat "gives player 1 a wheat" player1;
     get_resources_test "tests if player has a wheat" player1 ["Wheat";"Brick";"Rock";"Wood";"Sheep"];
-    has_three_to_one_test "tests if players start with no ports" player1 false;
-    has_three_to_one_test "tests if players start with no ports" player2 false;
+    has_three_to_one_test "tests if players start with no ports" player1 true;
+    has_three_to_one_test "tests if players start with no ports" player2 true;
 
     give_port "gives player 2 a three to one port" player1 true "";
-    has_three_to_one_test "tests if players start with no ports" player1 false;
+    has_three_to_one_test "tests if players start with no ports" player1 true;
     give_port "gives player 2 a three to one port" player1 false "sheep";
     has_two_to_one_test "tests if player gets a two to one port" player1 "sheep" true;
     give_port "gives player 2 a three to one port" player1 false "wheat";
