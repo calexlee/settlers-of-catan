@@ -60,16 +60,17 @@ We play tested by watching die rolls, observing they were random and the game
 game the resources corresponding to that random die roll.
 
 ==============================Building Settlements==============================
-We ensured that a settlement appeared where the players clicked and
-that they begin to recieve resources from that settlement. 
-We also checked to make sure that players could only build on nodes that 
-are not adjacent to other nodes but are also connected to their civilation via
-road. 
+We first made sure that if players had enough resources to build a settlement. 
+And We ensured that a settlement appeared where the players clicked and that 
+they begin to recieve resources from that settlement. We also checked to make 
+sure that players could only build on nodes that are not adjacent to other nodes 
+but are also connected to their civilation via road. 
 
 ===============================Building Cities==================================
-We ensured that players could only place cities on nodes where they already 
-have settlements. And that players began recieving two times as many resources
-from that node
+We first made sure that if players had enough resources to build a city. And we
+ensured that players could only place cities on nodes where they already have 
+settlements. And that players began recieving two times as many resources from 
+that node.
 
 ==============================Giving Players Ports==============================
 We checked many different cobinations of players and ports. We then ensured that
@@ -85,15 +86,50 @@ We play tested bank trading by trying all the different combinations of
 
 =================================Player Trading=================================
 We play tested player trading by keeping track of all the players inventories 
-and esnuring that
+and ensuring that
   1. Players could only trade when both players had the resources
   2. Players lost their resources they traded away
   3. Players gained the resources they traded for
   4. The correct players recieved the resources
 
 ====================================Robbing=====================================
+We tested robbing by running through the game and checking that whenever a 
+player rolled a 7 that
+  1. Players could move the robber onto any tile, including the one it was on
+  2. All players had their resources halved 
+  3. A robber on a tile prevented players from gaining its resource
+=====================================Win/Points=================================
+We tested points and winning by running through the game and ensuring that
+  1. Every Settlement gave a player 1 point
+  2. Every City gave a player 2 points
+  3. Having the most roads or most armies gave players 2 points
+  4. Another player surpassing the most number of armies/roads gave them the 
+  points and also subtracted them from the original holder
+  5. Victory cards permenantly gave players 1 point on their use
+  6. Upon reaching 10 or more points the game would end with the player who
+  reached that number of points being displayed on the screen as the winner
 
-=====================================Win========================================
+============================Buying Development Card=============================
+We tested buying development card by running through it multiple times. We 
+verified that
+  1. Players could only buy development cards when they had enough resources.
+  2. Players could get a random development card when they succeed buying a card
+  buy checking their cards list.
+  3. Players lost their resources they used to buy cards.
+  4. We ensured players couldn't buy cards when all the cards had been sold out.
+
+============================Using Development Card==============================
+We tested using development card by running through it multiple times. We 
+verified that
+  1. Players could only use the development cards they owned.
+  2. Players lost corresponding cards after using them.
+  3. Players could go into the correct phase after using corresponding cards.
+
+================================Building Roads==================================
+We first made sure that if players had enough resources to build a road. And We 
+ensured that a road appeared where the players clicked. We also checked to make 
+sure that players could only build on edges that are adjacent to their 
+settlements or other roads.
 
 ==================================Conlcusion====================================
 Bescause we observed no faulty behavior after play testing the game with as many

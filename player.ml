@@ -28,7 +28,7 @@ let make_player color=
     |x when x="blue" -> Blue 
     |_ -> Green in
   {
-    color = colorp; (* Need to make random out of available options*)
+    color = colorp; 
     resources = [];
     points = 0;
     card_list = [];
