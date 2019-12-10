@@ -86,17 +86,28 @@ We play tested bank trading by trying all the different combinations of
 
 =================================Player Trading=================================
 We play tested player trading by keeping track of all the players inventories 
-and esnuring that
+and ensuring that
   1. Players could only trade when both players had the resources
   2. Players lost their resources they traded away
   3. Players gained the resources they traded for
   4. The correct players recieved the resources
 
 ====================================Robbing=====================================
-
-=====================================Win========================================
-
-====================================Points======================================
+We tested robbing by running through the game and checking that whenever a 
+player rolled a 7 that
+  1. Players could move the robber onto any tile, including the one it was on
+  2. All players had their resources halved 
+  3. A robber on a tile prevented players from gaining its resource
+=====================================Win/Points=================================
+We tested points and winning by running through the game and ensuring that
+  1. Every Settlement gave a player 1 point
+  2. Every City gave a player 2 points
+  3. Having the most roads or most armies gave players 2 points
+  4. Another player surpassing the most number of armies/roads gave them the 
+  points and also subtracted them from the original holder
+  5. Victory cards permenantly gave players 1 point on their use
+  6. Upon reaching 10 or more points the game would end with the player who
+  reached that number of points being displayed on the screen as the winner
 
 ============================Buying Development Card=============================
 We tested buying development card by running through it multiple times. We 

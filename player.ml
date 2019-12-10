@@ -29,10 +29,9 @@ let make_player color=
     |_ -> Green in
   {
     color = colorp; 
-    resources = [Wheat;Wheat;Rock;Rock;Sheep;Sheep;Wood;Wood;Brick;Brick];
+    resources = [];
     points = 0;
-    card_list = [Knight;Knight;Knight;Knight;Progress;Progress;Victory;Victory;
-                 Victory;Victory];
+    card_list = [];
     longest_road = 2;
     has_l_road = false;
     army = 0;
